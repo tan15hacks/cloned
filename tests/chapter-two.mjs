@@ -68,6 +68,9 @@ assert.equal(completedDungeon.monsters.some((monster) => monster.storyRole === "
 class SaveRuntimeHarness {
   migrateState(data) { return structuredClone(data); }
   enterGame() { this.entered = true; }
+  showChapterTwoGuildScene() { this.sceneOpened = true; return true; }
+  talkToNPC(npc) { this.baseTalkedTo = npc.id; return "base-dialogue"; }
+  toast(message) { this.lastToast = message; }
 }
 installChapterTwoRuntime(SaveRuntimeHarness);
 const runtime = new SaveRuntimeHarness();
@@ -85,6 +88,8 @@ assert.equal(resumed.chapterTwo.dungeon.defeatedIds[0], "archive-rift-slime-1", 
 runtime.state = {
   mode: "storyDungeon",
   player: { x: 47.5, y: 20.5 },
+  chapterOne: { completed: true },
+  progression: { adventureLevel: 4, bossRewards: [10] },
   chapterTwo: createChapterTwoState({ started: true, step: 16, dungeon: { finalBossDefeated: true } }),
   journal: [],
 };
@@ -94,6 +99,23 @@ assert.equal(runtime.state.mode, "world");
 assert.equal(runtime.currentStoryDungeon, null);
 assert.equal(runtime.state.chapterTwo.dungeon.finalBossDefeated, true, "Final boss completion must persist through safe resume");
 
+runtime.state = {
+  chapterOne: { completed: true },
+  progression: { adventureLevel: 3, bossRewards: [10] },
+  chapterTwo: createChapterTwoState(),
+};
+runtime.sceneOpened = false;
+assert.equal(runtime.showChapterTwoGuildScene(), false, "Locked Chapter 2 must not open its summons scene");
+assert.equal(runtime.sceneOpened, false);
+assert.match(runtime.lastToast, /requires Chapter 1/);
+assert.equal(runtime.talkToNPC({ id: "aria" }), "base-dialogue", "Locked Aria dialogue must fall through to normal NPC dialogue");
+assert.equal(runtime.state.chapterTwo.step, 0, "Temporary dialogue gating must restore the objective step");
+
+runtime.state.progression.adventureLevel = 4;
+runtime.sceneOpened = false;
+assert.equal(runtime.showChapterTwoGuildScene(), true, "Eligible Chapter 2 must open its summons scene");
+assert.equal(runtime.sceneOpened, true);
+
 console.log(JSON.stringify({
   ok: true,
   chapterObjectives: CHAPTER_TWO_STEPS.length - 1,
@@ -102,4 +124,5 @@ console.log(JSON.stringify({
   archiveGates: dungeon.gates.length,
   storyRooms: 5,
   safeResume: true,
+  unlockGate: true,
 }));
