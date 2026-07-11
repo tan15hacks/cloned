@@ -25,6 +25,7 @@ import { installProgressionCaveRuntime } from "./game-progression-cave-runtime.j
 import { installProgressionEconomy } from "./game-progression-economy.js";
 import { installChapterTwo } from "./game-chapter-two.js";
 import { installStoryDungeon } from "./game-story-dungeon.js";
+import { installChapterTwoRuntime } from "./game-chapter-two-runtime.js";
 
 class HearthvaleGame {
   constructor() {
@@ -93,4 +94,5 @@ installProgressionCaveRuntime(HearthvaleGame);
 installProgressionEconomy(HearthvaleGame);
 installChapterTwo(HearthvaleGame);
 installStoryDungeon(HearthvaleGame);
+installChapterTwoRuntime(HearthvaleGame);
 window.__hearthvale = new HearthvaleGame();
