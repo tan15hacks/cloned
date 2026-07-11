@@ -7,10 +7,12 @@ class InteriorRuntimeHarness {
   constructor() {
     this.state = null;
     this.refreshCount = 0;
+    this.interactionCount = 0;
   }
   migrateState(data) {
     return {
       mode: data?.mode || "world",
+      minutes: Number(data?.minutes) || 600,
       player: { x: Number(data?.player?.x) || 11.5, y: Number(data?.player?.y) || 15.5 },
       living: { interiorId: data?.living?.interiorId || null, worldReturn: data?.living?.worldReturn || null },
       interiors: data?.interiors || null,
@@ -19,7 +21,9 @@ class InteriorRuntimeHarness {
   }
   enterGame() { this.entered = true; }
   leaveInterior() { this.state.mode = "world"; this.state.living.interiorId = null; }
+  handleExpandedInteriorInteraction() { this.interactionCount += 1; }
   refreshInteriorNpcAssignments() { this.refreshCount += 1; }
+  toast(message) { this.lastToast = message; }
 }
 
 installExpandedInteriorsRuntime(InteriorRuntimeHarness);
@@ -27,6 +31,7 @@ const game = new InteriorRuntimeHarness();
 
 const resumed = game.migrateState({
   mode: "interior",
+  minutes: 600,
   player: { x: 15.5, y: 16.2 },
   living: { interiorId: "cityMarket", worldReturn: { x: 152.5, y: 18.5 } },
   interiors: {
@@ -79,10 +84,28 @@ assert.deepEqual(normalized.interiors.visited, []);
 assert.equal(normalized.interiors.lastInterior, "guild");
 assert.deepEqual(normalized.living.worldReturn, { x: 130.5, y: 19.5 });
 
+game.state = {
+  ...resumed,
+  mode: "interior",
+  minutes: 1100,
+  living: { interiorId: "seedshop", worldReturn: { x: 68.5, y: 16.5 } },
+};
+game.handleExpandedInteriorInteraction({ id: "seedCounter" }, { id: "seedshop" });
+assert.equal(game.interactionCount, 0, "Closed service counters must not open their shop action");
+assert.match(game.lastToast, /closed/i);
+game.state.minutes = 600;
+game.handleExpandedInteriorInteraction({ id: "seedCounter" }, { id: "seedshop" });
+assert.equal(game.interactionCount, 1, "Open service counters must call the original interaction");
+
+game.state.minutes = 1100;
+game.handleExpandedInteriorInteraction({ id: "cropCalendar" }, { id: "seedshop" });
+assert.equal(game.interactionCount, 2, "Lore interactions should remain available after closing");
+
 console.log(JSON.stringify({
   ok: true,
   correctExteriorResume: true,
   invalidReturnFallback: true,
   visitNormalization: true,
   staleAssignmentCleanup: true,
+  indoorClosingRules: true,
 }));
