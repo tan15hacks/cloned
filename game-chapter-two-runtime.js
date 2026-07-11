@@ -1,4 +1,8 @@
-import { CHAPTER_TWO_TARGETS, createChapterTwoState } from "./chapter-two-data.js";
+import {
+  CHAPTER_TWO_TARGETS,
+  chapterTwoEligible,
+  createChapterTwoState,
+} from "./chapter-two-data.js";
 
 function normalizeStoryDungeonSave(state) {
   if (!state || state.mode !== "storyDungeon") return state;
@@ -18,6 +22,8 @@ export function installChapterTwoRuntime(GameClass) {
   const proto = GameClass.prototype;
   const originalMigrateState = proto.migrateState;
   const originalEnterGame = proto.enterGame;
+  const originalGuildScene = proto.showChapterTwoGuildScene;
+  const originalTalkToNPC = proto.talkToNPC;
 
   proto.migrateState = function migrateStateChapterTwoRuntime(data) {
     return normalizeStoryDungeonSave(originalMigrateState.call(this, data));
@@ -27,5 +33,27 @@ export function installChapterTwoRuntime(GameClass) {
     normalizeStoryDungeonSave(this.state);
     originalEnterGame.call(this);
     this.currentStoryDungeon = null;
+  };
+
+  proto.showChapterTwoGuildScene = function showChapterTwoGuildSceneGated() {
+    const chapter = this.state?.chapterTwo;
+    if (!chapter?.started && !chapterTwoEligible(this.state)) {
+      this.toast("Chapter 2 requires Chapter 1, Adventure Level 4, and the Floor 10 guardian reward.");
+      return false;
+    }
+    return originalGuildScene.call(this);
+  };
+
+  proto.talkToNPC = function talkToNPCCampaignGated(npc) {
+    const chapter = this.state?.chapterTwo;
+    if (npc?.id === "aria" && chapter && !chapter.started && chapter.step === 0 && !chapterTwoEligible(this.state)) {
+      chapter.step = -1;
+      try {
+        return originalTalkToNPC.call(this, npc);
+      } finally {
+        chapter.step = 0;
+      }
+    }
+    return originalTalkToNPC.call(this, npc);
   };
 }
