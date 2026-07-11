@@ -16,6 +16,11 @@ import {
   WORLD_MINUTES_PER_REAL_SECOND,
   CAVE_MINUTES_PER_REAL_SECOND,
 } from "../game-performance.js";
+import {
+  CHAPTER_ONE_STEPS,
+  createChapterOneState,
+  chapterProgressValue,
+} from "../chapter-one.js";
 import { generateCaveFloor, caveTier } from "../cave.js";
 
 assert.equal(WORLD_W, 256, "World width must remain 256 tiles");
@@ -47,6 +52,15 @@ assert.equal(WORLD_MINUTES_PER_REAL_SECOND, 1.25, "Overworld clock rate changed 
 assert.equal(CAVE_MINUTES_PER_REAL_SECOND, 0.75, "Cave clock rate changed unexpectedly");
 assert.equal((1440 - 360) / WORLD_MINUTES_PER_REAL_SECOND / 60, 14.4, "Overworld day should last 14.4 real minutes");
 
+const chapter = createChapterOneState();
+assert.equal(CHAPTER_ONE_STEPS.length, 15, "Chapter 1 must contain 14 guided objectives and a completion state");
+assert.equal(chapter.step, 0, "New games must begin at the first Chapter 1 objective");
+chapter.step = 9;
+chapter.counters.greenfieldKills = 2;
+assert.deepEqual(chapterProgressValue(chapter, { cave: { maxFloor: 1 } }), { value: 2, goal: 3 }, "Greenfield patrol progress must be tracked");
+chapter.step = 12;
+assert.deepEqual(chapterProgressValue(chapter, { cave: { maxFloor: 3 } }), { value: 3, goal: 3 }, "Cave Floor 3 must complete the first descent objective");
+
 for (let floor = 1; floor <= 50; floor += 1) {
   const cave = generateCaveFloor(floor, 12345);
   assert.equal(cave.floor, floor);
@@ -67,6 +81,7 @@ console.log(JSON.stringify({
   activeMobileResources: mobileResources.length,
   activeDangerMonsters: dangerMonsters.length,
   overworldDayMinutes: 14.4,
+  chapterObjectives: CHAPTER_ONE_STEPS.length - 1,
   npcs: NPC_DEFS.length,
   caveFloors: 50,
   hubMerchants: hub.merchants.length,
