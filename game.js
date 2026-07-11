@@ -16,6 +16,7 @@ import { installWorldPolish } from "./game-world-polish.js";
 import { installWorldPolishRuntime } from "./game-world-polish-runtime.js";
 import { installLivingWorld } from "./game-living-world.js";
 import { installChapterOne } from "./chapter-one.js";
+import { installLivingWorldCompatibility } from "./game-living-compat.js";
 import { installCombatOverhaul } from "./game-combat.js";
 import { installCombatRuntimeHardening } from "./game-combat-runtime.js";
 
@@ -75,6 +76,7 @@ installWorldPolish(HearthvaleGame);
 installWorldPolishRuntime(HearthvaleGame);
 installLivingWorld(HearthvaleGame);
 installChapterOne(HearthvaleGame);
+installLivingWorldCompatibility(HearthvaleGame);
 installCombatOverhaul(HearthvaleGame);
 installCombatRuntimeHardening(HearthvaleGame);
 window.__hearthvale = new HearthvaleGame();
