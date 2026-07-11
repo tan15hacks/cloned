@@ -21,6 +21,7 @@ import { installCombatOverhaul } from "./game-combat.js";
 import { installCombatRuntimeHardening } from "./game-combat-runtime.js";
 import { installProgressionCore } from "./game-progression-core.js";
 import { installProgressionCaves } from "./game-progression-cave.js";
+import { installProgressionCaveRuntime } from "./game-progression-cave-runtime.js";
 import { installProgressionEconomy } from "./game-progression-economy.js";
 
 class HearthvaleGame {
@@ -84,5 +85,6 @@ installCombatOverhaul(HearthvaleGame);
 installCombatRuntimeHardening(HearthvaleGame);
 installProgressionCore(HearthvaleGame);
 installProgressionCaves(HearthvaleGame);
+installProgressionCaveRuntime(HearthvaleGame);
 installProgressionEconomy(HearthvaleGame);
 window.__hearthvale = new HearthvaleGame();
