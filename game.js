@@ -28,6 +28,10 @@ import { installStoryDungeon } from "./game-story-dungeon.js";
 import { installChapterTwoRuntime } from "./game-chapter-two-runtime.js";
 import { installSeasonsAndFestivals } from "./game-seasons.js";
 import { installSeasonsRuntime } from "./game-seasons-runtime.js";
+import { installRanching } from "./game-ranch-core.js";
+import { installRanchingRender } from "./game-ranch-render.js";
+import { installRanchingUI } from "./game-ranch-ui-main.js";
+import { installRanchingMachines } from "./game-ranch-machines.js";
 
 class HearthvaleGame {
   constructor() {
@@ -101,4 +105,8 @@ installStoryDungeon(HearthvaleGame);
 installChapterTwoRuntime(HearthvaleGame);
 installSeasonsAndFestivals(HearthvaleGame);
 installSeasonsRuntime(HearthvaleGame);
+installRanching(HearthvaleGame);
+installRanchingRender(HearthvaleGame);
+installRanchingUI(HearthvaleGame);
+installRanchingMachines(HearthvaleGame);
 window.__hearthvale = new HearthvaleGame();
