@@ -21,6 +21,15 @@ import {
   createChapterOneState,
   chapterProgressValue,
 } from "../chapter-one.js";
+import {
+  EQUIPMENT_SLOTS,
+  EQUIPMENT_DEFS,
+  createCombatState,
+  equipmentStats,
+  directionHitsTarget,
+  monsterBehavior,
+  statusForMonster,
+} from "../game-combat.js";
 import { generateCaveFloor, caveTier } from "../cave.js";
 
 assert.equal(WORLD_W, 256, "World width must remain 256 tiles");
@@ -61,6 +70,23 @@ assert.deepEqual(chapterProgressValue(chapter, { cave: { maxFloor: 1 } }), { val
 chapter.step = 12;
 assert.deepEqual(chapterProgressValue(chapter, { cave: { maxFloor: 3 } }), { value: 3, goal: 3 }, "Cave Floor 3 must complete the first descent objective");
 
+const combat = createCombatState();
+assert.equal(EQUIPMENT_SLOTS.length, 6, "Combat must provide six equipment slots");
+assert.ok(Object.keys(EQUIPMENT_DEFS).length >= 15, "Combat must include a meaningful equipment pool");
+assert.equal(combat.equipment.weapon, "fieldBlade", "New players must start with the Field Blade");
+assert.equal(combat.equipment.armor, "workCoat", "New players must start with work armor");
+const starterStats = equipmentStats(combat, { weaponPower: 1, armor: 0 });
+assert.ok(starterStats.damage >= 6, "Starter combat damage must be viable");
+assert.ok(starterStats.armor >= 1, "Starter armor must provide protection");
+assert.equal(directionHitsTarget("right", { x: 0, y: 0 }, { x: 1, y: 0 }, 1.5), true, "Directional attacks must hit targets in front");
+assert.equal(directionHitsTarget("right", { x: 0, y: 0 }, { x: -1, y: 0 }, 1.5), false, "Directional attacks must not hit targets behind the player");
+assert.equal(monsterBehavior("fogWraith"), "teleport", "Fog Wraiths must teleport");
+assert.equal(monsterBehavior("stoneSentinel"), "heavy", "Stone Sentinels must use heavy attacks");
+assert.equal(monsterBehavior("fireElemental"), "ranged", "Fire Elementals must use ranged attacks");
+assert.equal(statusForMonster("nightSpider"), "poison", "Night Spiders must apply poison");
+assert.equal(statusForMonster("iceWolf"), "slow", "Ice Wolves must apply slow");
+assert.equal(statusForMonster("fireElemental"), "burn", "Fire Elementals must apply burn");
+
 for (let floor = 1; floor <= 50; floor += 1) {
   const cave = generateCaveFloor(floor, 12345);
   assert.equal(cave.floor, floor);
@@ -82,6 +108,9 @@ console.log(JSON.stringify({
   activeDangerMonsters: dangerMonsters.length,
   overworldDayMinutes: 14.4,
   chapterObjectives: CHAPTER_ONE_STEPS.length - 1,
+  equipmentSlots: EQUIPMENT_SLOTS.length,
+  equipmentItems: Object.keys(EQUIPMENT_DEFS).length,
+  starterDamage: starterStats.damage,
   npcs: NPC_DEFS.length,
   caveFloors: 50,
   hubMerchants: hub.merchants.length,
