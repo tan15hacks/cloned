@@ -30,6 +30,7 @@ import {
   monsterBehavior,
   statusForMonster,
 } from "../game-combat.js";
+import { installCombatRuntimeHardening } from "../game-combat-runtime.js";
 import { generateCaveFloor, caveTier } from "../cave.js";
 
 assert.equal(WORLD_W, 256, "World width must remain 256 tiles");
@@ -87,6 +88,20 @@ assert.equal(statusForMonster("nightSpider"), "poison", "Night Spiders must appl
 assert.equal(statusForMonster("iceWolf"), "slow", "Ice Wolves must apply slow");
 assert.equal(statusForMonster("fireElemental"), "burn", "Fire Elementals must apply burn");
 
+class CombatRuntimeHarness {
+  getCombatStats() { return { knockback: Number.NaN, range: Number.NaN, attackSpeed: 0 }; }
+}
+installCombatRuntimeHardening(CombatRuntimeHarness);
+const harness = new CombatRuntimeHarness();
+const partialMonster = { type: "fogWraith", combat: { hitFlash: .1 } };
+const initializedAI = harness.ensureMonsterCombat(partialMonster);
+assert.equal(initializedAI.behavior, "teleport", "Partially initialized monsters must retain their intended AI behavior");
+assert.ok(Number.isFinite(initializedAI.teleportCooldown), "Monster teleport cooldown must remain finite");
+const hardenedStats = harness.getCombatStats();
+assert.equal(hardenedStats.knockback, .45, "Invalid knockback must fall back safely");
+assert.equal(hardenedStats.range, 1.5, "Invalid range must fall back safely");
+assert.equal(hardenedStats.attackSpeed, .25, "Attack speed must have a safe minimum");
+
 for (let floor = 1; floor <= 50; floor += 1) {
   const cave = generateCaveFloor(floor, 12345);
   assert.equal(cave.floor, floor);
@@ -111,6 +126,7 @@ console.log(JSON.stringify({
   equipmentSlots: EQUIPMENT_SLOTS.length,
   equipmentItems: Object.keys(EQUIPMENT_DEFS).length,
   starterDamage: starterStats.damage,
+  hardenedMonsterBehavior: initializedAI.behavior,
   npcs: NPC_DEFS.length,
   caveFloors: 50,
   hubMerchants: hub.merchants.length,
