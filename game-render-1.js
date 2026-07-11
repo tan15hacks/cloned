@@ -1,7 +1,7 @@
 import { TILE, WORLD_W, WORLD_H, SAVE_KEY, LEGACY_SAVE_KEYS, SETTINGS_KEY, ITEMS, CROPS, TOOLS, RECIPES, WEATHER, REGIONS, BUILDINGS, WAYSTONES, CAVE_ENTRANCES, INTERACTIONS, NPC_DEFS, MONSTER_TYPES, isWaterTile, isPathTile, isBridgeTile, buildingAtTile, isReservedTile, isFarmableTile, regionAt, terrainAt, generateResources, generateMonsters, generateQuests, generateGuildBounties, CAVE_W, CAVE_H, CAVE_MONSTERS, caveTier, generateCaveFloor, chestLoot, caveMerchantStock, $, clamp, keyOf, distance, randomChoice, safeParse, formatTime, randomInt, GUILD_RANKS, FORAGE_TYPES, AXE_TYPES, PICK_TYPES, forecastWeather } from "./game-shared.js";
 
 export const game_render_1 = {
-importSave(file) {
+  importSave(file) {
     if (!file) return;
     const reader = new FileReader();
     reader.onload = () => {
@@ -12,11 +12,11 @@ importSave(file) {
     reader.readAsText(file);
   },
 
-showHowToPlay() {
-    this.openModal("How to Play Hearthvale v3", `<section class="help-section"><h3>57,344-Tile Continent</h3><p>The map is 256 × 224 tiles and uses viewport culling, so Android devices render only nearby chunks.</p></section><section class="help-section"><h3>Regions & Monsters</h3><p>Ten wilderness regions contain three unique monster species each. Greenfield Wilds are beginner-friendly; Dreadwild gives the highest surface rewards.</p></section><section class="help-section"><h3>Silvercrest City</h3><p>Visit the Adventurers' Guild, market, smithy, apothecary, arcane shop, bank, inn, city hall, and hunter provisioner. Complete bounties to rise from Rank F to Rank S.</p></section><section class="help-section"><h3>Grand Depths — 50 Floors</h3><p>Floor 1 is an expedition hub with merchants, a trader, healer, and floor gate. Floors 1–9 contain copper; environments change at Floors 10, 20, 30, 40, and 50. Each non-hub floor independently has a 1% chest chance.</p></section><section class="help-section"><h3>Controls</h3><p>Desktop: WASD/arrows, E interact, Space/F tool, 1–8 toolbar, Q seeds, M menu. Mobile: movement stick, A tool, B interact.</p></section>`, [{ label: "Close", action: () => this.closeModal() }]);
+  showHowToPlay() {
+    this.openModal("How to Play Hearthvale v3.3", `<section class="help-section"><h3>Guided Chapter 1</h3><p>Follow the objective panel and golden direction marker to learn farming, Waystones, Silvercrest, Guild contracts, combat, and the first cave floors.</p></section><section class="help-section"><h3>Directional Combat</h3><p>Select the sword, face an enemy, and press Space/F or the mobile A button. Attacks only hit the forward arc. Watch red warning circles and lines, dodge projectiles, collect dropped loot orbs, and use potions or Cave Tonics to cure harmful effects.</p></section><section class="help-section"><h3>Equipment</h3><p>Open the Adventure Menu and choose Equipment. Six slots affect damage, armor, attack speed, range, critical hits, movement, status resistance, and rare-drop chance. Buy gear from smiths and the Hunter's Provisioner or find it from monsters.</p></section><section class="help-section"><h3>57,344-Tile Continent</h3><p>The 256 × 224 map streams only the nearby 16 × 16 chunks, keeping Android, tablet, and desktop performance practical.</p></section><section class="help-section"><h3>Grand Depths — 50 Floors</h3><p>Floor 1 is an expedition hub. Cave environments and monsters change at Floors 10, 20, 30, 40, and 50. Each non-hub floor independently has a 1% chest chance.</p></section><section class="help-section"><h3>Controls</h3><p>Desktop: WASD/arrows move, E interact, Space/F tool or attack, 1–8 toolbar, Q seeds, M menu. Mobile: movement stick, A tool/attack, B interact.</p></section>`, [{ label: "Close", action: () => this.closeModal() }]);
   },
 
-render() {
+  render() {
     const ctx = this.ctx;
     const width = this.screen.width;
     const height = this.screen.height;
@@ -31,7 +31,7 @@ render() {
     if (this.zoneBanner.timer > 0) this.drawZoneBanner(ctx, width);
   },
 
-visibleBounds(maxW, maxH) {
+  visibleBounds(maxW, maxH) {
     return {
       startX: clamp(Math.floor(this.camera.x / TILE) - 2, 0, maxW),
       endX: clamp(Math.ceil((this.camera.x + this.screen.width) / TILE) + 2, 0, maxW),
@@ -40,13 +40,13 @@ visibleBounds(maxW, maxH) {
     };
   },
 
-drawTitleBackdrop(ctx, width, height) {
+  drawTitleBackdrop(ctx, width, height) {
     ctx.fillStyle = "#8ec6d8"; ctx.fillRect(0, 0, width, height * .44);
     ctx.fillStyle = "#4f8b53";
     for (let i = 0; i < width + 100; i += 90) { ctx.beginPath(); ctx.moveTo(i - 30, height * .47); ctx.lineTo(i + 35, height * .28); ctx.lineTo(i + 100, height * .47); ctx.fill(); }
   },
 
-drawWorld(ctx) {
+  drawWorld(ctx) {
     const bounds = this.visibleBounds(WORLD_W, WORLD_H);
     for (let y = bounds.startY; y < bounds.endY; y += 1) for (let x = bounds.startX; x < bounds.endX; x += 1) this.drawTerrainTile(ctx, x, y);
     this.drawSoil(ctx, bounds);
@@ -61,7 +61,7 @@ drawWorld(ctx) {
     this.drawTarget(ctx);
   },
 
-drawTerrainTile(ctx, x, y) {
+  drawTerrainTile(ctx, x, y) {
     const terrain = terrainAt(x, y);
     const colors = { farm: "#6fa85e", field: "#75a95e", village: "#83ae68", city: "#9ca77b", highland: "#7c9585", meadow: "#75ad65", lake: "#6fa589", mist: "#718d82", snow: "#c5d6da", darkforest: "#294b3b", swamp: "#566e49", dread: "#4b455b", volcano: "#68483e", coast: "#d2bd7b", ruins: "#a88c67", path: "#c5aa73", bridge: "#8a6744", water: "#4e9cbc", lava: "#d55a2c" };
     ctx.fillStyle = colors[terrain] || "#6fa85e"; ctx.fillRect(x * TILE, y * TILE, TILE + 1, TILE + 1);
@@ -73,7 +73,7 @@ drawTerrainTile(ctx, x, y) {
     else if (variant === 0) { ctx.fillStyle = "rgba(255,255,255,.12)"; ctx.fillRect(x * TILE + 7, y * TILE + 8, 3, 3); }
   },
 
-drawSoil(ctx, bounds) {
+  drawSoil(ctx, bounds) {
     for (const [key, soil] of Object.entries(this.state.soil)) {
       const [x, y] = key.split(",").map(Number);
       if (x < bounds.startX || x >= bounds.endX || y < bounds.startY || y >= bounds.endY) continue;
@@ -83,14 +83,14 @@ drawSoil(ctx, bounds) {
     }
   },
 
-drawCrop(ctx, x, y, cropState) {
+  drawCrop(ctx, x, y, cropState) {
     const crop = CROPS[cropState.type]; const ratio = clamp(cropState.growth / crop.days, 0, 1); const cx = x * TILE + TILE / 2; const base = y * TILE + TILE - 5;
     ctx.strokeStyle = crop.colors[1]; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(cx, base); ctx.lineTo(cx, base - 8 - ratio * 10); ctx.stroke();
     ctx.fillStyle = crop.colors[1]; ctx.beginPath(); ctx.ellipse(cx - 4, base - 8 - ratio * 6, 6, 3, -.5, 0, Math.PI * 2); ctx.fill(); ctx.beginPath(); ctx.ellipse(cx + 4, base - 11 - ratio * 7, 6, 3, .5, 0, Math.PI * 2); ctx.fill();
     if (ratio >= 1) { ctx.fillStyle = crop.colors[2]; ctx.beginPath(); ctx.arc(cx, base - 17, 7, 0, Math.PI * 2); ctx.fill(); }
   },
 
-drawPlaced(ctx, bounds) {
+  drawPlaced(ctx, bounds) {
     for (const placed of this.state.placed) {
       if (placed.x < bounds.startX || placed.x > bounds.endX || placed.y < bounds.startY || placed.y > bounds.endY) continue;
       const x = placed.x * TILE, y = placed.y * TILE;
