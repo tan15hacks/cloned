@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Hearthvale icon">
+  <rect width="512" height="512" rx="72" fill="#1e5b43"/>
+  <circle cx="390" cy="105" r="68" fill="#efb94a"/>
+  <path d="M0 302 128 126 256 302Z" fill="#3f8a61"/>
+  <path d="m154 302 184-184 174 184Z" fill="#2e6f57"/>
+  <path d="M0 286h512v226H0Z" fill="#75ad65"/>
+  <path d="m44 372 424 0-74 140H118Z" fill="#7b5d3d"/>
+  <g stroke="#4f3627" stroke-width="8"><path d="M92 402h328M106 438h300M120 474h272"/></g>
+  <path d="M256 378V242" stroke="#245c3a" stroke-width="18" stroke-linecap="round"/>
+  <ellipse cx="222" cy="286" rx="42" ry="22" transform="rotate(25 222 286)" fill="#3f8a61"/>
+  <ellipse cx="289" cy="262" rx="42" ry="22" transform="rotate(-25 289 262)" fill="#3f8a61"/>
+  <circle cx="256" cy="218" r="44" fill="#d95e52"/>
+  <rect x="14" y="14" width="484" height="484" rx="62" fill="none" stroke="#10241d" stroke-width="20"/>
+</svg>
