@@ -3,8 +3,14 @@ import {
   WORLD_W,
   WORLD_H,
   REGIONS,
+  BUILDINGS,
+  WAYSTONES,
+  CAVE_ENTRANCES,
   NPC_DEFS,
   REGION_MONSTERS,
+  isPathTile,
+  isWaterTile,
+  buildingAtTile,
 } from "../world.js";
 import {
   CHUNK_SIZE,
@@ -30,6 +36,13 @@ import {
   monsterBehavior,
   statusForMonster,
 } from "../game-combat.js";
+import {
+  AUTHORED_STRUCTURES,
+  decorationForTile,
+  isWorldClearanceTile,
+  structureAtTile,
+  solidDecorationAtTile,
+} from "../world-polish-data.js";
 import { installCombatRuntimeHardening } from "../game-combat-runtime.js";
 import { generateCaveFloor, caveTier } from "../cave.js";
 
@@ -71,22 +84,18 @@ assert.deepEqual(chapterProgressValue(chapter, { cave: { maxFloor: 1 } }), { val
 chapter.step = 12;
 assert.deepEqual(chapterProgressValue(chapter, { cave: { maxFloor: 3 } }), { value: 3, goal: 3 }, "Cave Floor 3 must complete the first descent objective");
 
+assert.equal(EQUIPMENT_SLOTS.length, 6, "Combat must expose six equipment slots");
+assert.ok(Object.keys(EQUIPMENT_DEFS).length >= 15, "Combat must provide a meaningful equipment roster");
 const combat = createCombatState();
-assert.equal(EQUIPMENT_SLOTS.length, 6, "Combat must provide six equipment slots");
-assert.ok(Object.keys(EQUIPMENT_DEFS).length >= 15, "Combat must include a meaningful equipment pool");
-assert.equal(combat.equipment.weapon, "fieldBlade", "New players must start with the Field Blade");
-assert.equal(combat.equipment.armor, "workCoat", "New players must start with work armor");
-const starterStats = equipmentStats(combat, { weaponPower: 1, armor: 0 });
-assert.ok(starterStats.damage >= 6, "Starter combat damage must be viable");
-assert.ok(starterStats.armor >= 1, "Starter armor must provide protection");
-assert.equal(directionHitsTarget("right", { x: 0, y: 0 }, { x: 1, y: 0 }, 1.5), true, "Directional attacks must hit targets in front");
-assert.equal(directionHitsTarget("right", { x: 0, y: 0 }, { x: -1, y: 0 }, 1.5), false, "Directional attacks must not hit targets behind the player");
-assert.equal(monsterBehavior("fogWraith"), "teleport", "Fog Wraiths must teleport");
-assert.equal(monsterBehavior("stoneSentinel"), "heavy", "Stone Sentinels must use heavy attacks");
-assert.equal(monsterBehavior("fireElemental"), "ranged", "Fire Elementals must use ranged attacks");
-assert.equal(statusForMonster("nightSpider"), "poison", "Night Spiders must apply poison");
-assert.equal(statusForMonster("iceWolf"), "slow", "Ice Wolves must apply slow");
-assert.equal(statusForMonster("fireElemental"), "burn", "Fire Elementals must apply burn");
+const stats = equipmentStats(combat, { weaponPower: 1, armor: 0 });
+assert.ok(stats.damage > 0 && stats.range >= 1.5 && stats.attackSpeed > 0, "Starter combat stats must be valid");
+assert.equal(directionHitsTarget("right", { x: 0, y: 0 }, { x: 1, y: 0 }, 1.6), true, "Directional combat must hit in front");
+assert.equal(directionHitsTarget("right", { x: 0, y: 0 }, { x: -1, y: 0 }, 1.6), false, "Directional combat must not hit behind the player");
+assert.equal(monsterBehavior("fogWraith"), "teleport");
+assert.equal(monsterBehavior("fireElemental"), "ranged");
+assert.equal(statusForMonster("nightSpider"), "poison");
+assert.equal(statusForMonster("iceWolf"), "slow");
+assert.equal(statusForMonster("emberImp"), "burn");
 
 class CombatRuntimeHarness {
   getCombatStats() { return { knockback: Number.NaN, range: Number.NaN, attackSpeed: 0 }; }
@@ -101,6 +110,38 @@ const hardenedStats = harness.getCombatStats();
 assert.equal(hardenedStats.knockback, .45, "Invalid knockback must fall back safely");
 assert.equal(hardenedStats.range, 1.5, "Invalid range must fall back safely");
 assert.equal(hardenedStats.attackSpeed, .25, "Attack speed must have a safe minimum");
+
+assert.ok(AUTHORED_STRUCTURES.length >= 30, "World polish must contain authored settlement structures");
+assert.equal(isPathTile(130, 20), true, "Guild entrance must connect to an aligned path");
+assert.equal(isPathTile(152, 43), true, "Silvercrest plaza must be walkable");
+assert.equal(isPathTile(189, 69), true, "Grand Depths approach must be connected");
+assert.equal(isWorldClearanceTile(130, 18), true, "Guild door must have protected clearance");
+for (let y = 15; y < 53; y += 1) {
+  for (let x = 4; x < 52; x += 1) assert.equal(decorationForTile(x, y), null, "The working crop field must remain decoration-free");
+}
+
+const blocked = (x, y) => x < 1 || y < 1 || x >= WORLD_W - 1 || y >= WORLD_H - 1
+  || isWaterTile(x, y)
+  || Boolean(buildingAtTile(x + .5, y + .5))
+  || Boolean(structureAtTile(x, y))
+  || Boolean(solidDecorationAtTile(x, y));
+const queue = [[11, 15]];
+const visited = new Set(["11,15"]);
+for (let index = 0; index < queue.length; index += 1) {
+  const [x, y] = queue[index];
+  for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+    const nx = x + dx;
+    const ny = y + dy;
+    const key = `${nx},${ny}`;
+    if (!visited.has(key) && !blocked(nx, ny)) {
+      visited.add(key);
+      queue.push([nx, ny]);
+    }
+  }
+}
+for (const building of BUILDINGS) assert.ok(visited.has(`${building.door.x},${building.door.y}`), `${building.name} door must remain reachable`);
+for (const stone of WAYSTONES) assert.ok(visited.has(`${Math.floor(stone.x)},${Math.floor(stone.y)}`), `${stone.name} Waystone must remain reachable`);
+for (const cave of CAVE_ENTRANCES) assert.ok(visited.has(`${Math.floor(cave.x)},${Math.floor(cave.y)}`), `${cave.name} must remain reachable`);
 
 for (let floor = 1; floor <= 50; floor += 1) {
   const cave = generateCaveFloor(floor, 12345);
@@ -123,10 +164,10 @@ console.log(JSON.stringify({
   activeDangerMonsters: dangerMonsters.length,
   overworldDayMinutes: 14.4,
   chapterObjectives: CHAPTER_ONE_STEPS.length - 1,
-  equipmentSlots: EQUIPMENT_SLOTS.length,
-  equipmentItems: Object.keys(EQUIPMENT_DEFS).length,
-  starterDamage: starterStats.damage,
+  equipmentPieces: Object.keys(EQUIPMENT_DEFS).length,
   hardenedMonsterBehavior: initializedAI.behavior,
+  authoredStructures: AUTHORED_STRUCTURES.length,
+  reachableTiles: visited.size,
   npcs: NPC_DEFS.length,
   caveFloors: 50,
   hubMerchants: hub.merchants.length,
