@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+  <meta name="theme-color" content="#1e5b43" />
+  <meta name="description" content="Hearthvale is an original offline farming and village-life adventure for mobile, tablet, and desktop." />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="assets/icon.svg" />
+  <link rel="apple-touch-icon" href="assets/icon.svg" />
+  <link rel="stylesheet" href="styles.css" />
+  <title>Hearthvale</title>
+</head>
+<body>
+  <div id="app">
+    <canvas id="game" aria-label="Hearthvale game canvas"></canvas>
+
+    <header id="hud" class="hidden" aria-live="polite">
+      <section class="hud-card hud-left">
+        <div class="stat-line"><span>Day</span><strong id="dayLabel">1</strong></div>
+        <div class="stat-line"><span>Time</span><strong id="timeLabel">6:00 AM</strong></div>
+        <div class="stat-line"><span>Weather</span><strong id="weatherLabel">Clear</strong></div>
+      </section>
+      <section class="hud-card hud-right">
+        <div class="meter"><span>Energy</span><div class="meter-track"><i id="energyFill"></i></div><b id="energyText">100</b></div>
+        <div class="meter"><span>Health</span><div class="meter-track health"><i id="healthFill"></i></div><b id="healthText">100</b></div>
+        <div class="currency"><span>◈</span><strong id="coinLabel">250</strong></div>
+      </section>
+    </header>
+
+    <div id="toolbar" class="hidden" role="toolbar" aria-label="Tools"></div>
+    <div id="contextHint" class="hidden"></div>
+    <div id="toast" class="hidden" role="status"></div>
+
+    <section id="touchControls" class="hidden" aria-label="Touch controls">
+      <div id="joystick" class="joystick"><div id="stick"></div></div>
+      <div class="touch-actions">
+        <button id="actionButton" class="touch-button action" aria-label="Use selected tool">A</button>
+        <button id="interactButton" class="touch-button interact" aria-label="Interact">B</button>
+      </div>
+    </section>
+
+    <section id="titleScreen" class="screen active">
+      <div class="title-panel">
+        <p class="eyebrow">AN ORIGINAL FARMING &amp; VILLAGE ADVENTURE</p>
+        <h1>HEARTHVALE</h1>
+        <p class="subtitle">Restore an old valley, grow resonant crops, befriend its people, and awaken the Hearthlight.</p>
+        <div class="title-actions">
+          <button id="continueButton" class="primary">Continue</button>
+          <button id="newGameButton">New Valley</button>
+          <button id="howToButton">How to Play</button>
+          <button id="settingsButton">Settings</button>
+        </div>
+        <p class="version">v1.0.0 · Offline-ready · Keyboard, mouse, and touch</p>
+      </div>
+    </section>
+
+    <section id="modal" class="modal hidden" aria-modal="true" role="dialog">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h2 id="modalTitle">Menu</h2>
+          <button id="modalClose" class="icon-button" aria-label="Close">×</button>
+        </div>
+        <div id="modalBody" class="modal-body"></div>
+        <div id="modalActions" class="modal-actions"></div>
+      </div>
+    </section>
+
+    <section id="dialogue" class="dialogue hidden" aria-live="polite">
+      <div class="portrait" id="dialoguePortrait">🙂</div>
+      <div class="dialogue-copy">
+        <strong id="dialogueName">Villager</strong>
+        <p id="dialogueText"></p>
+        <div id="dialogueChoices" class="dialogue-choices"></div>
+      </div>
+    </section>
+
+    <button id="menuButton" class="menu-button hidden" aria-label="Open menu">☰</button>
+  </div>
+  <script type="module" src="game.js"></script>
+</body>
+</html>
