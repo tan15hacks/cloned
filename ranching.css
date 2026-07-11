@@ -1,0 +1,30 @@
+.ranch-summary { display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:10px; margin:12px 0; }
+.ranch-summary article { display:flex; flex-direction:column; align-items:center; gap:3px; padding:11px; border:2px solid rgba(239,185,74,.36); border-radius:13px; background:rgba(255,248,221,.06); }
+.ranch-summary article > span { font-size:27px; }
+.ranch-summary article > strong { font-size:18px; }
+.ranch-summary small { opacity:.78; text-align:center; }
+.ranch-project { padding:10px 12px; border:2px solid #efb94a; border-radius:12px; background:rgba(239,185,74,.12); }
+.ranch-warning { padding:10px 12px; border:2px solid #d95e52; border-radius:12px; background:rgba(217,94,82,.12); }
+.animal-card { display:grid; grid-template-columns:54px 1fr auto; gap:12px; align-items:center; padding:12px; border-bottom:1px solid rgba(255,255,255,.13); }
+.animal-card.sick { border-left:7px solid #d95e52; }
+.animal-icon { font-size:39px; text-align:center; }
+.animal-card h3,.animal-card p { margin:0 0 6px; }
+.animal-bars { display:grid; gap:5px; margin-top:8px; }
+.animal-bars label { display:grid; grid-template-columns:70px 1fr; align-items:center; gap:6px; font-size:10px; }
+.animal-bars i { display:block; height:7px; overflow:hidden; border-radius:999px; background:rgba(16,36,29,.55); }
+.animal-bars b { display:block; height:100%; background:#efb94a; }
+.animal-profile { display:flex; gap:16px; align-items:center; padding:14px; border:2px solid rgba(239,185,74,.35); border-radius:14px; }
+.animal-profile > span { font-size:58px; }
+.animal-profile h3,.animal-profile p { margin:0 0 7px; }
+.ranch-building-grid,.machine-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:12px; }
+.ranch-building,.machine-card { padding:13px; border:2px solid rgba(255,255,255,.15); border-radius:14px; background:rgba(255,248,221,.055); }
+.ranch-building h3,.ranch-building p,.machine-card h3,.machine-card p { margin:0 0 9px; }
+.ranch-building button,.machine-card button { margin:4px 5px 4px 0; }
+.machine-slot { display:flex; flex-wrap:wrap; gap:6px; align-items:center; padding:9px; margin:8px 0; border-radius:10px; background:rgba(16,36,29,.28); }
+.machine-slot strong { width:100%; }
+.machine-slot.ready { border:2px solid #efb94a; background:rgba(239,185,74,.12); }
+@media (max-width:620px) {
+  .animal-card { grid-template-columns:45px 1fr; }
+  .animal-card > button { grid-column:1/-1; }
+  .animal-profile > span { font-size:46px; }
+}
