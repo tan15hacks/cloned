@@ -36,6 +36,7 @@ import { installRanchingRuntime } from "./game-ranch-runtime.js";
 import { installRanchingRenderRuntime } from "./game-ranch-render-runtime.js";
 import { installExpandedInteriors } from "./game-expanded-interiors.js";
 import { installExpandedInteriorRender } from "./game-expanded-interiors-render.js";
+import { installExpandedInteriorsRuntime } from "./game-expanded-interiors-runtime.js";
 
 class HearthvaleGame {
   constructor() {
@@ -117,4 +118,5 @@ installRanchingRuntime(HearthvaleGame);
 installRanchingRenderRuntime(HearthvaleGame);
 installExpandedInteriors(HearthvaleGame);
 installExpandedInteriorRender(HearthvaleGame);
+installExpandedInteriorsRuntime(HearthvaleGame);
 window.__hearthvale = new HearthvaleGame();
