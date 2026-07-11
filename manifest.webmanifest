@@ -1,7 +1,7 @@
 {
-  "name": "Hearthvale",
+  "name": "Hearthvale: Continental Adventure",
   "short_name": "Hearthvale",
-  "description": "An original offline farming and village-life adventure.",
+  "description": "An original offline farming, exploration, guild, monster-hunting, and 50-floor cave adventure.",
   "start_url": "./",
   "display": "standalone",
   "orientation": "any",
