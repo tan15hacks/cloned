@@ -1,8 +1,10 @@
 import assert from "node:assert/strict";
 import { ITEMS } from "../game-shared.js";
 import { EQUIPMENT_DEFS } from "../game-combat.js";
+import { installChapterTwoRuntime } from "../game-chapter-two-runtime.js";
 import {
   CHAPTER_TWO_STEPS,
+  CHAPTER_TWO_TARGETS,
   SURFACE_RUNES,
   STABILIZER_COST,
   STORY_DUNGEON_W,
@@ -63,6 +65,35 @@ withRunes.dungeon.finalBossDefeated = true;
 const completedDungeon = generateStoryDungeon(withRunes.dungeon);
 assert.equal(completedDungeon.monsters.some((monster) => monster.storyRole === "cartographer"), false, "The final boss must remain defeated after reload");
 
+class SaveRuntimeHarness {
+  migrateState(data) { return structuredClone(data); }
+  enterGame() { this.entered = true; }
+}
+installChapterTwoRuntime(SaveRuntimeHarness);
+const runtime = new SaveRuntimeHarness();
+const resumed = runtime.migrateState({
+  mode: "storyDungeon",
+  player: { x: 46.5, y: 16.5 },
+  chapterTwo: { started: true, step: 15, dungeon: { switches: ["archive-moon"], defeatedIds: ["archive-rift-slime-1"] } },
+  journal: [],
+});
+assert.equal(resumed.mode, "world", "Story-dungeon saves must resume safely in the overworld");
+assert.equal(resumed.player.x, CHAPTER_TWO_TARGETS.archive.x);
+assert.equal(resumed.chapterTwo.dungeon.switches[0], "archive-moon", "Archive switch progress must survive safe resume");
+assert.equal(resumed.chapterTwo.dungeon.defeatedIds[0], "archive-rift-slime-1", "Dungeon defeat progress must survive safe resume");
+
+runtime.state = {
+  mode: "storyDungeon",
+  player: { x: 47.5, y: 20.5 },
+  chapterTwo: createChapterTwoState({ started: true, step: 16, dungeon: { finalBossDefeated: true } }),
+  journal: [],
+};
+runtime.enterGame();
+assert.equal(runtime.entered, true);
+assert.equal(runtime.state.mode, "world");
+assert.equal(runtime.currentStoryDungeon, null);
+assert.equal(runtime.state.chapterTwo.dungeon.finalBossDefeated, true, "Final boss completion must persist through safe resume");
+
 console.log(JSON.stringify({
   ok: true,
   chapterObjectives: CHAPTER_TWO_STEPS.length - 1,
@@ -70,4 +101,5 @@ console.log(JSON.stringify({
   archiveSwitches: dungeon.switches.length,
   archiveGates: dungeon.gates.length,
   storyRooms: 5,
+  safeResume: true,
 }));
