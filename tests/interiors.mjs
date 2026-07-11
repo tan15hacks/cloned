@@ -44,7 +44,7 @@ for (const map of Object.values(EXPANDED_INTERIOR_MAPS)) {
   }
 }
 
-const state = { minutes: 600, weather: "Clear" };
+const state = { minutes: 420, weather: "Clear" };
 assert.equal(activeInteriorResidents(INTERIOR_MAPS.seedshop, state)[0].id, "mira");
 assert.equal(interiorAssignmentForNpc("mira", state).interiorId, "seedshop");
 assert.equal(interiorAssignmentForNpc("bram", state).interiorId, "blacksmith");
