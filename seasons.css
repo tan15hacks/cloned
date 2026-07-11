@@ -1,0 +1,27 @@
+#objectiveTracker.seasonal { border-color: rgba(239,185,74,.72); }
+.season-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:12px; margin-top:14px; }
+.season-card { border:3px solid color-mix(in srgb,var(--season) 62%,#10241d); border-left-width:10px; border-radius:14px; padding:12px; background:rgba(255,248,221,.07); }
+.season-card.current { box-shadow:0 0 0 2px var(--season),0 10px 24px rgba(0,0,0,.22); }
+.season-card h3,.season-card p { margin:0 0 7px; }
+.festival-today { padding:12px; border:2px solid #efb94a; border-radius:12px; background:rgba(239,185,74,.12); font-weight:700; }
+.festival-record,.festival-hero { display:flex; align-items:center; gap:13px; padding:12px; border-bottom:1px solid rgba(255,255,255,.12); }
+.festival-record > span,.festival-hero > span { font-size:38px; }
+.festival-record p,.festival-hero p { margin:4px 0 0; }
+.festival-status { display:flex; justify-content:space-between; padding:10px 12px; border-radius:10px; background:rgba(16,36,29,.5); margin:10px 0; }
+.festival-tile-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:9px; }
+.festival-tile { min-height:58px; font-size:28px; }
+.festival-tile.correct { outline:3px solid #8fd279; }
+.festival-tile.wrong { animation:festivalShake .2s linear 2; outline:3px solid #db665e; }
+.festival-race { position:relative; height:34px; margin:24px 8px; border:3px solid #10241d; border-radius:18px; background:#79b7cd; }
+.festival-race i { display:block; height:100%; border-radius:14px; background:linear-gradient(90deg,#efb94a,#fff1a4); }
+.festival-race span { position:absolute; top:-20px; transform:translateX(-50%); font-size:32px; }
+.produce-entries,.festival-shop { display:grid; gap:10px; }
+.produce-entries button { display:flex; justify-content:space-between; align-items:center; gap:8px; }
+.produce-entries small { opacity:.8; }
+.lantern-display { min-height:72px; display:grid; place-items:center; font-size:42px; margin:12px 0; border:3px solid #7660b2; border-radius:14px; background:rgba(41,31,69,.55); }
+.lantern-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
+.lantern-grid button { min-height:64px; font-size:30px; }
+.festival-result { text-align:center; padding:14px; }
+.festival-result span { font-size:58px; }
+@keyframes festivalShake { 25%{transform:translateX(-3px)}75%{transform:translateX(3px)} }
+@media (max-width:640px){ .festival-tile-grid{grid-template-columns:repeat(3,1fr)} .season-grid{grid-template-columns:1fr} }
