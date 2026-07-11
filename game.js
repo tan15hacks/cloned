@@ -27,6 +27,7 @@ import { installChapterTwo } from "./game-chapter-two.js";
 import { installStoryDungeon } from "./game-story-dungeon.js";
 import { installChapterTwoRuntime } from "./game-chapter-two-runtime.js";
 import { installSeasonsAndFestivals } from "./game-seasons.js";
+import { installSeasonsRuntime } from "./game-seasons-runtime.js";
 
 class HearthvaleGame {
   constructor() {
@@ -99,4 +100,5 @@ installChapterTwo(HearthvaleGame);
 installStoryDungeon(HearthvaleGame);
 installChapterTwoRuntime(HearthvaleGame);
 installSeasonsAndFestivals(HearthvaleGame);
+installSeasonsRuntime(HearthvaleGame);
 window.__hearthvale = new HearthvaleGame();
