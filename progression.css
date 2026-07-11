@@ -1,0 +1,85 @@
+.adventure-level {
+  padding: 12px;
+  margin-bottom: 12px;
+  background: #d9bd79;
+  border: 3px solid var(--ink);
+  border-radius: 12px;
+}
+
+.skill-list,
+.progression-upgrades {
+  display: grid;
+  gap: 10px;
+  margin: 12px 0 16px;
+}
+
+.skill-card,
+.progression-upgrade {
+  display: grid;
+  grid-template-columns: 42px 1fr;
+  gap: 10px;
+  align-items: center;
+  padding: 10px;
+  background: #ead39e;
+  border: 3px solid var(--ink);
+  border-radius: 12px;
+}
+
+.skill-card > span {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  font-size: 1.55rem;
+  background: rgba(255,255,255,.3);
+  border: 2px solid var(--ink);
+  border-radius: 9px;
+}
+
+.skill-card p,
+.progression-upgrade p {
+  margin: 4px 0;
+  font-size: .82rem;
+}
+
+.progression-upgrade {
+  grid-template-columns: 1fr auto;
+}
+
+.progression-upgrade p {
+  grid-column: 1 / -1;
+}
+
+.progression-upgrade button {
+  min-height: 40px;
+  padding: 8px 12px;
+  color: var(--cream);
+  background: var(--leaf);
+  border: 3px solid var(--ink);
+  border-radius: 9px;
+  box-shadow: 0 3px 0 var(--ink);
+  font-weight: 900;
+}
+
+.perk-list {
+  display: grid;
+  gap: 7px;
+  padding-left: 20px;
+}
+
+.perk-list .locked {
+  opacity: .5;
+}
+
+.perk-list .unlocked {
+  font-weight: 700;
+}
+
+@media (max-width: 620px) {
+  .progression-upgrade {
+    grid-template-columns: 1fr;
+  }
+  .progression-upgrade button {
+    width: 100%;
+  }
+}
