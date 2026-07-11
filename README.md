@@ -1,101 +1,67 @@
 # Hearthvale
 
-Hearthvale is an original, responsive farming, exploration, guild, combat, and cave-adventure game. It uses its own characters, story, maps, dialogue, systems, and geometric cartoon rendering rather than copying Stardew Valley assets or content.
+Hearthvale is an original, responsive farming, exploration, guild, combat, equipment, and cave-adventure game. It uses its own characters, story, map, dialogue, systems, and geometric cartoon rendering rather than copying Stardew Valley assets or content.
 
-## Version 3.3 — Combat Overhaul
+## Version 3.4 — World and Map Polish
 
-Combat is now directional, readable, and equipment-driven instead of damaging every nearby enemy at once.
+The 256 × 224 overworld remains **57,344 tiles**, but its settlements, roads, collisions, cave entrances, regional scenery, and underground presentation have been rebuilt for clearer navigation and a more intentional world layout.
 
-### Player combat
+### Aligned settlements and travel routes
 
-- Sword attacks follow the player's facing direction and use a visible attack arc.
-- Weapons have damage, attack speed, range, critical-hit chance, knockback, and optional elemental effects.
-- Hits produce damage numbers, critical-hit feedback, knockback, enemy flashes, vibration, and short death animations.
-- The player receives invulnerability frames after direct damage.
-- Poison, burn, and slow effects have visible timers and can be resisted or cured with equipment and consumables.
-- Enemy projectiles, attack warnings, boss health bars, and status indicators are rendered on the game canvas.
+- Farmstead roads now connect the farmhouse, barn, crop field, pond route, and Farm Waystone.
+- Hearthvale Village has a central green, aligned door aprons, gardens, benches, a well, lamps, and a readable route toward Moonlake.
+- Silvercrest now has visible walls and open gates, a guild courtyard, market stalls, a central fountain plaza, wider boulevards, residential houses, district roads, banners, and connected service-building entrances.
+- Every service door, Waystone, cave entrance, quest interaction point, and NPC home receives protected clearance so resources and monsters do not spawn over important locations.
+- The five cave entrances now have wider approach zones and visible stone steps.
 
-### Monster behaviors
+### Regional identity and animation
 
-Monster families now behave differently:
+Every visible chunk can add deterministic region-specific decoration without loading the full continent. Examples include flowers and shrubs in Greenfield, reeds and bubbles in Murkfen, twisted roots and glowing mushrooms in the Lightless Wood, standing stones and drifting fog in Veilmoor, snowdrifts and pines in Frostpeak, bones and Void Crystals in Dreadwild, ash vents and embers in Cinderwake, shells and driftwood on the Suncoast, and broken pillars in Suncleft Ruins.
 
-- Slimes leap.
-- Bats, wolves, hounds, moths, gulls, and similar hunters circle and dash.
-- Mages, wisps, spirits, imps, elementals, and wraiths fire projectiles.
-- Golems, sentinels, brutes, knights, and bosses use slow telegraphed heavy attacks.
-- Fog and prism wraiths teleport.
-- Dark-forest monsters remain partially hidden until approached.
-- Swamp and venomous monsters inflict poison, frost monsters inflict slow, and volcanic monsters inflict burn.
+Water ripples, grass sways, fountains move, city banners flutter, snow falls, mist drifts, swamp bubbles rise, volcanic embers float, and cave accents flicker. The visuals retain the cozy flat-shaded 2D low-poly cartoon style.
 
-### Loot and equipment
+### Cave readability
 
-Defeated monsters now leave physical loot orbs that move toward the player when approached. Coins, Guild XP, materials, and rare equipment are collected from the ground rather than awarded invisibly.
+- Entry rooms, stairs, merchant counters, and exits are protected from nearby ore and monster spawns.
+- Floor tiles, rock walls, ore nodes, safe pads, stairs, torches, crystals, fungal growth, ice cracks, lava cracks, and the Floor 50 arena have clearer silhouettes.
+- Combat effects, Chapter 1 markers, loot drops, health bars, and boss UI continue to render over the polished cave layer.
 
-There are six equipment slots:
+### Connectivity and mobile performance
 
-- Weapon
-- Armor
-- Helmet
-- Boots
-- Ring
-- Charm
-
-The initial equipment pool contains 15 items across common, uncommon, rare, epic, and legendary tiers. Equipment can be purchased from the blacksmith and Hunter's Provisioner, unlocked by Guild Rank, or found as rare regional and cave drops. The Adventure Menu includes a complete equipment screen with calculated combat statistics.
+The world still uses deterministic **16 × 16 tile chunks**. Decorations are generated only for visible tiles, while resources and monsters remain limited to the current screen and preload margin. Automated validation confirms that every service-building door, Waystone, and cave entrance remains reachable from the Farmstead after the collision changes.
 
 ## Guided Chapter 1
 
-The opening chapter introduces farming, Hearthvale Village, Silvercrest City, the Adventurers' Guild, Greenfield combat, and the first three Grand Depths floors.
+Chapter 1 introduces farming, Hearthvale Village, Silvercrest City, the Adventurers’ Guild, Greenfield combat, and Cave Floor 3 through a persistent objective tracker, progress bars, world markers, cave markers, directional arrows, dialogue, rewards, and a completion screen.
 
-Chapter 1 objectives:
+## Combat and equipment
 
-1. Meet Mira and receive starter seeds.
-2. Till three farm tiles.
-3. Water the prepared soil.
-4. Plant three crops.
-5. Reach Hearthvale Village.
-6. Awaken the village Waystone.
-7. Travel to Silvercrest City.
-8. Register with the Adventurers' Guild.
-9. Accept the Greenfield Patrol contract.
-10. Defeat three Greenfield monsters.
-11. Claim the guild reward and weapon upgrade.
-12. Enter the Grand Depths.
-13. Reach Cave Floor 3.
-14. Return to the farmhouse and complete the chapter.
-
-The chapter includes a persistent objective HUD, progress bars, animated world and cave markers, off-screen directional arrows with distance, NPC-specific dialogue, automatic progression, journal entries, rewards, an achievement, and a completion screen. Existing browser saves receive Chapter 1 and combat state automatically.
-
-## Streamed continent and slower days
-
-The overworld remains **256 × 224 tiles**, or **57,344 total tiles**, but the game does not create the entire continent's resource and monster population at once.
-
-The runtime uses deterministic **16 × 16 tile chunks**:
-
-- Only chunks covering the player's current screen and a small preload margin are generated.
-- Chunks outside the local area are released from the active resource and monster arrays.
-- Harvested resources, defeated monsters, partially damaged objects, equipment, loot drops, and status progression remain compatible with local saves.
-- Existing v1, v2, and v3 browser saves are migrated automatically.
-- The desktop minimap is a local-area radar instead of a full-continent renderer.
-
-The in-game clock uses:
-
-- Overworld: **1.25 game minutes per real second**
-- Cave: **0.75 game minutes per real second**
-- A normal 6:00 AM-to-midnight overworld day lasts approximately **14.4 real minutes**
+Combat includes directional sword arcs, attack cooldowns, critical hits, knockback, damage numbers, invulnerability frames, telegraphed enemy attacks, projectiles, status effects, physical loot drops, boss bars, and six equipment slots: weapon, armor, helmet, boots, ring, and charm.
 
 ## Regions
 
-The continent contains 14 connected regions: Hearthvale Farmstead, Hearthvale Village, Silvercrest City, Northwatch Foothills, Greenfield Wilds, Moonlake Basin, Veilmoor, Frostpeak Mountains, The Lightless Wood, Murkfen Swamp, Dreadwild Expanse, Cinderwake Caldera, Suncoast Reach, and Suncleft Ruins.
+The continent contains 14 connected regions:
+
+- Hearthvale Farmstead
+- Hearthvale Village
+- Silvercrest City
+- Northwatch Foothills
+- Greenfield Wilds
+- Moonlake Basin
+- Veilmoor
+- Frostpeak Mountains
+- The Lightless Wood
+- Murkfen Swamp
+- Dreadwild Expanse
+- Cinderwake Caldera
+- Suncoast Reach
+- Suncleft Ruins
 
 Every hostile surface region has three region-exclusive monster species.
 
-## Silvercrest City
-
-Silvercrest includes the Adventurers' Guild, Grand Market, Ironhart Smithy, Blue Vial Apothecary, Moon & Rune arcane shop, Silvercrest Exchange, Golden Griffin inn, City Hall, Hunter's Provisioner, residents, friendship, quests, equipment shops, and guild ranks from F through S.
-
 ## Grand Depths — 50 Floors
 
-Five surface entrances connect to the Grand Depths. Floor 1 is an expedition hub containing a merchant, trader, healer, and milestone floor gate.
+Five surface entrances connect to the Grand Depths. Floor 1 is an expedition hub with a merchant, trader, healer, and milestone floor gate.
 
 - Floors 1–9 — Copper Galleries
 - Floors 10–19 — Fungal Grotto
@@ -106,6 +72,13 @@ Five surface entrances connect to the Grand Depths. Floor 1 is an expedition hub
 
 Each non-hub floor independently has a deterministic 1% chest chance for the current expedition.
 
+## Time and streaming
+
+- Overworld clock: **1.25 game minutes per real second**
+- Cave clock: **0.75 game minutes per real second**
+- A normal 6:00 AM-to-midnight overworld day lasts approximately **14.4 real minutes**
+- Only nearby 16 × 16 chunks are active at runtime
+
 ## Run locally
 
 ```bash
@@ -114,7 +87,7 @@ npm run start
 
 Open `http://localhost:4173`.
 
-Validate all JavaScript modules and smoke tests:
+Validate JavaScript modules and smoke tests:
 
 ```bash
 npm run check
@@ -123,8 +96,8 @@ node tests/smoke.mjs
 
 ## Controls
 
-- Desktop: WASD/arrows to move, E/Enter to interact, Space/F to use tools or attack, 1–8 to select tools, Q to cycle seeds, and M/Escape for the menu.
-- Android/tablet: virtual movement stick, A tool/attack button, B interaction button, and tappable toolbar/menu controls.
+- Desktop: WASD/arrows to move, E/Enter to interact, Space/F to use the selected tool, 1–8 to select tools, Q to cycle seeds, and M/Escape for the menu.
+- Android/tablet: virtual movement stick, A tool button, B interaction button, and tappable toolbar/menu controls.
 
 ## License
 
