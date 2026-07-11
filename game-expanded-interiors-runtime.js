@@ -1,5 +1,5 @@
 import { BUILDINGS, WORLD_W, WORLD_H, clamp } from "./game-shared.js";
-import { INTERIOR_MAPS } from "./living-world-data.js";
+import { INTERIOR_MAPS, shopIsOpen } from "./living-world-data.js";
 import { BUILDING_INTERIOR_MAP, registerExpandedInteriors } from "./expanded-interiors-data.js";
 
 registerExpandedInteriors();
@@ -10,6 +10,17 @@ const INTERIOR_TO_BUILDING = {
   ...Object.fromEntries(Object.entries(BUILDING_INTERIOR_MAP).map(([buildingId, interiorId]) => [interiorId, buildingId])),
 };
 
+const TIMED_SERVICE_INTERACTIONS = new Set([
+  "seedCounter",
+  "villageInnCounter", "villageKitchen",
+  "smithCounter", "smithAnvil",
+  "apothecaryCounter", "apothecaryCauldron",
+  "cityInnCounter", "cityInnBed",
+  "marketCounter", "produceStall",
+  "observatoryDesk", "observatoryTelescope",
+  "cityHallDesk",
+]);
+
 function finitePoint(value) {
   if (!value || !Number.isFinite(Number(value.x)) || !Number.isFinite(Number(value.y))) return null;
   const x = Number(value.x);
@@ -18,11 +29,15 @@ function finitePoint(value) {
   return { x, y };
 }
 
+function buildingForInterior(interiorId) {
+  const buildingId = INTERIOR_TO_BUILDING[interiorId];
+  return BUILDINGS.find((entry) => entry.id === buildingId) || null;
+}
+
 function buildingReturnPoint(interiorId) {
   const mapPoint = finitePoint(INTERIOR_MAPS[interiorId]?.exit?.world);
   if (mapPoint) return mapPoint;
-  const buildingId = INTERIOR_TO_BUILDING[interiorId];
-  const building = BUILDINGS.find((entry) => entry.id === buildingId);
+  const building = buildingForInterior(interiorId);
   if (building) return { x: building.door.x + .5, y: building.door.y + 1.5 };
   return { x: 11.5, y: 15.5 };
 }
@@ -71,6 +86,7 @@ export function installExpandedInteriorsRuntime(GameClass) {
   const originalMigrateState = proto.migrateState;
   const originalEnterGame = proto.enterGame;
   const originalLeaveInterior = proto.leaveInterior;
+  const originalHandleInteraction = proto.handleExpandedInteriorInteraction;
 
   proto.migrateState = function migrateStateExpandedInteriorRuntime(data) {
     const wasInterior = data?.mode === "interior";
@@ -100,5 +116,17 @@ export function installExpandedInteriorsRuntime(GameClass) {
     if (this.state?.living) this.state.living.worldReturn = null;
     this.refreshInteriorNpcAssignments?.();
     return result;
+  };
+
+  if (originalHandleInteraction) proto.handleExpandedInteriorInteraction = function handleExpandedInteriorInteractionRuntime(interaction, map) {
+    if (TIMED_SERVICE_INTERACTIONS.has(interaction?.id)) {
+      const interiorId = map?.id || this.state?.living?.interiorId;
+      const building = buildingForInterior(interiorId);
+      if (building?.service && !shopIsOpen(building.service, this.state.minutes)) {
+        this.refreshInteriorNpcAssignments?.();
+        return this.toast(`${building.name} has closed for the day. Lore displays and the exit remain available.`);
+      }
+    }
+    return originalHandleInteraction.call(this, interaction, map);
   };
 }
