@@ -12,6 +12,7 @@ import { game_render_2 } from "./game-render-2.js";
 import { game_render_3 } from "./game-render-3.js";
 import { game_ui } from "./game-ui.js";
 import { installPerformanceStreaming } from "./game-performance.js";
+import { installWorldPolish } from "./game-world-polish.js";
 import { installChapterOne } from "./chapter-one.js";
 import { installCombatOverhaul } from "./game-combat.js";
 import { installCombatRuntimeHardening } from "./game-combat-runtime.js";
@@ -68,6 +69,7 @@ Object.assign(
 );
 
 installPerformanceStreaming(HearthvaleGame);
+installWorldPolish(HearthvaleGame);
 installChapterOne(HearthvaleGame);
 installCombatOverhaul(HearthvaleGame);
 installCombatRuntimeHardening(HearthvaleGame);
