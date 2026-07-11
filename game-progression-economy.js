@@ -70,12 +70,14 @@ export function installProgressionEconomy(GameClass) {
       if (count <= 0) continue;
       soldItems[id] = count;
       const quality = this.state.progression.qualityInventory[id] || {};
-      const tracked = QUALITY_TIERS.reduce((sum, tier) => sum + (quality[tier.id] || 0), 0);
+      const tracked = QUALITY_TIERS.reduce((sum, tier) => sum + Math.max(0, quality[tier.id] || 0), 0);
       const legacyNormal = Math.max(0, count - tracked);
+      let remainingCount = count - legacyNormal;
       let itemValue = legacyNormal * (ITEMS[id]?.value || 1);
       soldQuality[id] = { normal: legacyNormal, silver: 0, gold: 0, iridium: 0 };
       for (const tier of QUALITY_TIERS) {
-        const amount = Math.min(count, quality[tier.id] || 0);
+        const amount = Math.min(remainingCount, Math.max(0, quality[tier.id] || 0));
+        remainingCount -= amount;
         soldQuality[id][tier.id] += amount;
         itemValue += amount * (ITEMS[id]?.value || 1) * qualityMultiplier(tier.id);
       }
