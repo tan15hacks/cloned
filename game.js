@@ -26,6 +26,7 @@ import { installProgressionEconomy } from "./game-progression-economy.js";
 import { installChapterTwo } from "./game-chapter-two.js";
 import { installStoryDungeon } from "./game-story-dungeon.js";
 import { installChapterTwoRuntime } from "./game-chapter-two-runtime.js";
+import { installSeasonsAndFestivals } from "./game-seasons.js";
 
 class HearthvaleGame {
   constructor() {
@@ -41,6 +42,8 @@ class HearthvaleGame {
     this.modalOpen = false;
     this.dialogueOpen = false;
     this.fishingTimer = null;
+    this.festivalTimer = null;
+    this.festivalSequenceToken = 0;
     this.toastTimer = null;
     this.audio = null;
     this.state = null;
@@ -95,4 +98,5 @@ installProgressionEconomy(HearthvaleGame);
 installChapterTwo(HearthvaleGame);
 installStoryDungeon(HearthvaleGame);
 installChapterTwoRuntime(HearthvaleGame);
+installSeasonsAndFestivals(HearthvaleGame);
 window.__hearthvale = new HearthvaleGame();
