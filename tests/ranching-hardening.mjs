@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { installRanchingRuntime } from "../game-ranch-runtime.js";
+import { installRanchingRuntime, normalizeRanchRuntime } from "../game-ranch-runtime.js";
 
 class Harness {
   constructor() {
@@ -38,4 +38,22 @@ game.state.minutes = 1200;
 game.nextDay(false);
 assert.equal(game.state.ranch.machines.mayonnaise.slots[0].remaining, 280, "Sleeping at 8 PM should advance exactly 600 overnight minutes with the Farming 10 speed bonus");
 
-console.log(JSON.stringify({ ok: true, offscreenGrazing: true, exactOvernightTime: true, machineSpeedBonus: true }));
+const corrupted = {
+  day: 9,
+  ranch: {
+    hay: 9999,
+    buildings: { coop: { level: 1 }, barn: { level: 0 }, silo: { level: 0 } },
+    construction: { kind: "invalid", targetLevel: 99, daysRemaining: -4 },
+    lastProcessedDay: 999,
+    animals: [{ productReady: { id: "not-real", quality: "mythic", amount: 99 } }],
+    machines: { mayonnaise: { count: 1, slots: [{ input: "stone", output: "truffleOil", quality: "gold", remaining: -4 }] } },
+  },
+};
+normalizeRanchRuntime(corrupted);
+assert.equal(corrupted.ranch.construction, null);
+assert.equal(corrupted.ranch.lastProcessedDay, 9);
+assert.equal(corrupted.ranch.hay, 40);
+assert.equal(corrupted.ranch.animals[0].productReady, null);
+assert.equal(corrupted.ranch.machines.mayonnaise.slots[0], null);
+
+console.log(JSON.stringify({ ok: true, offscreenGrazing: true, exactOvernightTime: true, machineSpeedBonus: true, saveHardening: true }));
