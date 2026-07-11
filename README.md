@@ -1,6 +1,52 @@
 # Hearthvale
 
-Hearthvale is an original, responsive farming, exploration, living-world, guild, combat, progression, and cave-adventure game. It uses its own characters, story, map, dialogue, systems, and geometric cartoon rendering rather than copying Stardew Valley assets or content.
+Hearthvale is an original, responsive farming, exploration, living-world, guild, combat, progression, and story-adventure game. It uses its own characters, story, map, dialogue, systems, and geometric cartoon rendering rather than copying Stardew Valley assets or content.
+
+## Version 3.7 — Chapter 2: The Fractured Waystones
+
+Chapter 2 uses the existing continent, NPCs, progression systems, and regions to deliver a connected story campaign without expanding the 57,344-tile overworld again.
+
+The chapter unlocks after Chapter 1 is complete, Adventure Level 4 is reached, and the Floor 10 Mycelial Behemoth reward has been earned.
+
+### Seventeen-objective campaign
+
+The campaign sends the player from Guildmaster Aria to Starwatch Observatory, the fractured Veilmoor Waystone, Oren, Bram, Mei, Suncleft Ruins, and the hidden Waystone Archive.
+
+Major objectives include:
+
+- Investigating the Veilmoor fracture
+- Defeating corrupted mist creatures
+- Gathering Mist Pearls, Iron, Hearth Crystals, and Rift Fragments
+- Forging the Waystone Stabilizer
+- Escorting Mei and defending her repair ritual
+- Activating three Suncleft surface runes
+- Solving three archive switches
+- Defeating the Riftbound Sentinel
+- Defeating the Hollow Cartographer
+- Returning to Silvercrest for the chapter conclusion
+
+### Waystone Archive story dungeon
+
+The Waystone Archive is a separate **52 × 34** lightweight map containing five handcrafted room groups, three rune switches, three progression gates, a boss gate, animated spike traps, environmental inscriptions, a hidden treasure cache, a checkpoint, a mini-boss, and a final boss.
+
+Dungeon switches, opened treasure, defeated enemies, the checkpoint, and both boss states persist in the Chapter 2 save data. Saves closed inside the Archive resume safely at its Suncleft entrance without losing dungeon progress.
+
+### Story presentation
+
+Chapter 2 adds purple objective styling, multiple active rune markers, off-screen navigation, camera-focused cutscene overlays, choice-based dialogue, boss introductions, journal recap entries, special world encounters, and post-chapter NPC dialogue.
+
+### Chapter rewards
+
+Completing Chapter 2 awards:
+
+- 1,200 coins and 250 Guild XP
+- Adventure, Combat, and Mining XP
+- 8 permanent backpack spaces
+- The epic Rift Compass charm
+- A second equipment preset
+- Every continental Waystone route
+- Free stabilized Waystone travel
+- The **Pathfinder of Hearthvale** achievement
 
 ## Version 3.6 — Economy, Skills, and Cave Progression
 
@@ -8,7 +54,7 @@ Version 3.6 turns the existing activities into a connected long-term progression
 
 ### Adventure and skill levels
 
-The player now has an Adventure Level from 1–20 and five skills from 1–10:
+The player has an Adventure Level from 1–20 and five skills from 1–10:
 
 - Farming
 - Mining
@@ -32,13 +78,13 @@ Crop growth and base values were rebalanced:
 
 ### Balanced shops and upgrades
 
-Mira’s Seed Shop and Silvercrest Market now use limited daily stock. Higher-tier seeds require Farming Level progression. The market supports quality-weighted selling and one-transaction buyback at a premium.
+Mira’s Seed Shop and Silvercrest Market use limited daily stock. Higher-tier seeds require Farming Level progression. The market supports quality-weighted selling and one-transaction buyback at a premium.
 
-Blacksmith improvements now require coins and materials from the appropriate cave depth. Equipped weapons, armor, and helmets can also be enhanced from +1 to +3 using ores and Hearth Crystals.
+Blacksmith improvements require coins and materials from the appropriate cave depth. Equipped weapons, armor, and helmets can be enhanced from +1 to +3 using ores and Hearth Crystals.
 
 ### Cave milestone bosses
 
-Progression bosses now guard the transition floors:
+Progression bosses guard the transition floors:
 
 - Floor 10 — Mycelial Behemoth
 - Floor 20 — Prismatic Colossus
@@ -52,11 +98,11 @@ Ordinary equipment drops are rarer, respect region and cave difficulty, and use 
 
 ### Fairer penalties
 
-Combat rescue now costs at most 150 coins or 8% of carried coins. Passing out costs at most 80 coins or 5%. Recovery restores a useful amount of health and energy without erasing progression.
+Combat rescue costs at most 150 coins or 8% of carried coins. Passing out costs at most 80 coins or 5%. Recovery restores a useful amount of health and energy without erasing progression.
 
 ### Save compatibility
 
-Existing v1–v3.5 browser saves automatically receive progression state, skill XP storage, quality inventory, daily stock, boss rewards, unlocked cave tiers, enhancement levels, and gear pity tracking. Existing inventory is treated as Normal quality unless earned through the new quality system.
+Existing v1–v3.6 browser saves automatically receive Chapter 2 state, dungeon persistence, equipment preset storage, and story reward flags. Earlier progression, inventory, Chapter 1, friendships, equipment, and cave progress remain intact.
 
 ## Version 3.5 — Living World
 
@@ -119,6 +165,7 @@ npm run check
 node tests/smoke.mjs
 node tests/living-world.mjs
 node tests/progression.mjs
+node tests/chapter-two.mjs
 ```
 
 ## Controls
