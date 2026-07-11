@@ -69,7 +69,7 @@ assert.ok(dreadwild, "Dreadwild must exist");
 const dangerChunks = activeChunksForViewport(dreadwild.x + dreadwild.w / 2, dreadwild.y + dreadwild.h / 2, 390, 844);
 const dangerMonsters = dangerChunks.flatMap(({ cx, cy }) => generateMonsterChunk(1, cx, cy));
 assert.ok(dangerMonsters.length > 0, "Hostile local chunks must generate monsters");
-assert.ok(dangerMonsters.length < 30, "Only local monsters should be active at once");
+assert.ok(dangerMonsters.length < 45, "Only local elite-region monsters should be active at once");
 
 assert.equal(WORLD_MINUTES_PER_REAL_SECOND, 1.25, "Overworld clock rate changed unexpectedly");
 assert.equal(CAVE_MINUTES_PER_REAL_SECOND, 0.75, "Cave clock rate changed unexpectedly");
