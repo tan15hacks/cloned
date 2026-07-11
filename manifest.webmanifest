@@ -1,0 +1,13 @@
+{
+  "name": "Hearthvale",
+  "short_name": "Hearthvale",
+  "description": "An original offline farming and village-life adventure.",
+  "start_url": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#10241d",
+  "theme_color": "#1e5b43",
+  "icons": [
+    { "src": "assets/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
