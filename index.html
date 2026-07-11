@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
   <meta name="theme-color" content="#1e5b43" />
-  <meta name="description" content="Hearthvale is an original offline farming and village-life adventure for mobile, tablet, and desktop." />
+  <meta name="description" content="Hearthvale is an original farming, exploration, guild, and cave adventure across a 57,344-tile continent." />
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" href="assets/icon.svg" />
   <link rel="apple-touch-icon" href="assets/icon.svg" />
@@ -24,7 +24,7 @@
       <section class="hud-card hud-right">
         <div class="meter"><span>Energy</span><div class="meter-track"><i id="energyFill"></i></div><b id="energyText">100</b></div>
         <div class="meter"><span>Health</span><div class="meter-track health"><i id="healthFill"></i></div><b id="healthText">100</b></div>
-        <div class="currency"><span>◈</span><strong id="coinLabel">250</strong></div>
+        <div class="currency"><span>◈</span><strong id="coinLabel">300</strong></div>
       </section>
     </header>
 
@@ -42,16 +42,16 @@
 
     <section id="titleScreen" class="screen active">
       <div class="title-panel">
-        <p class="eyebrow">AN ORIGINAL FARMING &amp; VILLAGE ADVENTURE</p>
+        <p class="eyebrow">FARM · EXPLORE · HUNT · DESCEND</p>
         <h1>HEARTHVALE</h1>
-        <p class="subtitle">Explore a larger tile-aligned valley, grow resonant crops, befriend its people, and awaken the Hearthlight.</p>
+        <p class="subtitle">Explore a 57,344-tile continent, restore your farm, join Silvercrest's Adventurers' Guild, hunt regional monsters, and conquer the 50-floor Grand Depths.</p>
         <div class="title-actions">
           <button id="continueButton" class="primary">Continue</button>
-          <button id="newGameButton">New Valley</button>
+          <button id="newGameButton">New Adventure</button>
           <button id="howToButton">How to Play</button>
           <button id="settingsButton">Settings</button>
         </div>
-        <p class="version">v2.0.0 · Expanded map · Offline-ready · Keyboard, mouse, and touch</p>
+        <p class="version">v3.0.0 · 256 × 224 continent · 50-floor cave · Offline-ready · Keyboard and touch</p>
       </div>
     </section>
 
@@ -69,7 +69,7 @@
     <section id="dialogue" class="dialogue hidden" aria-live="polite">
       <div class="portrait" id="dialoguePortrait">🙂</div>
       <div class="dialogue-copy">
-        <strong id="dialogueName">Villager</strong>
+        <strong id="dialogueName">Resident</strong>
         <p id="dialogueText"></p>
         <div id="dialogueChoices" class="dialogue-choices"></div>
       </div>
