@@ -1,110 +1,123 @@
 # Hearthvale
 
-Hearthvale is an original, responsive seasonal farming, exploration, living-world, guild, combat, progression, and story-adventure game. It uses its own characters, story, map, dialogue, systems, and geometric cartoon rendering rather than copying Stardew Valley assets or content.
+Hearthvale is an original, responsive seasonal farming, farm-animal ranching, exploration, living-world, guild, combat, progression, and story-adventure game. It uses its own characters, story, map, dialogue, systems, and geometric cartoon rendering rather than copying Stardew Valley assets or content.
+
+## Version 3.9 — Farm Animals and Barn Progression
+
+Version 3.9 turns the Farmstead into a long-term ranch and artisan-production loop while preserving the streamed 57,344-tile continent.
+
+### Six animal species
+
+The ranch supports:
+
+- Chickens producing Eggs
+- Cows producing Milk
+- Ducks producing Duck Eggs and occasional Feathers
+- Goats producing Goat Milk
+- Sheep producing Wool
+- Pigs finding Truffles outdoors
+
+Every animal stores a name, age, friendship, happiness, health, sickness state, daily feeding and petting records, outdoor state, product readiness, product quality, and a rare-color variant. Animals can become temporarily sick after serious neglect, but they never permanently die.
+
+### Coop, barn, and silo progression
+
+The Coop progresses from Basic to Large and Deluxe tiers. Capacity increases from 4 to 8 and then 12 animals. Large Coops unlock Ducks and incubation; Deluxe Coops add automatic feeding and a quality bonus.
+
+The Barn progresses from Basic to Large and Deluxe tiers. Capacity increases from 4 to 8 and then 12 animals. Large Barns unlock Goats and Sheep; Deluxe Barns unlock Pigs, automatic feeding, improved product quality, and winter protection.
+
+Hay storage progresses from a 40-hay stack to a 240-hay Farm Silo and a 480-hay Expanded Silo. Every building project requires coins and materials and completes after multiple in-game days.
+
+### Daily care and grazing
+
+Players can:
+
+- Pet and rename individual animals
+- Feed animals manually or through Deluxe automatic feeders
+- Refill the water trough
+- Clean the housing
+- Open or close Coop and Barn doors
+- Install winter heaters
+- Treat sick animals with medicine
+- Install Deluxe auto-collectors
+- Collect products by hand using the required ranch tools
+
+Animals graze from the fenced pasture during clear weather when their housing door is open. Off-screen grazing is simulated even when the player spends the day away from the farm. Rain, Snow, festivals, winter, sickness, and nighttime keep animals indoors.
+
+The Ranch Scythe cuts mature pasture grass into Hay. Grass regrows through Springbloom, Suncrest, and Emberfall but remains dormant during Frostwane.
+
+Farming progression improves product quality, can produce double products, unlocks rare-colored animals, conserves Hay at higher levels, and accelerates artisan-machine processing.
+
+### Animal products and quality
+
+Animal and artisan goods use four quality levels:
+
+- Normal — 1× value
+- Silver — 1.25× value
+- Gold — 1.6× value
+- Iridium — 2.2× value
+
+Friendship, happiness, Farming Level, housing tier, heating, and daily care affect the final quality. Flat inventory counts remain compatible with existing systems while ranch quality is stored separately for accurate processing and selling.
+
+### Incubation and ranch supplies
+
+The Meadow & Manger Ranch Supply counter sells animals, Hay, Animal Medicine, heaters, Incubator Heat Packs, a Ranch Scythe, a Milking Pail, and Wool Shears. Species availability depends on Farming Level, housing tier, and remaining capacity.
+
+Large Coops can incubate Chicken or Duck Eggs. Incubation pauses safely when the Coop is full and hatches automatically after space becomes available.
+
+### Artisan machines
+
+Four machines convert quality animal products into more valuable goods over game time:
+
+- Egg or Duck Egg → Mayonnaise
+- Milk or Goat Milk → Cheese
+- Wool or Feather → Cloth
+- Truffle → Truffle Oil
+
+Up to two of each machine can be built. Input quality carries into the artisan output, high Farming Level speeds processing, and Farming Level 9 can improve the finished quality.
+
+### Ranch achievements
+
+- **First Flock** — Welcome the first animal
+- **Happy Herd** — Raise four deeply bonded and happy animals
+- **Master Rancher** — Build Deluxe housing and care for twelve animals
+- **Artisan of Hearthvale** — Produce four different artisan goods
+
+### Performance and save compatibility
+
+Animals update and render only while the Farmstead is active. Daily care, off-screen grazing, construction, incubation, and artisan processing are resolved through compact save-state calculations.
+
+Existing browser saves automatically receive an empty ranch, default housing state, pasture grass, quality storage, machine slots, Hay capacity, and care records. Crops, inventory, Chapter 1 and Chapter 2 progress, friendships, equipment, seasons, festivals, cave progress, and Waystone state remain intact.
 
 ## Version 3.8 — Seasons and Festivals
 
-The continuous Day counter now maps into four **28-day seasons** and a repeating **112-day year**:
+The continuous Day counter maps into four 28-day seasons and a repeating 112-day year: Springbloom, Suncrest, Emberfall, and Frostwane. Existing saves automatically enter the correct year and season based on their saved Day number.
 
-- Springbloom
-- Suncrest
-- Emberfall
-- Frostwane
+Each season has deterministic weather, lightweight screen-local effects, and crop affinity. Favored crops grow 25% faster; other crops grow 25% slower but never wither.
 
-The HUD displays the current year, season icon, and season day. Existing saves automatically enter the correct year and season based on their saved Day number.
+Four annual festivals provide unique minigames, Festival Tokens, Adventure and skill XP, keepsakes, friendship bonuses, and collectible equipment:
 
-### Seasonal world and weather
-
-Each season has deterministic weather probabilities and a lightweight visual identity. Spring adds petals and stronger rain chances, summer adds warm motes and clear skies, autumn adds drifting copper leaves, and winter adds snow particles and frequent Snow weather. These visuals remain screen-local and do not increase the streamed world size.
-
-Crop affinity changes through the year:
-
-- Springbloom favors Turnips and Sunberries
-- Suncrest favors Sunberries
-- Emberfall favors Turnips and Moonbeans
-- Frostwane favors Moonbeans
-
-Favored crops gain 25% faster watered growth. Other crops grow 25% slower but never wither, protecting old saves and long-running farms.
-
-### Four annual festivals
-
-- Springbloom Day 7 — **Hearthvale Bloomfair** at the Village Green
-- Suncrest Day 14 — **Moonlake Regatta** at Moonlake Dock
-- Emberfall Day 21 — **Silvercrest Harvest Crown** at the city plaza
-- Frostwane Day 28 — **Starfall Vigil** at the city plaza
-
-Festival sites are visibly decorated from 8:00 AM until 10:00 PM. NPC dialogue responds to both the current season and active festival.
-
-### Festival minigames and rewards
-
-Each festival has a different activity:
-
-- Enchanted Seed Sort
-- Moonlake River Dash
-- Quality-aware Produce Judging
-- Starfall Lantern Memory
-
-Bronze, Silver, and Gold results award Festival Tokens, Adventure XP, related skill XP, seasonal keepsakes, and friendship bonuses. Gold results can award four unique equipment pieces: Bloomfair Charm, Tidecall Ring, Harveststep Boots, and Starfall Crown. Festival Tokens can also purchase consumables or the current festival equipment from the festival shop.
-
-Completing all four festivals in one year unlocks the **A Year of Celebration** achievement. The calendar and Festival Album are available through the Adventure Menu.
+- Springbloom Day 7 — Hearthvale Bloomfair
+- Suncrest Day 14 — Moonlake Regatta
+- Emberfall Day 21 — Silvercrest Harvest Crown
+- Frostwane Day 28 — Starfall Vigil
 
 ## Version 3.7 — Chapter 2: The Fractured Waystones
 
-Chapter 2 uses the existing continent, NPCs, progression systems, and regions to deliver a connected story campaign without expanding the 57,344-tile overworld again.
+Chapter 2 contains seventeen objectives connecting Guildmaster Aria, Sora, Veilmoor, Oren, Bram, Mei, Suncleft Ruins, and the hidden Waystone Archive.
 
-The chapter unlocks after Chapter 1 is complete, Adventure Level 4 is reached, and the Floor 10 Mycelial Behemoth reward has been earned.
+The separate 52 × 34 Archive contains five room groups, three rune switches, progression gates, spike traps, environmental inscriptions, a hidden cache, a checkpoint, the Riftbound Sentinel, and the Hollow Cartographer. Dungeon progress and bosses persist safely across saves.
 
-### Seventeen-objective campaign
-
-The campaign sends the player from Guildmaster Aria to Starwatch Observatory, the fractured Veilmoor Waystone, Oren, Bram, Mei, Suncleft Ruins, and the hidden Waystone Archive.
-
-Major objectives include:
-
-- Investigating the Veilmoor fracture
-- Defeating corrupted mist creatures
-- Gathering Mist Pearls, Iron, Hearth Crystals, and Rift Fragments
-- Forging the Waystone Stabilizer
-- Escorting Mei and defending her repair ritual
-- Activating three Suncleft surface runes
-- Solving three archive switches
-- Defeating the Riftbound Sentinel
-- Defeating the Hollow Cartographer
-- Returning to Silvercrest for the chapter conclusion
-
-### Waystone Archive story dungeon
-
-The Waystone Archive is a separate **52 × 34** lightweight map containing five handcrafted room groups, three rune switches, three progression gates, a boss gate, animated spike traps, environmental inscriptions, a hidden treasure cache, a checkpoint, a mini-boss, and a final boss.
-
-Dungeon switches, opened treasure, defeated enemies, the checkpoint, and both boss states persist in the Chapter 2 save data. Saves closed inside the Archive resume safely at its Suncleft entrance without losing dungeon progress.
-
-### Story presentation
-
-Chapter 2 adds purple objective styling, multiple active rune markers, off-screen navigation, camera-focused cutscene overlays, choice-based dialogue, boss introductions, journal recap entries, special world encounters, and post-chapter NPC dialogue.
-
-### Chapter rewards
-
-Completing Chapter 2 awards:
-
-- 1,200 coins and 250 Guild XP
-- Adventure, Combat, and Mining XP
-- 8 permanent backpack spaces
-- The epic Rift Compass charm
-- A second equipment preset
-- Every continental Waystone route
-- Free stabilized Waystone travel
-- The **Pathfinder of Hearthvale** achievement
+Completing Chapter 2 unlocks the Rift Compass, a second equipment preset, free stabilized Waystone travel, backpack expansion, experience rewards, and the Pathfinder of Hearthvale achievement.
 
 ## Version 3.6 — Economy, Skills, and Cave Progression
 
-The player has an Adventure Level from 1–20 and five skills from 1–10: Farming, Mining, Combat, Fishing, and Foraging. Activities, quests, bounties, and milestone bosses award experience and unlock permanent perks.
+The player has an Adventure Level from 1–20 and Farming, Mining, Combat, Fishing, and Foraging skills from 1–10. Activities, quests, bounties, and milestone bosses award experience and unlock permanent perks.
 
-Turnips, Sunberries, Moonbeans, fish, rare fish, and apples can be Normal, Silver, Gold, or Iridium quality. Shops use daily stock, blacksmith upgrades require depth-appropriate materials, and equipment can be enhanced to +3.
-
-Progression bosses guard Floors 10, 20, 30, 40, and 50. Ordinary equipment respects region and cave difficulty and uses a pity system.
+Crops and fish use Normal, Silver, Gold, and Iridium quality. Shops use daily stock, blacksmith upgrades require depth-appropriate materials, equipment can be enhanced to +3, and progression bosses guard Floors 10, 20, 30, 40, and 50.
 
 ## Version 3.5 — Living World
 
-All 18 named NPCs have time- and weather-aware routines. Hearthvale and Silvercrest contain moving background citizens, shop hours, open/closed signs, evening lights, umbrellas, contextual dialogue, friendship milestones, and playable Farmhouse and Adventurers’ Guild interiors.
+All 18 named NPCs have time- and weather-aware routines. Hearthvale and Silvercrest contain moving citizens, shop hours, evening lights, umbrellas, contextual dialogue, friendship milestones, and playable Farmhouse and Adventurers’ Guild interiors.
 
 Characters use animated geometric body parts for walking, blinking, tool actions, fishing, combat, and weather reactions.
 
@@ -112,7 +125,7 @@ Characters use animated geometric body parts for walking, blinking, tool actions
 
 The 256 × 224 overworld remains **57,344 tiles**, with authored settlement roads, protected door clearances, city walls and gates, regional decorations, animated environmental effects, safer cave entrances, and improved underground presentation.
 
-The world uses deterministic **16 × 16 tile chunks**. Only nearby terrain, resources, monsters, decorations, citizens, and effects are active at runtime.
+The world uses deterministic 16 × 16 tile chunks. Only nearby terrain, resources, monsters, decorations, citizens, animals, and effects are active at runtime.
 
 ## Guided Chapter 1
 
@@ -141,10 +154,6 @@ Five surface entrances connect to the Grand Depths. Floor 1 is an expedition hub
 
 Each non-hub floor independently has a deterministic 1% chest chance for the current expedition.
 
-## Save compatibility
-
-Existing v1–v3.7 browser saves automatically receive seasonal calendar state, festival records, yearly score storage, deterministic seasonal weather forecasts, and festival minigame safety state. Inventory, farms, story progress, relationships, equipment, cave progress, and Chapter 2 dungeon persistence remain intact.
-
 ## Time and streaming
 
 - Overworld clock: **1.25 game minutes per real second**
@@ -169,6 +178,10 @@ node tests/living-world.mjs
 node tests/progression.mjs
 node tests/chapter-two.mjs
 node tests/seasons.mjs
+node tests/seasons-runtime.mjs
+node tests/ranching.mjs
+node tests/ranching-runtime.mjs
+node tests/ranching-hardening.mjs
 ```
 
 ## Controls
