@@ -1,0 +1,14 @@
+#objectiveTracker.chapter-two {
+  border-color: rgba(188, 166, 255, .85);
+  box-shadow: 0 12px 34px rgba(40, 27, 72, .42), inset 0 0 0 1px rgba(188, 166, 255, .18);
+}
+#objectiveTracker.chapter-two #objectiveChapter { color: #cdbdff; }
+#objectiveTracker.chapter-two .objective-progress > div { background: rgba(108, 82, 155, .42); }
+#objectiveTracker.chapter-two #objectiveProgressFill {
+  background: linear-gradient(90deg, #8f72d8, #d9caff);
+  box-shadow: 0 0 12px rgba(188, 166, 255, .65);
+}
+#objectiveTracker.chapter-two.complete {
+  border-color: #efb94a;
+  box-shadow: 0 12px 34px rgba(58, 42, 20, .38), inset 0 0 0 1px rgba(239, 185, 74, .22);
+}
