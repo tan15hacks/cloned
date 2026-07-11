@@ -13,6 +13,7 @@ import { game_render_3 } from "./game-render-3.js";
 import { game_ui } from "./game-ui.js";
 import { installPerformanceStreaming } from "./game-performance.js";
 import { installChapterOne } from "./chapter-one.js";
+import { installCombatOverhaul } from "./game-combat.js";
 
 class HearthvaleGame {
   constructor() {
@@ -67,4 +68,5 @@ Object.assign(
 
 installPerformanceStreaming(HearthvaleGame);
 installChapterOne(HearthvaleGame);
+installCombatOverhaul(HearthvaleGame);
 window.__hearthvale = new HearthvaleGame();
