@@ -11,6 +11,7 @@ import { game_render_1 } from "./game-render-1.js";
 import { game_render_2 } from "./game-render-2.js";
 import { game_render_3 } from "./game-render-3.js";
 import { game_ui } from "./game-ui.js";
+import { installPerformanceStreaming } from "./game-performance.js";
 
 class HearthvaleGame {
   constructor() {
@@ -37,6 +38,8 @@ class HearthvaleGame {
     this.currentRegion = null;
     this.zoneBanner = { text: "", timer: 0 };
     this.attackFlash = 0;
+    this.activeChunkSignature = "";
+    this.lateWarningShown = false;
     this.bindUI();
     this.resize();
     this.updateContinueState();
@@ -60,4 +63,5 @@ Object.assign(
   game_ui,
 );
 
+installPerformanceStreaming(HearthvaleGame);
 window.__hearthvale = new HearthvaleGame();
