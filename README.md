@@ -1,85 +1,100 @@
 # Hearthvale
 
-Hearthvale is an original, responsive farming-and-village-life game inspired by the broader cozy farming simulation genre. It does not copy Stardew Valley's copyrighted characters, art, dialogue, maps, music, or story.
+Hearthvale is an original, responsive farming, exploration, guild, and cave-adventure game. It uses its own characters, story, maps, dialogue, systems, and geometric cartoon rendering rather than copying Stardew Valley assets or content.
 
-## Version 2.0 — Expanded Valley
+## Version 3.0 — Continental Adventure
 
-The world has been rebuilt around an authored, tile-aligned layout and expanded to **104 × 78 tiles**. Roads, bridges, building entrances, interaction points, water, fences, collision boundaries, and farming tiles now share the same grid.
+The overworld is now **256 × 224 tiles**, or **57,344 total tiles**. Terrain is drawn only around the camera, keeping the much larger continent practical on Android phones, tablets, and desktop browsers.
 
-Major explorable regions:
+### Regions
 
-- **Farmstead** — farmhouse, barn, fenced crop field, pond, and the first Waystone
-- **Hearthvale Village** — seed shop, inn, workshop, community hall, request board, and Hearthlight Beacon
-- **Moonlake Meadow** — orchard fruit, herbs, dock fishing, and rarer fish
-- **Whisperwood** — dense timber, Silverleaf, Glowcaps, and a daily restorative grove
-- **Ember Ridge** — mine entrance, copper, crystals, cave creatures, and combat
-- **Northwatch Ridge** — Starwatch Observatory and tomorrow's weather forecast
+The continent contains 14 connected regions:
 
-Existing version 1 browser saves are automatically migrated to the expanded map while preserving inventory, coins, crops that still fit valid farm tiles, achievements, Beacon progress, upgrades, and other important progress.
+- Hearthvale Farmstead
+- Hearthvale Village
+- Silvercrest City
+- Northwatch Foothills
+- Greenfield Wilds — beginner monsters and low rewards
+- Moonlake Basin — beginner aquatic monsters and fishing
+- Veilmoor — mist creatures and Mist Pearls
+- Frostpeak Mountains — snow monsters, silver, and Frost Cores
+- The Lightless Wood — an entirely dark forest
+- Murkfen Swamp — bog monsters and swamp forage
+- Dreadwild Expanse — elite surface monsters and the highest surface rewards
+- Cinderwake Caldera — lava, fire monsters, obsidian, and Ember Cores
+- Suncoast Reach — coast monsters and fishing
+- Suncleft Ruins — sentinels, mages, gold, and relics
 
-## Play locally
+Every hostile surface region has **three region-exclusive monster species**, for 30 surface monster types in total.
 
-The project has no build step and no external runtime dependencies.
+## Silvercrest City
+
+Silvercrest is a large second settlement with:
+
+- Adventurers' Guild and daily regional bounties
+- Grand Market
+- Ironhart Smithy
+- Blue Vial Apothecary
+- Moon & Rune arcane shop
+- Silvercrest Exchange
+- Golden Griffin inn
+- City Hall
+- Hunter's Provisioner
+- Multiple named residents, friendship, favorite gifts, dialogue, and quests
+
+The guild tracks XP and ranks from **F through S**.
+
+## Grand Depths — 50 Floors
+
+Five surface entrances connect to the Grand Depths. Floor 1 is an expedition hub containing a merchant, trader, healer, and milestone floor gate.
+
+Cave environments change at major depths:
+
+- Floors 1–9 — Copper Galleries
+- Floors 10–19 — Fungal Grotto
+- Floors 20–29 — Prismatic Depths
+- Floors 30–39 — Frozen Abyss
+- Floors 40–49 — Infernal Rift
+- Floor 50 — Heart of the Depths and its boss
+
+Each tier has different monsters, ores, loot, hazards, colors, and rewards. Every non-hub floor independently receives a deterministic **1% chest chance** for the current expedition. Reaching milestone floors unlocks floor-gate travel and matching surface shortcuts.
+
+## Other complete systems
+
+- Farming, tilling, watering, three crops, crop growth, harvesting, selling, and crop Harmony
+- Fishing timing minigame
+- Surface and cave combat
+- Health, energy, armor, weapon and tool upgrades
+- Regional resources, forage, monster materials, ores, relics, and consumables
+- Crafting, Hearthlight restoration, Waystones, Mote companion, weather, day/night, quests, achievements, statistics, and journal
+- Autosave, manual save, export, import, and automatic v1/v2 save migration
+- Responsive keyboard, mouse, and touch controls
+- Offline PWA support
+
+## Run locally
 
 ```bash
 npm run start
 ```
 
-Open `http://localhost:4173` in a browser.
+Open `http://localhost:4173`.
 
-Validate both JavaScript modules with:
+Validate every JavaScript module:
 
 ```bash
 npm run check
 ```
 
-The static project can also be deployed with GitHub Pages, Cloudflare Pages, Netlify, Vercel static hosting, or an Android WebView/Capacitor wrapper.
-
 ## Controls
 
-### Desktop
+Desktop: WASD or arrows to move, E/Enter to interact, Space/F to use the selected tool, 1–8 to select tools, Q to cycle seeds, and M/Escape for the menu.
 
-- WASD or arrow keys — move
-- E or Enter — interact
-- Space or F — use the selected tool
-- 1–8 — select a tool
-- Q — cycle available seed types
-- M or Escape — open/close the valley menu
+Android and tablet: virtual movement stick, A to use a tool, B to interact, and direct toolbar/menu tapping.
 
-### Android and tablet
+## Rendering
 
-- Virtual movement stick
-- A — use the selected tool
-- B — interact
-- Tap toolbar slots and menu controls directly
-
-## Gameplay systems
-
-- Clearing, tilling, watering, planting, crop growth, harvesting, and selling
-- Three crop types with different growth times and values
-- Original crop-Harmony system for mixed-field yield bonuses
-- Day/night clock, deterministic forecast, Clear, Cloudy, Rain, and Sparkfall weather
-- Energy, health, sleep, pass-out recovery, autosave, export, and import
-- Fishing timing minigame across the farm pond, river, and Moonlake
-- Mining, ore, crystals, enemies, sword combat, health damage, and tool upgrades
-- Five scheduled villagers, dialogue, friendship, favorite gifts, and community requests
-- Foraging for Silverleaf, Glowcaps, and orchard apples
-- Crafting for sprinklers, snacks, Glow Lanterns, and Forest Tea
-- Three-tier Hearthlight restoration with permanent valley-wide upgrades
-- Mote spirit companion that waters crops after being awakened
-- Discoverable Waystones and fast travel after Hearthlight Tier 2
-- World map, desktop minimap, zone discovery, journal, achievements, and statistics
-- Responsive desktop, tablet, and Android layouts
-- Installable offline PWA with local save data and refreshed service-worker caching
-
-## Rendering and visual style
-
-Hearthvale uses a lightweight Canvas 2D renderer rather than Three.js. Its visual direction is a **cozy flat-shaded 2D low-poly-inspired cartoon style** made from simple geometric forms, chunky proportions, warm colors, subtle tile variation, and crisp silhouettes. This approach keeps the game efficient on lower-powered Android devices while preserving the style established in the original prototype.
-
-## Android packaging
-
-The game already supports mobile browsers and installation as a PWA. For Google Play distribution, wrap the static project with Capacitor or a Trusted Web Activity, then add the Android package metadata, signing configuration, store graphics, privacy disclosures, and device testing required for release.
+Hearthvale uses Canvas 2D with a cozy flat-shaded, low-poly-inspired cartoon style. The renderer culls off-screen tiles and objects rather than drawing the entire 57,344-tile world every frame.
 
 ## License
 
-Code and original visual rendering are released under the MIT License. The included app icon is original to this repository.
+Code and original visual rendering are released under the MIT License.
