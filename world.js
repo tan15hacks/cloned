@@ -1,5 +1,6 @@
 import { TILE, WORLD_W, WORLD_H, SAVE_KEY, LEGACY_SAVE_KEYS, SETTINGS_KEY, ITEMS, CROPS, TOOLS, RECIPES, WEATHER, REGIONS, BUILDINGS, WAYSTONES, CAVE_ENTRANCES, INTERACTIONS, NPC_DEFS } from "./world-data.js";
 import { MONSTER_TYPES, REGION_MONSTERS } from "./monster-data.js";
+import { isPolishPathTile, isWorldClearanceTile, solidDecorationAtTile, structureAtTile } from "./world-polish-data.js";
 export { TILE, WORLD_W, WORLD_H, SAVE_KEY, LEGACY_SAVE_KEYS, SETTINGS_KEY, ITEMS, CROPS, TOOLS, RECIPES, WEATHER, REGIONS, BUILDINGS, WAYSTONES, CAVE_ENTRANCES, INTERACTIONS, NPC_DEFS, MONSTER_TYPES, REGION_MONSTERS };
 
 const rect = (x, y, rx, ry, rw, rh) => x >= rx && x < rx + rw && y >= ry && y < ry + rh;
@@ -46,7 +47,7 @@ export function isPathTile(x, y) {
     [50, 199, 61, 4], [108, 199, 58, 4],
     [188, 69, 4, 123], [240, 111, 4, 97],
   ];
-  return isBridgeTile(x, y) || paths.some(([px, py, pw, ph]) => rect(x, y, px, py, pw, ph));
+  return isBridgeTile(x, y) || isPolishPathTile(x, y) || paths.some(([px, py, pw, ph]) => rect(x, y, px, py, pw, ph));
 }
 
 export function buildingAtTile(x, y) {
@@ -55,6 +56,7 @@ export function buildingAtTile(x, y) {
 
 export function isReservedTile(x, y) {
   if (buildingAtTile(x, y) || isWaterTile(x, y) || isPathTile(x, y)) return true;
+  if (isWorldClearanceTile(x, y) || structureAtTile(x, y) || solidDecorationAtTile(x, y)) return true;
   if (WAYSTONES.some((stone) => Math.floor(stone.x) === x && Math.floor(stone.y) === y)) return true;
   if (CAVE_ENTRANCES.some((entry) => Math.floor(entry.x) === x && Math.floor(entry.y) === y)) return true;
   return Object.values(INTERACTIONS).some((point) => Math.floor(point.x) === x && Math.floor(point.y) === y);
