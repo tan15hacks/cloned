@@ -4,11 +4,15 @@ import { BUILDING_INTERIOR_MAP, registerExpandedInteriors } from "./expanded-int
 
 registerExpandedInteriors();
 
-const INTERIOR_TO_BUILDING = {
+const DIRECTORY_INTERIORS = {
   farmhouse: "farmhouse",
   guild: "guild",
-  ...Object.fromEntries(Object.entries(BUILDING_INTERIOR_MAP).map(([buildingId, interiorId]) => [interiorId, buildingId])),
+  ...BUILDING_INTERIOR_MAP,
 };
+
+const INTERIOR_TO_BUILDING = Object.fromEntries(
+  Object.entries(DIRECTORY_INTERIORS).map(([buildingId, interiorId]) => [interiorId, buildingId]),
+);
 
 const TIMED_SERVICE_INTERACTIONS = new Set([
   "seedCounter",
@@ -40,6 +44,13 @@ function buildingReturnPoint(interiorId) {
   const building = buildingForInterior(interiorId);
   if (building) return { x: building.door.x + .5, y: building.door.y + 1.5 };
   return { x: 11.5, y: 15.5 };
+}
+
+function formatHour(minutes) {
+  const hour24 = Math.floor((Number(minutes) || 0) / 60) % 24;
+  const minute = Math.floor((Number(minutes) || 0) % 60);
+  const suffix = hour24 >= 12 ? "PM" : "AM";
+  return `${hour24 % 12 || 12}:${String(minute).padStart(2, "0")} ${suffix}`;
 }
 
 export function safeInteriorReturnPoint(data) {
@@ -85,6 +96,7 @@ export function installExpandedInteriorsRuntime(GameClass) {
   const proto = GameClass.prototype;
   const originalMigrateState = proto.migrateState;
   const originalEnterGame = proto.enterGame;
+  const originalEnterInterior = proto.enterInterior;
   const originalLeaveInterior = proto.leaveInterior;
   const originalHandleInteraction = proto.handleExpandedInteriorInteraction;
 
@@ -111,6 +123,18 @@ export function installExpandedInteriorsRuntime(GameClass) {
     this.refreshInteriorNpcAssignments?.();
   };
 
+  if (originalEnterInterior) proto.enterInterior = function enterInteriorExpandedRuntime(id, building) {
+    const result = originalEnterInterior.call(this, id, building);
+    const total = Object.keys(DIRECTORY_INTERIORS).length;
+    this.checkAchievement?.(
+      "open-every-door",
+      (this.state?.interiors?.visited?.filter((interiorId) => INTERIOR_TO_BUILDING[interiorId]).length || 0) >= total,
+      "Open Every Door",
+      "Visit all ten playable building interiors.",
+    );
+    return result;
+  };
+
   proto.leaveInterior = function leaveInteriorExpandedRuntime() {
     const result = originalLeaveInterior.call(this);
     if (this.state?.living) this.state.living.worldReturn = null;
@@ -128,5 +152,21 @@ export function installExpandedInteriorsRuntime(GameClass) {
       }
     }
     return originalHandleInteraction.call(this, interaction, map);
+  };
+
+  proto.showInteriorDirectory = function showCompleteInteriorDirectory() {
+    const cards = Object.entries(DIRECTORY_INTERIORS).map(([buildingId, interiorId]) => {
+      const building = BUILDINGS.find((entry) => entry.id === buildingId);
+      const map = INTERIOR_MAPS[interiorId];
+      const visited = this.state.interiors.visited.includes(interiorId);
+      const alwaysAccessible = buildingId === "farmhouse" || buildingId === "guild";
+      const open = alwaysAccessible || !building?.service || shopIsOpen(building.service, this.state.minutes);
+      return `<article class="interior-directory-card ${visited ? "visited" : ""}"><h3>${visited ? "✅" : "⬚"} ${map.name}</h3><p>${open ? "Open now" : "Closed now"} · Visits ${this.state.interiors.visits[interiorId] || 0}</p><small>${alwaysAccessible ? "Always accessible" : building?.service || "interior"} · Current time ${formatHour(this.state.minutes)}</small></article>`;
+    }).join("");
+    this.openModal(
+      "Buildings & Interiors",
+      `<p><strong>${this.state.interiors.visited.length}/${Object.keys(DIRECTORY_INTERIORS).length}</strong> playable interiors discovered. Business counters follow their normal working hours.</p><div class="interior-directory">${cards}</div>`,
+      [{ label: "Close", action: () => this.closeModal() }],
+    );
   };
 }
