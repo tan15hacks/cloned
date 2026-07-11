@@ -1,12 +1,51 @@
-const CACHE = "hearthvale-v1";
-const ASSETS = ["./", "./index.html", "./styles.css", "./game.js", "./manifest.webmanifest", "./assets/icon.svg"];
-self.addEventListener("install", (event) => event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(ASSETS)).then(() => self.skipWaiting())));
-self.addEventListener("activate", (event) => event.waitUntil(caches.keys().then((keys) => Promise.all(keys.filter((key) => key !== CACHE).map((key) => caches.delete(key)))).then(() => self.clients.claim())));
+const CACHE = "hearthvale-expanded-v2";
+const ASSETS = [
+  "./",
+  "./index.html",
+  "./styles.css",
+  "./game.js",
+  "./world.js",
+  "./manifest.webmanifest",
+  "./assets/icon.svg"
+];
+
+self.addEventListener("install", (event) => {
+  event.waitUntil(
+    caches.open(CACHE)
+      .then((cache) => cache.addAll(ASSETS))
+      .then(() => self.skipWaiting())
+  );
+});
+
+self.addEventListener("activate", (event) => {
+  event.waitUntil(
+    caches.keys()
+      .then((keys) => Promise.all(keys.filter((key) => key !== CACHE).map((key) => caches.delete(key))))
+      .then(() => self.clients.claim())
+  );
+});
+
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
-  event.respondWith(caches.match(event.request).then((cached) => cached || fetch(event.request).then((response) => {
-    const copy = response.clone();
-    caches.open(CACHE).then((cache) => cache.put(event.request, copy));
-    return response;
-  }).catch(() => caches.match("./index.html"))));
+  const requestUrl = new URL(event.request.url);
+  const isCoreCode = requestUrl.pathname.endsWith("/game.js") || requestUrl.pathname.endsWith("/world.js") || requestUrl.pathname.endsWith("/index.html");
+  if (isCoreCode) {
+    event.respondWith(
+      fetch(event.request)
+        .then((response) => {
+          const copy = response.clone();
+          caches.open(CACHE).then((cache) => cache.put(event.request, copy));
+          return response;
+        })
+        .catch(() => caches.match(event.request).then((cached) => cached || caches.match("./index.html")))
+    );
+    return;
+  }
+  event.respondWith(
+    caches.match(event.request).then((cached) => cached || fetch(event.request).then((response) => {
+      const copy = response.clone();
+      caches.open(CACHE).then((cache) => cache.put(event.request, copy));
+      return response;
+    }).catch(() => caches.match("./index.html")))
+  );
 });
