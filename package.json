@@ -1,0 +1,11 @@
+{
+  "name": "hearthvale",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Original responsive farming and village-life browser game.",
+  "scripts": {
+    "start": "python3 -m http.server 4173",
+    "check": "node --check game.js"
+  },
+  "license": "MIT"
+}
