@@ -5,9 +5,17 @@ import {
   REGIONS,
   NPC_DEFS,
   REGION_MONSTERS,
-  generateResources,
-  generateMonsters,
 } from "../world.js";
+import {
+  CHUNK_SIZE,
+  activeChunksForViewport,
+  generateResourceChunk,
+  generateMonsterChunk,
+} from "../world-stream.js";
+import {
+  WORLD_MINUTES_PER_REAL_SECOND,
+  CAVE_MINUTES_PER_REAL_SECOND,
+} from "../game-performance.js";
 import { generateCaveFloor, caveTier } from "../cave.js";
 
 assert.equal(WORLD_W, 256, "World width must remain 256 tiles");
@@ -15,16 +23,29 @@ assert.equal(WORLD_H, 224, "World height must remain 224 tiles");
 assert.equal(WORLD_W * WORLD_H, 57_344, "World must contain 57,344 tiles");
 assert.equal(REGIONS.length, 14, "Expected 14 authored regions");
 assert.equal(NPC_DEFS.length, 18, "Expected 18 named residents");
+assert.equal(CHUNK_SIZE, 16, "Streaming chunks must remain 16×16 tiles");
 
 for (const [region, monsters] of Object.entries(REGION_MONSTERS)) {
   assert.equal(monsters.length, 3, `${region} must have three unique surface monsters`);
   assert.equal(new Set(monsters).size, 3, `${region} monster roster must not contain duplicates`);
 }
 
-const resources = generateResources(1);
-const monsters = generateMonsters(1);
-assert.ok(resources.length > 4_000, "Expanded continent should generate thousands of resources");
-assert.ok(monsters.length >= 120, "Expanded continent should generate a broad monster population");
+const mobileChunks = activeChunksForViewport(11.5, 15.5, 390, 844);
+assert.ok(mobileChunks.length > 0 && mobileChunks.length <= 16, "Mobile must load only nearby chunks");
+const mobileResources = mobileChunks.flatMap(({ cx, cy }) => generateResourceChunk(1, cx, cy));
+assert.ok(mobileResources.length > 0, "Nearby farm chunks must contain generated resources");
+assert.ok(mobileResources.length < 1_000, "Mobile streaming must not generate the whole continent");
+
+const dreadwild = REGIONS.find((region) => region.id === "dreadwild");
+assert.ok(dreadwild, "Dreadwild must exist");
+const dangerChunks = activeChunksForViewport(dreadwild.x + dreadwild.w / 2, dreadwild.y + dreadwild.h / 2, 390, 844);
+const dangerMonsters = dangerChunks.flatMap(({ cx, cy }) => generateMonsterChunk(1, cx, cy));
+assert.ok(dangerMonsters.length > 0, "Hostile local chunks must generate monsters");
+assert.ok(dangerMonsters.length < 30, "Only local monsters should be active at once");
+
+assert.equal(WORLD_MINUTES_PER_REAL_SECOND, 1.25, "Overworld clock rate changed unexpectedly");
+assert.equal(CAVE_MINUTES_PER_REAL_SECOND, 0.75, "Cave clock rate changed unexpectedly");
+assert.equal((1440 - 360) / WORLD_MINUTES_PER_REAL_SECOND / 60, 14.4, "Overworld day should last 14.4 real minutes");
 
 for (let floor = 1; floor <= 50; floor += 1) {
   const cave = generateCaveFloor(floor, 12345);
@@ -42,8 +63,10 @@ console.log(JSON.stringify({
   ok: true,
   tiles: WORLD_W * WORLD_H,
   regions: REGIONS.length,
-  resources: resources.length,
-  monsters: monsters.length,
+  activeMobileChunks: mobileChunks.length,
+  activeMobileResources: mobileResources.length,
+  activeDangerMonsters: dangerMonsters.length,
+  overworldDayMinutes: 14.4,
   npcs: NPC_DEFS.length,
   caveFloors: 50,
   hubMerchants: hub.merchants.length,
