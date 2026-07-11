@@ -2,19 +2,42 @@
 
 Hearthvale is an original, responsive farming, exploration, guild, and cave-adventure game. It uses its own characters, story, maps, dialogue, systems, and geometric cartoon rendering rather than copying Stardew Valley assets or content.
 
-## Version 3.1 — Streamed Continent and Slower Days
+## Version 3.2 — Guided Chapter 1
 
-The overworld remains **256 × 224 tiles**, or **57,344 total tiles**, but the game no longer creates the entire continent's resource and monster population at once.
+The game now has a complete guided opening chapter that introduces its major systems without removing free exploration.
 
-The runtime now uses deterministic **16 × 16 tile chunks**:
+Chapter 1 objectives:
+
+1. Meet Mira and receive starter seeds.
+2. Till three farm tiles.
+3. Water the prepared soil.
+4. Plant three crops.
+5. Reach Hearthvale Village.
+6. Awaken the village Waystone.
+7. Travel to Silvercrest City.
+8. Register with the Adventurers' Guild.
+9. Accept the Greenfield Patrol contract.
+10. Defeat three Greenfield monsters.
+11. Claim the guild reward and weapon upgrade.
+12. Enter the Grand Depths.
+13. Reach Cave Floor 3.
+14. Return to the farmhouse and complete the chapter.
+
+The chapter includes a persistent objective HUD, progress bars, animated world and cave markers, off-screen directional arrows with distance, NPC-specific dialogue, automatic progression, journal entries, rewards, an achievement, and a completion screen. Existing browser saves receive Chapter 1 state automatically.
+
+## Streamed continent and slower days
+
+The overworld remains **256 × 224 tiles**, or **57,344 total tiles**, but the game does not create the entire continent's resource and monster population at once.
+
+The runtime uses deterministic **16 × 16 tile chunks**:
 
 - Only chunks covering the player's current screen and a small preload margin are generated.
 - Chunks outside the local area are released from the active resource and monster arrays.
 - Harvested resources, defeated monsters, and partially damaged objects remain persistent when a chunk is revisited.
 - Existing v1, v2, and v3 browser saves are migrated automatically.
-- The desktop minimap is now a local-area radar instead of a full-continent renderer.
+- The desktop minimap is a local-area radar instead of a full-continent renderer.
 
-The in-game clock was also slowed:
+The in-game clock uses:
 
 - Overworld: **1.25 game minutes per real second**
 - Cave: **0.75 game minutes per real second**
