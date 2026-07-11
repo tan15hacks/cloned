@@ -14,6 +14,7 @@ import { game_ui } from "./game-ui.js";
 import { installPerformanceStreaming } from "./game-performance.js";
 import { installChapterOne } from "./chapter-one.js";
 import { installCombatOverhaul } from "./game-combat.js";
+import { installCombatRuntimeHardening } from "./game-combat-runtime.js";
 
 class HearthvaleGame {
   constructor() {
@@ -69,4 +70,5 @@ Object.assign(
 installPerformanceStreaming(HearthvaleGame);
 installChapterOne(HearthvaleGame);
 installCombatOverhaul(HearthvaleGame);
+installCombatRuntimeHardening(HearthvaleGame);
 window.__hearthvale = new HearthvaleGame();
