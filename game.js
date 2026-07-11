@@ -19,6 +19,9 @@ import { installChapterOne } from "./chapter-one.js";
 import { installLivingWorldCompatibility } from "./game-living-compat.js";
 import { installCombatOverhaul } from "./game-combat.js";
 import { installCombatRuntimeHardening } from "./game-combat-runtime.js";
+import { installProgressionCore } from "./game-progression-core.js";
+import { installProgressionCaves } from "./game-progression-cave.js";
+import { installProgressionEconomy } from "./game-progression-economy.js";
 
 class HearthvaleGame {
   constructor() {
@@ -79,4 +82,7 @@ installChapterOne(HearthvaleGame);
 installLivingWorldCompatibility(HearthvaleGame);
 installCombatOverhaul(HearthvaleGame);
 installCombatRuntimeHardening(HearthvaleGame);
+installProgressionCore(HearthvaleGame);
+installProgressionCaves(HearthvaleGame);
+installProgressionEconomy(HearthvaleGame);
 window.__hearthvale = new HearthvaleGame();
