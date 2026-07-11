@@ -1,51 +1,53 @@
-const CACHE = "hearthvale-expanded-v2";
+const CACHE = "hearthvale-continent-v3";
 const ASSETS = [
   "./",
   "./index.html",
   "./styles.css",
   "./game.js",
+  "./game-shared.js",
+  "./game-base.js",
+  "./game-actions-1.js",
+  "./game-actions-2.js",
+  "./game-actions-3.js",
+  "./game-services-1.js",
+  "./game-services-2.js",
+  "./game-services-3.js",
+  "./game-services-4.js",
+  "./game-render-1.js",
+  "./game-render-2.js",
+  "./game-render-3.js",
+  "./game-ui.js",
   "./world.js",
+  "./world-data.js",
+  "./monster-data.js",
+  "./cave.js",
   "./manifest.webmanifest",
   "./assets/icon.svg"
 ];
 
 self.addEventListener("install", (event) => {
-  event.waitUntil(
-    caches.open(CACHE)
-      .then((cache) => cache.addAll(ASSETS))
-      .then(() => self.skipWaiting())
-  );
+  event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(ASSETS)).then(() => self.skipWaiting()));
 });
 
 self.addEventListener("activate", (event) => {
-  event.waitUntil(
-    caches.keys()
-      .then((keys) => Promise.all(keys.filter((key) => key !== CACHE).map((key) => caches.delete(key))))
-      .then(() => self.clients.claim())
-  );
+  event.waitUntil(caches.keys().then((keys) => Promise.all(keys.filter((key) => key !== CACHE).map((key) => caches.delete(key)))).then(() => self.clients.claim()));
 });
 
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
   const requestUrl = new URL(event.request.url);
-  const isCoreCode = requestUrl.pathname.endsWith("/game.js") || requestUrl.pathname.endsWith("/world.js") || requestUrl.pathname.endsWith("/index.html");
+  const isCoreCode = requestUrl.pathname.endsWith(".js") || requestUrl.pathname.endsWith("/index.html");
   if (isCoreCode) {
-    event.respondWith(
-      fetch(event.request)
-        .then((response) => {
-          const copy = response.clone();
-          caches.open(CACHE).then((cache) => cache.put(event.request, copy));
-          return response;
-        })
-        .catch(() => caches.match(event.request).then((cached) => cached || caches.match("./index.html")))
-    );
-    return;
-  }
-  event.respondWith(
-    caches.match(event.request).then((cached) => cached || fetch(event.request).then((response) => {
+    event.respondWith(fetch(event.request).then((response) => {
       const copy = response.clone();
       caches.open(CACHE).then((cache) => cache.put(event.request, copy));
       return response;
-    }).catch(() => caches.match("./index.html")))
-  );
+    }).catch(() => caches.match(event.request).then((cached) => cached || caches.match("./index.html"))));
+    return;
+  }
+  event.respondWith(caches.match(event.request).then((cached) => cached || fetch(event.request).then((response) => {
+    const copy = response.clone();
+    caches.open(CACHE).then((cache) => cache.put(event.request, copy));
+    return response;
+  }).catch(() => caches.match("./index.html"))));
 });
