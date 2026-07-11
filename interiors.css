@@ -1,0 +1,20 @@
+.interior-directory {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+.interesior-directory-card,
+.interior-directory-card {
+  padding: 12px;
+  border: 2px solid rgba(255,255,255,.14);
+  border-radius: 13px;
+  background: rgba(16,36,29,.18);
+}
+.interior-directory-card.visited { border-color: rgba(239,185,74,.55); background: rgba(239,185,74,.08); }
+.interior-directory-card h3,
+.interior-directory-card p { margin: 0 0 7px; }
+.interior-directory-card small { opacity: .75; }
+@media (max-width: 620px) {
+  .interior-directory { grid-template-columns: 1fr; }
+}
