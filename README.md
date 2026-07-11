@@ -1,14 +1,68 @@
 # Hearthvale
 
-Hearthvale is an original, responsive seasonal farming, farm-animal ranching, exploration, living-world, guild, combat, progression, and story-adventure game. It uses its own characters, story, map, dialogue, systems, and geometric cartoon rendering rather than copying Stardew Valley assets or content.
+Hearthvale is an original, responsive seasonal farming, farm-animal ranching, expanded-interior, exploration, living-world, guild, combat, progression, and story-adventure game. It uses its own characters, story, map, dialogue, systems, and geometric cartoon rendering rather than copying Stardew Valley assets or content.
+
+## Version 3.10 — Expanded Building Interiors and Town Life
+
+Version 3.10 expands the lightweight interior system from two maps to **ten playable buildings** without increasing the 57,344-tile overworld.
+
+### Eight new furnished interiors
+
+- Mira's Seeds
+- Hearth & Kettle
+- Ironhart Smithy
+- Blue Vial Apothecary
+- The Golden Griffin
+- Silvercrest Grand Market
+- Starwatch Observatory
+- Silvercrest Hall
+
+These join the existing Farmhouse and Silvercrest Adventurers' Guild interiors.
+
+Every new map contains collision-safe furniture, a clear entrance and exit, at least three reachable service or lore interactions, indoor lighting, windows that reflect time and rain, and a building-specific visual identity. Examples include seed displays, market stalls, smithing equipment, brewing tables, guest beds, a piano, civic records, a continental map, and the Great Telescope.
+
+### Indoor NPC schedules
+
+Named residents now move indoors during their working hours:
+
+- Mira works behind the Seed Shop counter.
+- Bram works inside Ironhart Smithy.
+- Pella operates the Apothecary.
+- Cass and Eno work inside the Grand Market.
+- Rowan manages the Golden Griffin.
+- Sora observes from Starwatch.
+- Mei and Ves work inside Silvercrest Hall.
+- Oren visits Hearth & Kettle during the evening.
+
+NPCs assigned to an interior are hidden from the street and remain available for normal quest-safe dialogue indoors. Rain and Snow extend several sheltered work schedules.
+
+### Playable counters and furnishings
+
+Indoor interactions connect directly to existing game systems:
+
+- Seed purchases and seasonal crop information
+- Village and city inn meals, room rental, and sleep
+- Blacksmith upgrades and tempering information
+- Apothecary remedies and brewing notes
+- Grand Market buying, selling, and price records
+- Starwatch forecasts and seasonal star charts
+- City Hall services, world map, and civic statistics
+
+The Adventure Menu now includes a **Buildings & Interiors** directory showing which mapped buildings have been visited, how many times each has been entered, and whether each business is currently open.
+
+### Rendering and performance
+
+Interiors use small independent maps with their own camera bounds. The overworld, monsters, resources, citizens, and ranch animals are not rendered while indoors. Interior lighting, forge sparks, alchemy bubbles, and star effects remain local to the current room.
+
+### Save compatibility
+
+Existing saves receive an interior discovery log, visit counters, civic record flags, and safe last-interior metadata. Invalid map references are removed during migration. Saves made inside unsupported or outdated interior data safely return to the overworld through the existing living-world migration layer.
 
 ## Version 3.9 — Farm Animals and Barn Progression
 
-Version 3.9 turns the Farmstead into a long-term ranch and artisan-production loop while preserving the streamed 57,344-tile continent.
+Version 3.9 turns the Farmstead into a long-term ranch and artisan-production loop while preserving the streamed continent.
 
 ### Six animal species
-
-The ranch supports:
 
 - Chickens producing Eggs
 - Cows producing Milk
@@ -27,66 +81,18 @@ The Barn progresses from Basic to Large and Deluxe tiers. Capacity increases fro
 
 Hay storage progresses from a 40-hay stack to a 240-hay Farm Silo and a 480-hay Expanded Silo. Every building project requires coins and materials and completes after multiple in-game days.
 
-### Daily care and grazing
+### Daily care, products, and artisan machines
 
-Players can:
+Players can pet, rename, feed, water, clean, heat, treat, and collect from animals. Animals graze during clear weather, and off-screen grazing is simulated while the player is away. The Ranch Scythe converts mature pasture grass into Hay.
 
-- Pet and rename individual animals
-- Feed animals manually or through Deluxe automatic feeders
-- Refill the water trough
-- Clean the housing
-- Open or close Coop and Barn doors
-- Install winter heaters
-- Treat sick animals with medicine
-- Install Deluxe auto-collectors
-- Collect products by hand using the required ranch tools
+Animal and artisan goods use Normal, Silver, Gold, and Iridium quality. Friendship, happiness, Farming Level, housing tier, heating, and daily care affect quality and possible double products.
 
-Animals graze from the fenced pasture during clear weather when their housing door is open. Off-screen grazing is simulated even when the player spends the day away from the farm. Rain, Snow, festivals, winter, sickness, and nighttime keep animals indoors.
-
-The Ranch Scythe cuts mature pasture grass into Hay. Grass regrows through Springbloom, Suncrest, and Emberfall but remains dormant during Frostwane.
-
-Farming progression improves product quality, can produce double products, unlocks rare-colored animals, conserves Hay at higher levels, and accelerates artisan-machine processing.
-
-### Animal products and quality
-
-Animal and artisan goods use four quality levels:
-
-- Normal — 1× value
-- Silver — 1.25× value
-- Gold — 1.6× value
-- Iridium — 2.2× value
-
-Friendship, happiness, Farming Level, housing tier, heating, and daily care affect the final quality. Flat inventory counts remain compatible with existing systems while ranch quality is stored separately for accurate processing and selling.
-
-### Incubation and ranch supplies
-
-The Meadow & Manger Ranch Supply counter sells animals, Hay, Animal Medicine, heaters, Incubator Heat Packs, a Ranch Scythe, a Milking Pail, and Wool Shears. Species availability depends on Farming Level, housing tier, and remaining capacity.
-
-Large Coops can incubate Chicken or Duck Eggs. Incubation pauses safely when the Coop is full and hatches automatically after space becomes available.
-
-### Artisan machines
-
-Four machines convert quality animal products into more valuable goods over game time:
+Four machines process quality goods over game time:
 
 - Egg or Duck Egg → Mayonnaise
 - Milk or Goat Milk → Cheese
 - Wool or Feather → Cloth
 - Truffle → Truffle Oil
-
-Up to two of each machine can be built. Input quality carries into the artisan output, high Farming Level speeds processing, and Farming Level 9 can improve the finished quality.
-
-### Ranch achievements
-
-- **First Flock** — Welcome the first animal
-- **Happy Herd** — Raise four deeply bonded and happy animals
-- **Master Rancher** — Build Deluxe housing and care for twelve animals
-- **Artisan of Hearthvale** — Produce four different artisan goods
-
-### Performance and save compatibility
-
-Animals update and render only while the Farmstead is active. Daily care, off-screen grazing, construction, incubation, and artisan processing are resolved through compact save-state calculations.
-
-Existing browser saves automatically receive an empty ranch, default housing state, pasture grass, quality storage, machine slots, Hay capacity, and care records. Crops, inventory, Chapter 1 and Chapter 2 progress, friendships, equipment, seasons, festivals, cave progress, and Waystone state remain intact.
 
 ## Version 3.8 — Seasons and Festivals
 
@@ -117,7 +123,7 @@ Crops and fish use Normal, Silver, Gold, and Iridium quality. Shops use daily st
 
 ## Version 3.5 — Living World
 
-All 18 named NPCs have time- and weather-aware routines. Hearthvale and Silvercrest contain moving citizens, shop hours, evening lights, umbrellas, contextual dialogue, friendship milestones, and playable Farmhouse and Adventurers’ Guild interiors.
+All 18 named NPCs have time- and weather-aware routines. Hearthvale and Silvercrest contain moving citizens, shop hours, evening lights, umbrellas, contextual dialogue, friendship milestones, and the original Farmhouse and Adventurers' Guild interiors.
 
 Characters use animated geometric body parts for walking, blinking, tool actions, fishing, combat, and weather reactions.
 
@@ -129,7 +135,7 @@ The world uses deterministic 16 × 16 tile chunks. Only nearby terrain, resource
 
 ## Guided Chapter 1
 
-Chapter 1 introduces farming, Hearthvale Village, Silvercrest City, the Adventurers’ Guild, Greenfield combat, and Cave Floor 3 through a persistent objective tracker, progress bars, world markers, cave markers, directional arrows, dialogue, rewards, and a completion screen.
+Chapter 1 introduces farming, Hearthvale Village, Silvercrest City, the Adventurers' Guild, Greenfield combat, and Cave Floor 3 through a persistent objective tracker, progress bars, world markers, cave markers, directional arrows, dialogue, rewards, and a completion screen.
 
 ## Combat and equipment
 
@@ -182,6 +188,8 @@ node tests/seasons-runtime.mjs
 node tests/ranching.mjs
 node tests/ranching-runtime.mjs
 node tests/ranching-hardening.mjs
+node tests/interiors.mjs
+node tests/interiors-runtime.mjs
 ```
 
 ## Controls
