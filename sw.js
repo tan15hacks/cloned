@@ -1,8 +1,9 @@
-const CACHE = "hearthvale-continent-v3-1";
+const CACHE = "hearthvale-continent-v3-2";
 const ASSETS = [
   "./",
   "./index.html",
   "./styles.css",
+  "./chapter-one.css",
   "./game.js",
   "./game-shared.js",
   "./game-base.js",
@@ -18,6 +19,7 @@ const ASSETS = [
   "./game-render-3.js",
   "./game-ui.js",
   "./game-performance.js",
+  "./chapter-one.js",
   "./world-stream.js",
   "./world.js",
   "./world-data.js",
@@ -38,7 +40,7 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
   const requestUrl = new URL(event.request.url);
-  const isCoreCode = requestUrl.pathname.endsWith(".js") || requestUrl.pathname.endsWith("/index.html");
+  const isCoreCode = requestUrl.pathname.endsWith(".js") || requestUrl.pathname.endsWith(".css") || requestUrl.pathname.endsWith("/index.html");
   if (isCoreCode) {
     event.respondWith(fetch(event.request).then((response) => {
       const copy = response.clone();
