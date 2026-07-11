@@ -1,6 +1,52 @@
 # Hearthvale
 
-Hearthvale is an original, responsive farming, exploration, living-world, guild, combat, progression, and story-adventure game. It uses its own characters, story, map, dialogue, systems, and geometric cartoon rendering rather than copying Stardew Valley assets or content.
+Hearthvale is an original, responsive seasonal farming, exploration, living-world, guild, combat, progression, and story-adventure game. It uses its own characters, story, map, dialogue, systems, and geometric cartoon rendering rather than copying Stardew Valley assets or content.
+
+## Version 3.8 — Seasons and Festivals
+
+The continuous Day counter now maps into four **28-day seasons** and a repeating **112-day year**:
+
+- Springbloom
+- Suncrest
+- Emberfall
+- Frostwane
+
+The HUD displays the current year, season icon, and season day. Existing saves automatically enter the correct year and season based on their saved Day number.
+
+### Seasonal world and weather
+
+Each season has deterministic weather probabilities and a lightweight visual identity. Spring adds petals and stronger rain chances, summer adds warm motes and clear skies, autumn adds drifting copper leaves, and winter adds snow particles and frequent Snow weather. These visuals remain screen-local and do not increase the streamed world size.
+
+Crop affinity changes through the year:
+
+- Springbloom favors Turnips and Sunberries
+- Suncrest favors Sunberries
+- Emberfall favors Turnips and Moonbeans
+- Frostwane favors Moonbeans
+
+Favored crops gain 25% faster watered growth. Other crops grow 25% slower but never wither, protecting old saves and long-running farms.
+
+### Four annual festivals
+
+- Springbloom Day 7 — **Hearthvale Bloomfair** at the Village Green
+- Suncrest Day 14 — **Moonlake Regatta** at Moonlake Dock
+- Emberfall Day 21 — **Silvercrest Harvest Crown** at the city plaza
+- Frostwane Day 28 — **Starfall Vigil** at the city plaza
+
+Festival sites are visibly decorated from 8:00 AM until 10:00 PM. NPC dialogue responds to both the current season and active festival.
+
+### Festival minigames and rewards
+
+Each festival has a different activity:
+
+- Enchanted Seed Sort
+- Moonlake River Dash
+- Quality-aware Produce Judging
+- Starfall Lantern Memory
+
+Bronze, Silver, and Gold results award Festival Tokens, Adventure XP, related skill XP, seasonal keepsakes, and friendship bonuses. Gold results can award four unique equipment pieces: Bloomfair Charm, Tidecall Ring, Harveststep Boots, and Starfall Crown. Festival Tokens can also purchase consumables or the current festival equipment from the festival shop.
+
+Completing all four festivals in one year unlocks the **A Year of Celebration** achievement. The calendar and Festival Album are available through the Adventure Menu.
 
 ## Version 3.7 — Chapter 2: The Fractured Waystones
 
@@ -50,59 +96,11 @@ Completing Chapter 2 awards:
 
 ## Version 3.6 — Economy, Skills, and Cave Progression
 
-Version 3.6 turns the existing activities into a connected long-term progression system.
+The player has an Adventure Level from 1–20 and five skills from 1–10: Farming, Mining, Combat, Fishing, and Foraging. Activities, quests, bounties, and milestone bosses award experience and unlock permanent perks.
 
-### Adventure and skill levels
+Turnips, Sunberries, Moonbeans, fish, rare fish, and apples can be Normal, Silver, Gold, or Iridium quality. Shops use daily stock, blacksmith upgrades require depth-appropriate materials, and equipment can be enhanced to +3.
 
-The player has an Adventure Level from 1–20 and five skills from 1–10:
-
-- Farming
-- Mining
-- Combat
-- Fishing
-- Foraging
-
-Experience comes from the related activity, quests, bounties, and milestone bosses. Adventure levels unlock permanent perks including maximum energy, movement speed, better selling prices, backpack capacity, critical chance, health, status resistance, and an endgame XP bonus.
-
-### Crop and fish quality
-
-Turnips, Sunberries, Moonbeans, fish, rare fish, and apples can be Normal, Silver, Gold, or Iridium quality. Quality increases sale value by 1×, 1.25×, 1.6×, or 2.2×.
-
-Crop quality improves with Farming Level, crop Harmony, Beacon restoration, and Sparkfall weather. Fishing Level widens the reel target, slows the marker, improves rare-fish chance, and raises fish quality.
-
-Crop growth and base values were rebalanced:
-
-- Turnip: 3 days
-- Sunberry: 5 days
-- Moonbean: 7 days
-
-### Balanced shops and upgrades
-
-Mira’s Seed Shop and Silvercrest Market use limited daily stock. Higher-tier seeds require Farming Level progression. The market supports quality-weighted selling and one-transaction buyback at a premium.
-
-Blacksmith improvements require coins and materials from the appropriate cave depth. Equipped weapons, armor, and helmets can be enhanced from +1 to +3 using ores and Hearth Crystals.
-
-### Cave milestone bosses
-
-Progression bosses guard the transition floors:
-
-- Floor 10 — Mycelial Behemoth
-- Floor 20 — Prismatic Colossus
-- Floor 30 — Frostbound Champion
-- Floor 40 — Caldera Tyrant
-- Floor 50 — Warden of the Deep
-
-The descent gate remains sealed until the floor’s boss is defeated. Each milestone awards increased coins and Guild XP, guarantees appropriate equipment, and unlocks the next material tier.
-
-Ordinary equipment drops are rarer, respect region and cave difficulty, and use a pity system so long unlucky streaks eventually provide an eligible item. Endgame equipment cannot drop from beginner regions.
-
-### Fairer penalties
-
-Combat rescue costs at most 150 coins or 8% of carried coins. Passing out costs at most 80 coins or 5%. Recovery restores a useful amount of health and energy without erasing progression.
-
-### Save compatibility
-
-Existing v1–v3.6 browser saves automatically receive Chapter 2 state, dungeon persistence, equipment preset storage, and story reward flags. Earlier progression, inventory, Chapter 1, friendships, equipment, and cave progress remain intact.
+Progression bosses guard Floors 10, 20, 30, 40, and 50. Ordinary equipment respects region and cave difficulty and uses a pity system.
 
 ## Version 3.5 — Living World
 
@@ -114,7 +112,7 @@ Characters use animated geometric body parts for walking, blinking, tool actions
 
 The 256 × 224 overworld remains **57,344 tiles**, with authored settlement roads, protected door clearances, city walls and gates, regional decorations, animated environmental effects, safer cave entrances, and improved underground presentation.
 
-The world still uses deterministic **16 × 16 tile chunks**. Only nearby terrain, resources, monsters, decorations, citizens, and effects are active at runtime.
+The world uses deterministic **16 × 16 tile chunks**. Only nearby terrain, resources, monsters, decorations, citizens, and effects are active at runtime.
 
 ## Guided Chapter 1
 
@@ -143,6 +141,10 @@ Five surface entrances connect to the Grand Depths. Floor 1 is an expedition hub
 
 Each non-hub floor independently has a deterministic 1% chest chance for the current expedition.
 
+## Save compatibility
+
+Existing v1–v3.7 browser saves automatically receive seasonal calendar state, festival records, yearly score storage, deterministic seasonal weather forecasts, and festival minigame safety state. Inventory, farms, story progress, relationships, equipment, cave progress, and Chapter 2 dungeon persistence remain intact.
+
 ## Time and streaming
 
 - Overworld clock: **1.25 game minutes per real second**
@@ -166,6 +168,7 @@ node tests/smoke.mjs
 node tests/living-world.mjs
 node tests/progression.mjs
 node tests/chapter-two.mjs
+node tests/seasons.mjs
 ```
 
 ## Controls
