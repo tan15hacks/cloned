@@ -13,10 +13,11 @@ import { game_render_3 } from "./game-render-3.js";
 import { game_ui } from "./game-ui.js";
 import { installPerformanceStreaming } from "./game-performance.js";
 import { installWorldPolish } from "./game-world-polish.js";
+import { installWorldPolishRuntime } from "./game-world-polish-runtime.js";
+import { installLivingWorld } from "./game-living-world.js";
 import { installChapterOne } from "./chapter-one.js";
 import { installCombatOverhaul } from "./game-combat.js";
 import { installCombatRuntimeHardening } from "./game-combat-runtime.js";
-import { installWorldPolishRuntime } from "./game-world-polish-runtime.js";
 
 class HearthvaleGame {
   constructor() {
@@ -71,8 +72,9 @@ Object.assign(
 
 installPerformanceStreaming(HearthvaleGame);
 installWorldPolish(HearthvaleGame);
+installWorldPolishRuntime(HearthvaleGame);
+installLivingWorld(HearthvaleGame);
 installChapterOne(HearthvaleGame);
 installCombatOverhaul(HearthvaleGame);
 installCombatRuntimeHardening(HearthvaleGame);
-installWorldPolishRuntime(HearthvaleGame);
 window.__hearthvale = new HearthvaleGame();
