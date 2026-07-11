@@ -79,7 +79,7 @@ game.state.minutes = 600;
 game.refreshInteriorNpcAssignments();
 game.drawNPCs({}, {});
 assert.equal(game.drawnNpcIds.includes("mira"), false, "Indoor workers must not render on the street");
-assert.equal(game.drawnNpcIds.includes("rowan"), true);
+assert.equal(game.drawnNpcIds.includes("rowan"), false, "Rowan should be working inside the city inn at 10:00 AM");
 
 game.state.mode = "interior";
 game.state.living.interiorId = "cityHall";
