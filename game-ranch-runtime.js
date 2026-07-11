@@ -1,6 +1,9 @@
-import { clamp } from "./game-shared.js";
+import { ITEMS, clamp } from "./game-shared.js";
 import { calendarForDay, festivalForDay } from "./seasons-data.js";
-import { ANIMAL_SPECIES, housingDefinition } from "./ranch-data.js";
+import {
+  ANIMAL_SPECIES, MACHINE_DEFS, RANCH_QUALITY, RANCH_SUPPLIES,
+  housingDefinition, siloCapacity,
+} from "./ranch-data.js";
 
 function snapshotMachines(ranch) {
   return Object.fromEntries(Object.entries(ranch?.machines || {}).map(([id, machine]) => [id, (machine.slots || []).map((slot) => slot ? { ...slot } : null)]));
@@ -20,11 +23,61 @@ function haySaveRoll(day, animal) {
   return (value >>> 0) / 4294967296;
 }
 
+export function normalizeRanchRuntime(state) {
+  const ranch = state?.ranch;
+  if (!ranch) return state;
+  const maxLevel = { coop: 3, barn: 3, silo: 2 };
+  if (ranch.construction) {
+    const kind = ranch.construction.kind;
+    const current = Number(ranch.buildings?.[kind]?.level) || 0;
+    if (!(kind in maxLevel) || current >= maxLevel[kind]) ranch.construction = null;
+    else {
+      ranch.construction.targetLevel = clamp(Math.floor(Number(ranch.construction.targetLevel) || current + 1), current + 1, maxLevel[kind]);
+      ranch.construction.daysRemaining = clamp(Math.floor(Number(ranch.construction.daysRemaining) || 1), 1, 10);
+    }
+  }
+  ranch.lastProcessedDay = clamp(Math.floor(Number(ranch.lastProcessedDay) || 0), 0, Math.max(1, Number(state.day) || 1));
+  ranch.hay = clamp(Math.floor(Number(ranch.hay) || 0), 0, siloCapacity(ranch));
+  ranch.troughWater = clamp(Number(ranch.troughWater) || 0, 0, 100);
+  ranch.cleanliness = clamp(Number(ranch.cleanliness) || 0, 0, 100);
+  for (const animal of ranch.animals || []) {
+    const product = animal.productReady;
+    if (!product) continue;
+    if (!ITEMS[product.id] || !RANCH_QUALITY[product.quality]) animal.productReady = null;
+    else product.amount = clamp(Math.floor(Number(product.amount) || 1), 1, 2);
+  }
+  for (const [id, def] of Object.entries(MACHINE_DEFS)) {
+    const machine = ranch.machines?.[id];
+    if (!machine) continue;
+    machine.count = clamp(Math.floor(Number(machine.count) || 0), 0, 2);
+    const slots = Array.isArray(machine.slots) ? machine.slots.slice(0, machine.count) : [];
+    while (slots.length < machine.count) slots.push(null);
+    machine.slots = slots.map((slot) => {
+      if (!slot || def.inputs[slot.input] !== slot.output || !RANCH_QUALITY[slot.quality]) return null;
+      const remaining = Math.max(0, Number(slot.remaining) || 0);
+      return { ...slot, remaining, ready: Boolean(slot.ready || remaining <= 0) };
+    });
+  }
+  return state;
+}
+
 export function installRanchingRuntime(GameClass) {
   const proto = GameClass.prototype;
+  const originalMigrateState = proto.migrateState;
+  const originalEnterGame = proto.enterGame;
   const originalUpdate = proto.update;
   const originalNextDay = proto.nextDay;
   const originalProcessDayEnd = proto.processRanchDayEnd;
+  const originalBuyRanchSupply = proto.buyRanchSupply;
+
+  if (originalMigrateState) proto.migrateState = function migrateStateRanchingHardened(data) {
+    return normalizeRanchRuntime(originalMigrateState.call(this, data));
+  };
+
+  if (originalEnterGame) proto.enterGame = function enterGameRanchingHardened() {
+    originalEnterGame.call(this);
+    normalizeRanchRuntime(this.state);
+  };
 
   proto.consumeRanchHay = function consumeRanchHay(animal = null) {
     const ranch = this.state.ranch;
@@ -110,5 +163,19 @@ export function installRanchingRuntime(GameClass) {
     this.awardSkillXp?.("farming", fed, .1);
     this.toast(`Fed ${fed} animal${fed === 1 ? "" : "s"}.`);
     this.closeModal(); this.showRanchCare();
+  };
+
+  if (originalBuyRanchSupply) proto.buyRanchSupply = function buyRanchSupplyHardened(supplyId) {
+    const supply = RANCH_SUPPLIES[supplyId];
+    if (supply?.item !== "hay") return originalBuyRanchSupply.call(this, supplyId);
+    const room = siloCapacity(this.state.ranch) - this.state.ranch.hay;
+    if (room <= 0) return this.toast("Hay storage is full.");
+    const amount = Math.min(room, supply.amount);
+    const price = Math.ceil(supply.price * amount / supply.amount);
+    if (this.state.coins < price) return this.toast("Not enough coins.");
+    this.state.coins -= price;
+    this.state.ranch.hay += amount;
+    this.toast(`Bought Hay ×${amount} for ${price} coins.`);
+    this.closeModal(); this.openRancherShop();
   };
 }
