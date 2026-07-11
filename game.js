@@ -23,6 +23,8 @@ import { installProgressionCore } from "./game-progression-core.js";
 import { installProgressionCaves } from "./game-progression-cave.js";
 import { installProgressionCaveRuntime } from "./game-progression-cave-runtime.js";
 import { installProgressionEconomy } from "./game-progression-economy.js";
+import { installChapterTwo } from "./game-chapter-two.js";
+import { installStoryDungeon } from "./game-story-dungeon.js";
 
 class HearthvaleGame {
   constructor() {
@@ -42,6 +44,7 @@ class HearthvaleGame {
     this.audio = null;
     this.state = null;
     this.currentCave = null;
+    this.currentStoryDungeon = null;
     this.resourceMap = new Map();
     this.camera = { x: 0, y: 0 };
     this.screen = { width: innerWidth, height: innerHeight, dpr: devicePixelRatio || 1 };
@@ -52,6 +55,7 @@ class HearthvaleGame {
     this.activeChunkSignature = "";
     this.lateWarningShown = false;
     this.chapterHudSignature = "";
+    this.chapterTwoHudSignature = "";
     this.bindUI();
     this.resize();
     this.updateContinueState();
@@ -87,4 +91,6 @@ installProgressionCore(HearthvaleGame);
 installProgressionCaves(HearthvaleGame);
 installProgressionCaveRuntime(HearthvaleGame);
 installProgressionEconomy(HearthvaleGame);
+installChapterTwo(HearthvaleGame);
+installStoryDungeon(HearthvaleGame);
 window.__hearthvale = new HearthvaleGame();
