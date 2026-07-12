@@ -1,4 +1,4 @@
-const CACHE = "hearthvale-continent-v3-14-3";
+const CACHE = "hearthvale-continent-v3-15";
 const ASSETS = [
   "./",
   "./index.html",
@@ -14,6 +14,7 @@ const ASSETS = [
   "./cooking.css",
   "./fishing.css",
   "./museum.css",
+  "./storage.css",
   "./game.js",
   "./game-shared.js",
   "./game-base.js",
@@ -62,6 +63,10 @@ const ASSETS = [
   "./museum-data.js",
   "./game-museum.js",
   "./game-museum-runtime.js",
+  "./inventory-storage-data.js",
+  "./game-storage.js",
+  "./game-storage-runtime.js",
+  "./game-storage-overflow-runtime.js",
   "./game-combat.js",
   "./game-combat-runtime.js",
   "./game-world-polish.js",
