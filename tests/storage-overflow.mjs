@@ -28,6 +28,7 @@ class OverflowHarness {
   addItem(id, amount = 1) { this.state.inventory[id] = (this.state.inventory[id] || 0) + amount; }
   addRanchItem(id, quality, amount) { this.addItem(id, amount); this.state.ranch.qualityInventory[id][quality] += amount; }
   recordQuality(id, quality, amount = 1) { this.state.progression.qualityInventory[id][quality] += amount; }
+  giveSocialGift(npcId, itemId) { if ((this.state.inventory[itemId] || 0) > 0) this.state.inventory[itemId] -= 1; }
   harvestCrop() {}
   finishFishingCatch() {}
   cookMeal() {}
@@ -96,6 +97,13 @@ assert.equal(game.state.storage.chests.trunk.items.egg, 2);
 assert.equal(game.state.storage.chests.trunk.qualities.egg.gold, 1);
 assert.equal(game.state.storage.chests.trunk.qualities.egg.normal, 1);
 
+// Gifts made outside the inventory screen must consume the matching quality record.
+game.state.inventory.turnip = 1;
+game.state.progression.qualityInventory.turnip = qualityMap({ gold: 1 });
+game.giveSocialGift("mira", "turnip");
+assert.equal(game.state.inventory.turnip, 0);
+assert.equal(game.state.progression.qualityInventory.turnip.gold, 0);
+
 // Material overflow normally prefers the trunk; a full trunk stack must fall back to the pantry.
 game.state.storage.chests.trunk.items.wood = 9999;
 game.state.storage.chests.trunk.qualities.wood = qualityMap({ normal: 9999 });
@@ -113,5 +121,6 @@ console.log(JSON.stringify({
   progressionQualityPreserved: true,
   ranchQualityPreserved: true,
   normalQualityIsolation: true,
+  giftQualitySynchronization: true,
   stackLimitsRespected: true,
 }));
