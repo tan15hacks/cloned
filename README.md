@@ -1,83 +1,78 @@
 # Hearthvale
 
-Hearthvale is an original responsive farming, ranching, cooking, fishing, collection, storage, construction, relationship, exploration, guild-combat, and story-adventure game. It uses original characters, map design, dialogue, systems, and geometric cartoon rendering.
+Hearthvale is an original responsive farming, ranching, cooking, fishing, collection, storage, construction, automation, relationship, exploration, guild-combat, and story-adventure game. It uses original characters, map design, dialogue, systems, and geometric cartoon rendering.
+
+## Version 3.17 — Farm Workshop and Field Automation
+
+Version 3.17 turns the Farm Workshop into a permanent field-production system connected to storage, crop growth, weather, and the Farmstead expansion chain.
+
+### Five automation blueprints
+
+- **Quality Sprinkler** — waters all eight neighboring crop tiles before morning growth
+- **Bee House** — produces honey every two days; four nearby mature crops double the output
+- **Spark Rod** — captures one Hearth Battery during Sparkfall weather
+- **Seed Maker** — converts one harvested crop into fresh seeds the following morning
+- **Hearth Sprinkler** — waters all 24 surrounding tiles within a two-tile radius
+
+Blueprints unlock through the Farmstead project chain. The workshop may draw crafting materials from the backpack, Farmhouse Pantry, and Adventure Trunk.
+
+### Placement and interaction
+
+Automation devices are placed on empty, untilled Farmstead crop-field tiles. Players can interact directly with machines to collect outputs, load Seed Makers, inspect production timers, or return idle devices to storage.
+
+- 40-device total Farmstead limit
+- Per-blueprint placement limits
+- Device-specific geometric rendering and ready-output markers
+- Adventure Menu and Farm Workshop access
+- Context-sensitive interaction hints on desktop and mobile
+
+### Daily automation order
+
+Advanced sprinklers water soil before the existing daily crop-growth step. This means crops receive growth correctly on the same morning rather than waiting an extra day.
+
+Bee Houses, Spark Rods, and Seed Makers process their production before the new day begins. Overlapping sprinkler coverage counts each watered tile once for statistics.
+
+### Production outputs
+
+- **Wildflower Honey** — standard Bee House output
+- **Spark Honey** — premium honey produced during Sparkfall
+- **Hearth Battery** — required by the advanced Hearth Sprinkler blueprint
+- Turnip, Sunberry, and Moonbean seeds from Seed Makers
+
+### Save and streaming safety
+
+Migration validates device types, Farmstead coordinates, per-device limits, unique IDs, machine inputs, outputs, quantities, production dates, duplicate tiles, and conflicting soil. Forged outputs, zero-sized outputs, invalid crops, non-finite positions, and excess devices are rejected.
+
+Chunk streaming removes newly generated resources or monsters that occupy an automation device tile while preserving unrelated streamed objects.
+
+### Automation achievements
+
+- **First Circuit** — place the first automation device
+- **Rainmaker** — operate eight advanced sprinklers
+- **Sweet Industry** — collect 25 jars of honey
+- **Bottled Spark** — capture 10 Hearth Batteries
+- **Seed Sovereignty** — produce 50 seeds
+- **Master Mechanist** — craft every automation blueprint
 
 ## Version 3.16 — Farmstead Expansion and Hearthglass Greenhouse
 
 Version 3.16 turns the lower Farmstead into a permanent construction and protected-farming progression loop.
 
-### Five construction projects
+1. **Restore the South Field** — morning irrigation for up to 16 outdoor crops
+2. **Build the Farm Workshop** — crafting, planning, and estate reports
+3. **Build the Hearthglass Greenhouse** — 24 protected crop beds
+4. **Install the Irrigation Network** — every greenhouse bed and up to 48 outdoor crops
+5. **Expand the Greenhouse** — 48 total beds and 25% faster protected growth
 
-The project board beside the Old Barn manages a dependency-safe sequence:
-
-1. **Restore the South Field** — unlock morning irrigation for up to 16 outdoor crops
-2. **Build the Farm Workshop** — add a crafting, project-planning, and estate-report station
-3. **Build the Hearthglass Greenhouse** — unlock 24 protected crop beds
-4. **Install the Irrigation Network** — water every greenhouse bed and up to 48 outdoor crops automatically
-5. **Expand the Greenhouse** — open 24 additional beds and increase greenhouse growth by 25%
-
-Only one construction project may run at a time. Each project requires coins, materials, and completed prerequisites. Construction materials may be drawn from the backpack, Farmhouse Pantry, and Adventure Trunk.
-
-### Season-proof greenhouse farming
-
-The greenhouse is a fully playable interior with independent soil, tool interactions, crop growth, irrigation controls, and a growing ledger.
-
-- Basic greenhouse — 24 plots
-- Expanded greenhouse — 48 plots
-- All three crop types grow at full speed in every season
-- Hoe, watering can, seed selection, harvesting, quality rolls, skill XP, inventory overflow, and storage remain connected to the existing farming systems
-- The deluxe greenhouse grows protected crops at ×1.25 speed
-
-### Farmstead layout and safety
-
-The lower Farmstead now contains two open fence gates, aligned construction paths, prepared workshop and greenhouse sites, and a permanent project board. Construction-site rectangles are reserved from deterministic chunk resources and decorative obstacles. Existing players trapped inside a completed building are moved to a nearby clear path.
-
-Migration validates project order, prerequisites, remaining construction days, greenhouse plots, crop IDs, crop growth, planted days, counters, world conflicts, and non-finite imported values.
-
-### Farmstead achievements
-
-- **Breaking New Ground** — complete the first project
-- **A Place to Build** — construct the Farm Workshop
-- **Under Hearthglass** — construct the greenhouse
-- **Water Finds a Way** — install the irrigation network
-- **Protected Harvest** — harvest 50 greenhouse crops
-- **Master of the Farmstead** — complete all five projects
+The greenhouse remains a fully playable interior with independent soil, normal farming tools, quality harvests, skill XP, inventory overflow, and season-proof crop growth.
 
 ## Version 3.15 — Storage, Shipping, and Inventory Management
 
-Version 3.15 adds a quality-safe inventory-management loop connecting farming, fishing, ranching, cooking, the museum, shops, and daily income.
-
-### Expandable backpack
-
-The backpack tracks unique item stacks rather than total units. Each stack holds up to 999 items.
-
-- Field Pack — 40 stacks
-- Explorer Pack — 56 stacks
-- Expedition Pack — 72 stacks
-- Curator Pack — 96 stacks
-
-Silvercrest upgrades require coins and progression materials. Existing saves with more unique stacks than their recorded capacity preserve those items safely during migration.
-
-### Two farmhouse storage chests
-
-The Farmhouse contains two independent, reachable storage stations:
-
-- **Farmhouse Pantry** — 80 stacks for crops, forage, fish, ranch goods, artisan products, consumables, and prepared meals
-- **Adventure Trunk** — 120 stacks for materials, monster drops, equipment, supplies, and collectibles
-
-Players can move one item or an entire stack in either direction. The Inventory screen also supports quick storage while inside the Farmhouse.
-
-### Quality-safe transfers
-
-Normal, Silver, Gold, and Iridium records move with crops, fishing inventory, ranch products, artisan goods, and prepared meals. When the backpack is full, newly collected goods use their preferred chest and then the alternate chest.
-
-### Farmstead shipping bin
-
-A physical shipping bin stands east of the Farmstead mailbox. Goods remain retrievable until the day ends. Sleeping or passing out processes the shipment exactly once and records quality-aware values, bonuses, total payout, lifetime revenue, and shipment count. Important equipment, tokens, seals, quest tools, and collectibles cannot be shipped.
+Version 3.15 adds an expandable 40–96-stack backpack, an 80-stack Farmhouse Pantry, a 120-stack Adventure Trunk, quality-safe transfers, and overnight shipping with morning payouts.
 
 ## Version 3.14 — Silvercrest Museum and Collections
 
-The Silvercrest Museum contains nine permanent galleries with **45 display entries** and **49 donation units**. Completing galleries awards coins, Adventure XP, and Museum Tokens. Completing the museum grants the Continental Curator Seal. Donations synchronize with crop, fish, ranch, artisan, and meal-quality records.
+The Silvercrest Museum contains nine permanent galleries with 45 display entries and 49 donation units. Gallery completion awards coins, Adventure XP, Museum Tokens, and the Continental Curator Seal.
 
 ## Major systems
 
@@ -94,7 +89,8 @@ The Silvercrest Museum contains nine permanent galleries with **45 display entri
 - **21 regional fish species**, bait, tackle, treasures, records, and four legendary fish
 - **Nine museum galleries** integrating long-term collection loops
 - **Expandable backpack, two chests, and quality-aware overnight shipping**
-- **Five Farmstead construction projects**, a workshop, and automatic irrigation
+- **Five Farmstead construction projects** and protected farming
+- **Five workshop automation blueprints** with honey, batteries, seeds, and advanced irrigation
 
 ## Run locally
 
@@ -109,37 +105,10 @@ Run syntax and regression validation:
 ```bash
 npm run check
 node tests/smoke.mjs
-node tests/living-world.mjs
-node tests/progression.mjs
-node tests/chapter-two.mjs
-node tests/seasons.mjs
-node tests/seasons-runtime.mjs
-node tests/ranching.mjs
-node tests/ranching-runtime.mjs
-node tests/ranching-hardening.mjs
-node tests/interiors.mjs
-node tests/interiors-runtime.mjs
-node tests/interiors-hardening.mjs
-node tests/relationships.mjs
-node tests/relationships-runtime.mjs
-node tests/cooking.mjs
-node tests/cooking-runtime.mjs
-node tests/cooking-hardening.mjs
-node tests/fishing.mjs
-node tests/fishing-runtime.mjs
-node tests/fishing-world.mjs
-node tests/museum.mjs
-node tests/museum-runtime.mjs
-node tests/museum-hardening.mjs
-node tests/storage.mjs
-node tests/storage-runtime.mjs
-node tests/storage-hardening.mjs
-node tests/storage-overflow.mjs
-node tests/storage-ui-runtime.mjs
-node tests/farmstead-expansion.mjs
-node tests/farmstead-expansion-runtime.mjs
-node tests/farmstead-expansion-world.mjs
-node tests/farmstead-expansion-stream.mjs
+node tests/workshop-automation.mjs
+node tests/workshop-automation-gameplay.mjs
+node tests/workshop-automation-runtime.mjs
+node tests/workshop-automation-stream.mjs
 ```
 
 ## Controls
