@@ -42,7 +42,7 @@ hardenCookingState(state);
 assert.equal(state.cooking.level, 1, "Non-finite XP should normalize safely instead of becoming a forged maximum level");
 assert.equal(state.cooking.xp, 0);
 assert.deepEqual(state.cooking.knownRecipes.sort(), ["herbOmelet", "sunberryCompote", "turnipBroth"].sort());
-assert.deepEqual(state.cooking.notifiedRecipes, ["riverStew"]);
+assert.deepEqual(state.cooking.notifiedRecipes, [], "Unknown or unlearned notification records must not suppress future recipe letters");
 assert.deepEqual(state.cooking.stats.uniqueRecipesCooked, ["turnipBroth"]);
 assert.equal(state.cooking.stats.mealsEaten, 0);
 assert.equal(state.cooking.stats.iridiumMeals, 4);
@@ -88,6 +88,7 @@ console.log(JSON.stringify({
   finiteXp: true,
   mealInventoryReconciled: true,
   unknownItemsRemoved: true,
+  forgedNotificationCleanup: true,
   forgedBuffCorrected: true,
   durationCapped: true,
   expiredBuffRemoved: true,
