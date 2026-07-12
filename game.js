@@ -56,6 +56,7 @@ import { installFarmsteadStreamRuntime } from "./game-farmstead-stream-runtime.j
 import { installWorkshopAutomation } from "./game-workshop-automation.js";
 import { installWorkshopAutomationRuntime } from "./game-workshop-automation-runtime.js";
 import { installWorkshopAutomationStreamRuntime } from "./game-workshop-automation-stream-runtime.js";
+import { installFarmsteadTerrainArt } from "./game-farmstead-art.js";
 
 class HearthvaleGame {
   constructor() {
@@ -157,4 +158,5 @@ installFarmsteadStreamRuntime(HearthvaleGame);
 installWorkshopAutomation(HearthvaleGame);
 installWorkshopAutomationRuntime(HearthvaleGame);
 installWorkshopAutomationStreamRuntime(HearthvaleGame);
+installFarmsteadTerrainArt(HearthvaleGame);
 window.__hearthvale = new HearthvaleGame();
