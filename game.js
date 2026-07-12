@@ -42,6 +42,7 @@ import { installRelationshipsRuntime } from "./game-relationships-runtime.js";
 import { installRelationshipSecurity } from "./game-relationships-security.js";
 import { installCooking } from "./game-cooking.js";
 import { installCookingRuntime } from "./game-cooking-runtime.js";
+import "./fishing-region-data.js";
 import { installFishingOverhaul } from "./game-fishing.js";
 import { installFishingRuntime } from "./game-fishing-runtime.js";
 
