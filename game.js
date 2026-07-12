@@ -45,6 +45,8 @@ import { installCookingRuntime } from "./game-cooking-runtime.js";
 import "./fishing-region-data.js";
 import { installFishingOverhaul } from "./game-fishing.js";
 import { installFishingRuntime } from "./game-fishing-runtime.js";
+import { installMuseumCollections } from "./game-museum.js";
+import { installMuseumRuntime } from "./game-museum-runtime.js";
 
 class HearthvaleGame {
   constructor() {
@@ -135,4 +137,6 @@ installCooking(HearthvaleGame);
 installCookingRuntime(HearthvaleGame);
 installFishingOverhaul(HearthvaleGame);
 installFishingRuntime(HearthvaleGame);
+installMuseumCollections(HearthvaleGame);
+installMuseumRuntime(HearthvaleGame);
 window.__hearthvale = new HearthvaleGame();
