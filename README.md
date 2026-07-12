@@ -1,6 +1,89 @@
 # Hearthvale
 
-Hearthvale is an original responsive farming, ranching, cooking, relationship, exploration, guild-combat, and story-adventure game. It uses its own characters, map, dialogue, systems, and geometric cartoon rendering rather than copying another game's assets or content.
+Hearthvale is an original responsive farming, ranching, cooking, fishing, relationship, exploration, guild-combat, and story-adventure game. It uses its own characters, map, dialogue, systems, and geometric cartoon rendering rather than copying another game's assets or content.
+
+## Version 3.13 — Continental Fishing Overhaul
+
+Version 3.13 replaces the original one-roll fishing action with a continent-wide collection, equipment, and timing system.
+
+### 21 regional fish species
+
+Every one of Hearthvale's 14 overworld regions now has a fish pool and a reachable shoreline. Species availability can depend on:
+
+- Region
+- Season
+- Weather
+- Time of day
+- Fishing Level
+- Whether a legendary fish has already been landed
+
+The collection includes settlement fish, mountain salmon, Moonlake night fish, swamp species, volcanic eels, Suncoast ocean fish, ruin-dwelling gar, and four one-time legendary catches.
+
+### Four legendary fish
+
+- **Star-Crowned Koi** — Moonlake during a Frostwane Sparkfall night
+- **Aurora Char** — Frostpeak during a Frostwane Sparkfall night
+- **Cinderheart Koi** — Cinderwake during a Suncrest Sparkfall night
+- **Golden Dawn Marlin** — Suncoast during a clear Suncrest dawn
+
+A first legendary catch awards 600 coins and an Angler's Token. Save hardening rebuilds the caught flag from valid journal records so a removed or malformed flag cannot replay the one-time reward.
+
+### Multi-stage reel minigame
+
+A hooked fish now requires several successful reels. The player must press **REEL** while the moving fish overlaps the highlighted zone before missing three times.
+
+- Harder fish move faster and require more successful reels.
+- Higher Fishing Levels widen the target and calm movement.
+- Center hits improve quality and treasure chance.
+- Perfect catches, escapes, daily streaks, and best streaks are recorded.
+- Closing or abandoning the fishing modal safely ends the session and breaks the active streak.
+
+Each cast is bound to the nearest actual water tile, not merely the player's current region. Border rivers therefore use the correct regional species pool.
+
+### Bait and tackle
+
+Tavi's Tackle Ledger sells daily-limited supplies:
+
+- **Worm Bait** — improves uncommon and rare bite rates
+- **Glow Bait** — strongly attracts nocturnal and legendary fish
+- **Silver Spinner** — widens the reel zone and slightly reduces fish speed
+- **Treasure Bobber** — improves treasure and high-quality catch chances
+
+Bait is consumed per cast. Tackle has persistent remaining uses and daily shop stock resets after sleeping.
+
+### Continental Fishing Journal
+
+The Adventure Menu now includes a Fishing Journal showing:
+
+- 21 species and four legends
+- Current availability at the player's location
+- Season, weather, time, and level clues
+- Number caught
+- Best quality
+- Largest recorded size
+- First and most recent catch days
+- Catch streak, perfect catches, and treasure totals
+- Selected bait and tackle with remaining stock or uses
+
+### Fishing treasure
+
+Accurate catches can recover coin purses, driftwood, copper caches, bait tins, Hearth Crystals, and Ancient Relics. Treasure odds improve with reel accuracy, perfect catches, and the Treasure Bobber.
+
+### Fishing achievements
+
+- **First Entry** — Record the first fish species
+- **Continental Angler** — Catch 12 species
+- **Living Waters** — Complete all 21 journal entries
+- **Unbroken Line** — Land 10 catches in one day without an escape
+- **Something Beneath** — Recover fishing treasure
+- **Perfect Rhythm** — Land five perfect catches
+- **Legend of Every Water** — Catch all four legendary fish
+
+### Fishing save hardening
+
+Existing saves automatically receive an empty journal, safe default gear, daily shop stock, and Tavi's welcome letter with starter bait. Migration validates species IDs, sizes, qualities, caught counts, legendary records, selected gear, tackle uses, streaks, counters, stock limits, and non-finite imported values.
+
+World regression tests verify that all 14 regions have fishable water and same-region casting shorelines while building doors, Waystones, Waystone spawn points, and cave entrances remain dry.
 
 ## Version 3.12 — Farmhouse Cooking and Meal Buffs
 
@@ -8,12 +91,12 @@ Version 3.12 connects crops, fish, forage, ranch products, artisan goods, relati
 
 ### Farmhouse kitchen
 
-The Farmhouse now contains two playable stations:
+The Farmhouse contains two playable stations:
 
-- **Farmhouse Stove** — prepare known recipes using ingredients from the player's inventory.
-- **Farmhouse Cookbook** — review recipes, unlock requirements, ingredient stock, Cooking XP, meal effects, and prepared food.
+- **Farmhouse Stove** — prepare known recipes using inventory ingredients
+- **Farmhouse Cookbook** — review recipes, unlock requirements, ingredient stock, Cooking XP, meal effects, and prepared food
 
-The stove, cookbook shelf, interaction markers, warm light, and rising steam are rendered inside the existing lightweight Farmhouse interior.
+The stove, cookbook shelf, interaction markers, warm light, and rising steam are rendered inside the Farmhouse interior.
 
 ### 16 original recipes
 
@@ -34,62 +117,21 @@ The stove, cookbook shelf, interaction markers, warm light, and rising steam are
 15. Grand Depths Victory Platter
 16. Hearthvale Continental Feast
 
-Recipes use existing crops, fish, forage, eggs, milk, cheese, goat products, truffles, and artisan goods. Three recipes are available immediately, three unlock through Cooking Levels, and ten are learned from completed resident heart events after reaching the recipe's required Cooking Level.
+Recipes use crops, fish, forage, eggs, milk, cheese, goat products, truffles, and artisan goods. Three recipes are available immediately, three unlock through Cooking Levels, and ten are learned from completed resident heart events after reaching the required Cooking Level.
 
-### Ingredient and meal quality
+### Ingredient quality and meal effects
 
-Cooking understands the existing crop, fish, and ranch quality inventories. Players may choose:
+Players may choose **Cook Standard** to use lower-quality ingredients first or **Use Best Ingredients** to prioritize premium ingredients. Meals can become Homestyle, Refined, Gourmet, or Masterwork quality.
 
-- **Cook Standard** — uses lower-quality ingredients first.
-- **Use Best Ingredients** — spends premium ingredients first for a better final dish.
-
-Prepared meals can become Homestyle, Refined, Gourmet, or Masterwork quality. Higher-quality food restores more health and energy and keeps its meal effect active longer.
-
-### Cooking Levels
-
-Cooking has a dedicated progression path from Level 1 to Level 10. Cooking food awards XP, unlocks advanced cookbook entries, and records:
-
-- Total dishes cooked
-- Total meals eaten
-- Masterwork meals prepared
-- Unique recipes completed
-- Recipe collection progress
-
-### Temporary meal effects
-
-Only one meal effect may be active at a time. Eating another prepared meal replaces the current effect. Effects use game time and remain consistent across overworld travel, interiors, caves, sleeping, saving, and loading.
-
-Meal effects can improve:
-
-- Tool and attack energy efficiency
-- Movement speed
-- Damage and armor
-- Critical chance and attack speed
-- Equipment-drop luck
-- Maximum health
-- Status resistance
-
-The HUD displays the active meal, quality, and remaining game time.
-
-### Relationship recipe letters
-
-Completing selected 3-, 6-, and 9-heart events can unlock personal recipes from Rowan, Lumi, Mira, Tavi, Pella, Niva, Sora, Cass, Bram, and Guildmaster Aria. New recipes are recorded in the journal and delivered through the secure Farmstead mailbox.
-
-Rowan also sends a first-day cooking letter with starter ingredients and explains the restored farmhouse stove.
+Only one meal effect may be active at a time. Food can improve energy efficiency, movement, damage, armor, critical chance, attack speed, loot luck, maximum health, and status resistance.
 
 ### Cooking achievements
 
-- **Home-Cooked** — Prepare the first meal at the farmhouse stove
+- **Home-Cooked** — Prepare the first meal
 - **Kitchen Hand** — Cook 25 meals
-- **Masterwork Supper** — Cook a Masterwork-quality meal
+- **Masterwork Supper** — Cook a Masterwork meal
 - **Continental Cookbook** — Learn all 16 recipes
-- **Continental Chef** — Cook every recipe at least once
-
-### Save hardening
-
-Existing saves automatically receive Cooking Level 1, the starter cookbook, an empty quality-aware pantry, and the kitchen welcome letter. Migration validates recipe IDs, quality counts, XP, statistics, meal inventory, active effects, expiration times, and imported inventory records.
-
-Forged or malformed effects cannot grant unrelated bonuses, imported meal durations are capped to one game day, expired effects are removed, and non-finite XP values are rejected.
+- **Continental Chef** — Cook every recipe
 
 ## Version 3.11 — Relationships, Heart Events, Gifts, and Mailbox
 
@@ -97,7 +139,7 @@ All 18 named residents have unique birthdays, loved and disliked gifts, conversa
 
 Players may give one gift per resident each day and two per seven-day week. Birthday gifts receive stronger bonuses. The Residents menu shows friendship, profession, known preferences, gift usage, talk streaks, completed scenes, and pending invitations.
 
-A physical Farmstead mailbox receives birthday reminders, heart-event invitations, recipe letters, and claim-once item or coin enclosures. Imported letter text is escaped before rendering.
+A physical Farmstead mailbox receives birthday reminders, heart-event invitations, recipe letters, system introductions, and claim-once item or coin enclosures. Imported letter text is escaped before rendering.
 
 ## Version 3.10 — Expanded Building Interiors
 
@@ -127,7 +169,7 @@ Six animal species support long-term ranch progression:
 - Sheep producing Wool
 - Pigs finding Truffles
 
-The Coop and Barn progress through Basic, Large, and Deluxe tiers. The Silo expands hay storage. Daily feeding, petting, health, weather, housing, friendship, happiness, and Farming Level affect Normal, Silver, Gold, and Iridium products.
+The Coop and Barn progress through Basic, Large, and Deluxe tiers. The Silo expands hay storage. Feeding, petting, health, weather, housing, friendship, happiness, and Farming Level affect Normal, Silver, Gold, and Iridium products.
 
 Four machines create Mayonnaise, Cheese, Cloth, and Truffle Oil.
 
@@ -150,9 +192,9 @@ The 52 × 34 Archive includes rune switches, gates, traps, inscriptions, a hidde
 
 ## Version 3.6 — Progression and Cave Milestones
 
-The player has Adventure Level 1–20 and Farming, Mining, Combat, Fishing, and Foraging skills from 1–10. Activities, quests, bounties, and bosses award experience and permanent perks.
+The player has Adventure Level 1–20 and Farming, Mining, Combat, Fishing, and Foraging skills from 1–10. Activities, quests, bounties, bosses, cooking, and fishing award experience and permanent progression.
 
-Crops and fish use four quality tiers. Shops have daily stock, blacksmith upgrades require depth-appropriate materials, equipment can be enhanced to +3, and progression bosses guard Floors 10, 20, 30, 40, and 50.
+Crops, fish, and ranch products use four quality tiers. Shops have daily stock, blacksmith upgrades require depth-appropriate materials, equipment can be enhanced to +3, and progression bosses guard Floors 10, 20, 30, 40, and 50.
 
 ## Version 3.5 — Living World
 
@@ -221,12 +263,15 @@ node tests/relationships-runtime.mjs
 node tests/cooking.mjs
 node tests/cooking-runtime.mjs
 node tests/cooking-hardening.mjs
+node tests/fishing.mjs
+node tests/fishing-runtime.mjs
+node tests/fishing-world.mjs
 ```
 
 ## Controls
 
-- Desktop: WASD/arrows move, E/Enter interact, Space/F uses the selected tool, 1–8 selects tools, Q cycles seeds, and M/Escape opens the Adventure Menu.
-- Android/tablet: virtual movement stick, A tool/attack, B interaction, and tappable toolbar/menu controls.
+- Desktop: WASD/arrows move, E/Enter interact, Space/F uses the selected tool or casts/reels, 1–8 selects tools, Q cycles seeds, and M/Escape opens the Adventure Menu.
+- Android/tablet: virtual movement stick, A tool/attack/cast, B interaction, and tappable toolbar/menu controls.
 
 ## License
 
