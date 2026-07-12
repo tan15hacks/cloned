@@ -130,7 +130,6 @@ export function installRelationshipsRuntime(GameClass) {
       this.refreshActiveWorldChunks?.(true);
       this.saveGame?.(true);
     }
-    this.processSocialDay?.(true);
     return result;
   };
 
