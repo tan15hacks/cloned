@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { INTERIOR_MAPS } from "../living-world-data.js";
-import { AUTHORED_STRUCTURES } from "../world-polish-data.js";
+import { AUTHORED_STRUCTURES, POLISHED_PATH_RECTS } from "../world-polish-data.js";
 import {
   FARM_PROJECTS, FARM_PROJECT_ORDER, FARM_BUILDINGS, FARM_PATH_RECTS,
   GREENHOUSE_BASIC_SLOTS, GREENHOUSE_DELUXE_SLOTS,
@@ -20,6 +20,9 @@ assert.equal(INTERIOR_MAPS.greenhouse.height, 20);
 assert.equal(FARM_BUILDINGS.greenhouse.y + FARM_BUILDINGS.greenhouse.h < 64, true);
 assert.equal(FARM_BUILDINGS.workshop.y + FARM_BUILDINGS.workshop.h < 64, true);
 assert.equal(FARM_PATH_RECTS.length >= 3, true);
+assert.equal(FARM_PATH_RECTS.every(([, y]) => y >= 53), true, "New construction paths must not replace legacy crop rows");
+assert.equal(POLISHED_PATH_RECTS.some(([x, y, w, h]) => x <= FARM_BUILDINGS.workshop.x && y <= FARM_BUILDINGS.workshop.y && x + w >= FARM_BUILDINGS.workshop.x + FARM_BUILDINGS.workshop.w && y + h >= FARM_BUILDINGS.workshop.y + FARM_BUILDINGS.workshop.h), true);
+assert.equal(POLISHED_PATH_RECTS.some(([x, y, w, h]) => x <= FARM_BUILDINGS.greenhouse.x && y <= FARM_BUILDINGS.greenhouse.y && x + w >= FARM_BUILDINGS.greenhouse.x + FARM_BUILDINGS.greenhouse.w && y + h >= FARM_BUILDINGS.greenhouse.y + FARM_BUILDINGS.greenhouse.h), true);
 
 const fresh = createFarmExpansionState({}, { day: 1 });
 assert.equal(projectAvailable(fresh, "southField"), true);
@@ -45,4 +48,5 @@ console.log(JSON.stringify({
   basicPlots: GREENHOUSE_BASIC_SLOTS.length,
   deluxePlots: GREENHOUSE_BASIC_SLOTS.length + GREENHOUSE_DELUXE_SLOTS.length,
   fenceGates: 2,
+  reservedConstructionSites: 2,
 }));
