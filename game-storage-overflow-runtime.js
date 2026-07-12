@@ -1,12 +1,10 @@
 import { ITEMS } from "./game-shared.js";
 import { RANCH_QUALITY } from "./ranch-data.js";
 import {
-  BACKPACK_STACK_LIMIT, STORAGE_CHESTS, preferredStorageChest,
+  BACKPACK_STACK_LIMIT, preferredStorageChest,
   backpackOccupiedSlots, createStorageState,
 } from "./inventory-storage-data.js";
-import {
-  backpackQualityCounts, moveBackpackToContainer,
-} from "./game-storage.js";
+import { moveBackpackToContainer } from "./game-storage.js";
 
 const PROGRESSION_QUALITY_ITEMS = new Set(["turnip", "berry", "moonbean", "fish", "rareFish", "apple"]);
 const QUALITY_ORDER = ["normal", "silver", "gold", "iridium"];
@@ -17,7 +15,7 @@ function finiteInt(value, fallback = 0) {
 }
 
 function shiftStoredQuality(container, id, quality, amount) {
-  if (!container || amount <= 0) return;
+  if (!container || amount <= 0 || quality === "normal") return;
   const record = container.qualities[id];
   if (!record) return;
   let remaining = Math.max(0, finiteInt(amount));
@@ -120,9 +118,9 @@ export function installStorageOverflowRuntime(GameClass) {
 
   if (original.cookMeal) proto.cookMeal = function cookMealStorageOverflow(recipeId, ...args) {
     const result = original.cookMeal.call(this, recipeId, ...args);
-    const beforeSlots = backpackOccupiedSlots(this.state);
+    const occupied = backpackOccupiedSlots(this.state);
     const capacity = Math.max(1, finiteInt(this.state.upgrades?.backpack, 40));
-    if (beforeSlots > capacity && (this.state.inventory?.[recipeId] || 0) > 0) {
+    if (occupied > capacity && (this.state.inventory?.[recipeId] || 0) > 0) {
       const segments = routeBackpackOverflow(this, recipeId, 1);
       if (segments.length) {
         this.toast(`${ITEMS[recipeId]?.name || recipeId} moved to farmhouse storage because the backpack was full.`);
