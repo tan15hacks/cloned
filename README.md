@@ -1,6 +1,47 @@
 # Hearthvale
 
-Hearthvale is an original responsive farming, ranching, cooking, fishing, collection, storage, relationship, exploration, guild-combat, and story-adventure game. It uses original characters, map design, dialogue, systems, and geometric cartoon rendering.
+Hearthvale is an original responsive farming, ranching, cooking, fishing, collection, storage, construction, relationship, exploration, guild-combat, and story-adventure game. It uses original characters, map design, dialogue, systems, and geometric cartoon rendering.
+
+## Version 3.16 — Farmstead Expansion and Hearthglass Greenhouse
+
+Version 3.16 turns the lower Farmstead into a permanent construction and protected-farming progression loop.
+
+### Five construction projects
+
+The project board beside the Old Barn manages a dependency-safe sequence:
+
+1. **Restore the South Field** — unlock morning irrigation for up to 16 outdoor crops
+2. **Build the Farm Workshop** — add a crafting, project-planning, and estate-report station
+3. **Build the Hearthglass Greenhouse** — unlock 24 protected crop beds
+4. **Install the Irrigation Network** — water every greenhouse bed and up to 48 outdoor crops automatically
+5. **Expand the Greenhouse** — open 24 additional beds and increase greenhouse growth by 25%
+
+Only one construction project may run at a time. Each project requires coins, materials, and completed prerequisites. Construction materials may be drawn from the backpack, Farmhouse Pantry, and Adventure Trunk.
+
+### Season-proof greenhouse farming
+
+The greenhouse is a fully playable interior with independent soil, tool interactions, crop growth, irrigation controls, and a growing ledger.
+
+- Basic greenhouse — 24 plots
+- Expanded greenhouse — 48 plots
+- All three crop types grow at full speed in every season
+- Hoe, watering can, seed selection, harvesting, quality rolls, skill XP, inventory overflow, and storage remain connected to the existing farming systems
+- The deluxe greenhouse grows protected crops at ×1.25 speed
+
+### Farmstead layout and safety
+
+The lower Farmstead now contains two open fence gates, aligned construction paths, prepared workshop and greenhouse sites, and a permanent project board. Construction-site rectangles are reserved from deterministic chunk resources and decorative obstacles. Existing players trapped inside a completed building are moved to a nearby clear path.
+
+Migration validates project order, prerequisites, remaining construction days, greenhouse plots, crop IDs, crop growth, planted days, counters, world conflicts, and non-finite imported values.
+
+### Farmstead achievements
+
+- **Breaking New Ground** — complete the first project
+- **A Place to Build** — construct the Farm Workshop
+- **Under Hearthglass** — construct the greenhouse
+- **Water Finds a Way** — install the irrigation network
+- **Protected Harvest** — harvest 50 greenhouse crops
+- **Master of the Farmstead** — complete all five projects
 
 ## Version 3.15 — Storage, Shipping, and Inventory Management
 
@@ -19,7 +60,7 @@ Silvercrest upgrades require coins and progression materials. Existing saves wit
 
 ### Two farmhouse storage chests
 
-The Farmhouse now contains two independent, reachable storage stations:
+The Farmhouse contains two independent, reachable storage stations:
 
 - **Farmhouse Pantry** — 80 stacks for crops, forage, fish, ranch goods, artisan products, consumables, and prepared meals
 - **Adventure Trunk** — 120 stacks for materials, monster drops, equipment, supplies, and collectibles
@@ -28,71 +69,15 @@ Players can move one item or an entire stack in either direction. The Inventory 
 
 ### Quality-safe transfers
 
-Normal, Silver, Gold, and Iridium records move with their items. This includes:
-
-- Crops and orchard produce
-- Generic fishing inventory
-- Ranch products and artisan goods
-- Prepared meals
-
-When the backpack is full, newly collected goods first use their preferred chest and then the alternate chest. This prevents quality catches, ranch products, or harvests from being forced into an invalid backpack stack.
-
-### Inventory organization
-
-The redesigned Inventory screen includes:
-
-- Occupied-stack and capacity counters
-- Category filters
-- Sorting by category, name, quantity, or value
-- Quality summaries
-- Base sale values
-- Storage and shipping shortcuts
-
-Categories cover seeds, crops, forage, fish, ranch products, artisan goods, meals, materials, monster drops, consumables, special items, and miscellaneous goods.
+Normal, Silver, Gold, and Iridium records move with crops, fishing inventory, ranch products, artisan goods, and prepared meals. When the backpack is full, newly collected goods use their preferred chest and then the alternate chest.
 
 ### Farmstead shipping bin
 
-A physical shipping bin stands east of the Farmstead mailbox. Players can queue goods individually, move complete stacks, or use bulk produce and artisan buttons.
-
-Goods remain retrievable until the day ends. Sleeping or passing out processes the shipment exactly once and records:
-
-- Items sold
-- Quality-aware values
-- Hearthlight market bonus
-- Total morning payout
-- Lifetime shipping revenue
-- Number of completed shipments
-
-Special equipment, tokens, seals, quest tools, and important collectibles cannot be shipped.
-
-### Storage achievements
-
-- **Everything in Its Place** — store the first item
-- **Farmhouse Organizer** — maintain 25 stored item stacks
-- **Packed and Ready** — purchase a backpack upgrade
-- **First Morning Market** — complete the first overnight shipment
-- **Merchant's Morning** — earn at least 5,000 coins from one shipment
-- **Continental Supplier** — earn 50,000 coins through shipping
-
-### Save hardening
-
-Migration validates backpack capacity, stack limits, both chests, shipping contents, quality ledgers, shipment history, counters, and item IDs. Unknown items and non-finite values are rejected. Overstacked legacy goods route into farmhouse storage, non-shippable goods are recovered from the shipping bin, and the physical bin's world tile remains clear after daily resource regeneration.
+A physical shipping bin stands east of the Farmstead mailbox. Goods remain retrievable until the day ends. Sleeping or passing out processes the shipment exactly once and records quality-aware values, bonuses, total payout, lifetime revenue, and shipment count. Important equipment, tokens, seals, quest tools, and collectibles cannot be shipped.
 
 ## Version 3.14 — Silvercrest Museum and Collections
 
-The Silvercrest Museum contains nine permanent galleries with **45 display entries** and **49 donation units**:
-
-- First Harvest Gallery
-- Continental Waters Exhibit
-- Ranch Heritage Hall
-- Artisan Traditions Wing
-- Wildlands Herbarium
-- Continental Geology Cabinet
-- Monster Ecology Archive
-- Ancient Depths Collection
-- The Hearthvale Table
-
-Completing galleries awards coins, Adventure XP, and Museum Tokens. Completing the museum grants the Continental Curator Seal. Donations synchronize with crop, fish, ranch, artisan, and meal-quality records.
+The Silvercrest Museum contains nine permanent galleries with **45 display entries** and **49 donation units**. Completing galleries awards coins, Adventure XP, and Museum Tokens. Completing the museum grants the Continental Curator Seal. Donations synchronize with crop, fish, ranch, artisan, and meal-quality records.
 
 ## Major systems
 
@@ -103,12 +88,13 @@ Completing galleries awards coins, Adventure XP, and Museum Tokens. Completing t
 - **Adventure Level 1–20** and five skills from Level 1–10
 - **Four 28-day seasons** with annual festivals and deterministic weather
 - **Six ranch animal species**, housing upgrades, quality products, and four artisan machines
-- **Ten playable interiors** with schedules, furniture collision, services, and local lighting
+- **Eleven playable interiors**, including the 48-plot Hearthglass Greenhouse
 - **18 residents**, birthdays, gifts, mailbox letters, and 54 heart events
 - **16 quality-aware recipes** with Cooking Levels and temporary meal effects
 - **21 regional fish species**, bait, tackle, treasures, records, and four legendary fish
 - **Nine museum galleries** integrating long-term collection loops
 - **Expandable backpack, two chests, and quality-aware overnight shipping**
+- **Five Farmstead construction projects**, a workshop, and automatic irrigation
 
 ## Run locally
 
@@ -149,6 +135,11 @@ node tests/storage.mjs
 node tests/storage-runtime.mjs
 node tests/storage-hardening.mjs
 node tests/storage-overflow.mjs
+node tests/storage-ui-runtime.mjs
+node tests/farmstead-expansion.mjs
+node tests/farmstead-expansion-runtime.mjs
+node tests/farmstead-expansion-world.mjs
+node tests/farmstead-expansion-stream.mjs
 ```
 
 ## Controls
