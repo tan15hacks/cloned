@@ -68,6 +68,13 @@ assert.equal(game.rebuilt, true);
 assert.equal(game.collides(18.5, 14.5, .3), true, "The physical mailbox must block player movement");
 assert.equal(game.collides(22.5, 18.5, .3), false);
 
+const legacy = new RelationshipHarness();
+legacy.state = legacy.defaultState();
+legacy.state.npcs.find((npc) => npc.id === "mira").friendship = 9;
+legacy.enterGame();
+assert.deepEqual(legacy.state.social.pendingEvents, ["mira:3"], "A high-friendship legacy save should queue only the first missing event on load");
+assert.equal(legacy.state.social.letters.filter((letter) => letter.eventKey?.startsWith("mira:")).length, 1);
+
 const mira = game.state.npcs.find((npc) => npc.id === "mira");
 game.giveSocialGift("mira", "berry");
 assert.equal(mira.friendship, 2, "Loved normal-day gifts should add two friendship");
@@ -144,6 +151,7 @@ assert.deepEqual(standalone.resources.map((resource) => resource.id), ["safe"]);
 console.log(JSON.stringify({
   ok: true,
   welcomeMail: true,
+  singleLegacyInvitation: true,
   giftLimits: true,
   birthdayMultiplier: true,
   heartEventCompletion: true,
