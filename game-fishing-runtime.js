@@ -143,12 +143,13 @@ export function installFishingRuntime(GameClass) {
     const water = nearestFishableWater(this.state, 2);
     if (!water) return this.toast("Stand beside water to cast the fishing rod.");
     const gear = resolvedFishingGear(this.state);
+    const species = selectFishSpecies(this.state, water.regionId, gear.bait.id);
+    if (!species) return this.toast("No fish are biting here under the current season, weather, time, and Fishing Level. Check the Fishing Journal.");
     if (this.state.fishing.selectedBait !== "none" && gear.bait.id === "none") this.toast(`${BAIT_DEFS[this.state.fishing.selectedBait].name} is empty; casting without bait.`);
     if (this.state.fishing.selectedTackle !== "none" && gear.tackle.id === "none") this.toast(`${TACKLE_DEFS[this.state.fishing.selectedTackle].name} has no uses remaining.`);
     consumeResolvedFishingGear(this.state, gear);
     this.spendEnergy(2);
     this.state.fishing.totalCasts += 1;
-    const species = selectFishSpecies(this.state, water.regionId, gear.bait.id);
     return this.openFishingGame(species, water.regionId, gear);
   };
 
