@@ -41,6 +41,7 @@ import { installRelationships } from "./game-relationships.js";
 import { installRelationshipsRuntime } from "./game-relationships-runtime.js";
 import { installRelationshipSecurity } from "./game-relationships-security.js";
 import { installCooking } from "./game-cooking.js";
+import { installCookingRuntime } from "./game-cooking-runtime.js";
 
 class HearthvaleGame {
   constructor() {
@@ -127,4 +128,5 @@ installRelationships(HearthvaleGame);
 installRelationshipsRuntime(HearthvaleGame);
 installRelationshipSecurity(HearthvaleGame);
 installCooking(HearthvaleGame);
+installCookingRuntime(HearthvaleGame);
 window.__hearthvale = new HearthvaleGame();
