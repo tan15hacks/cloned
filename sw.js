@@ -1,4 +1,4 @@
-const CACHE = "hearthvale-continent-v3-15";
+const CACHE = "hearthvale-continent-v3-15-1";
 const ASSETS = [
   "./",
   "./index.html",
