@@ -34,9 +34,11 @@ export function hardenCookingState(state) {
     const recipe = COOKING_RECIPE_MAP[active.recipeId];
     if (!recipe || !MEAL_BUFFS[recipe.buff] || !COOKING_QUALITY[active.quality] || active.expiresAt <= now) state.cooking.activeBuff = null;
     else {
+      const rawStartedAt = Number(active.startedAt);
+      const rawExpiresAt = Number(active.expiresAt);
       active.buffId = recipe.buff;
-      active.startedAt = clamp(Number(active.startedAt) || now, 0, now);
-      active.expiresAt = clamp(Number(active.expiresAt) || now, now + 1, now + MAX_ACTIVE_DURATION);
+      active.startedAt = clamp(Number.isFinite(rawStartedAt) ? rawStartedAt : now, 0, now);
+      active.expiresAt = clamp(Number.isFinite(rawExpiresAt) ? rawExpiresAt : now, now + 1, now + MAX_ACTIVE_DURATION);
     }
   }
 
