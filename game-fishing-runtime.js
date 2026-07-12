@@ -1,7 +1,7 @@
-import { ITEMS, clamp } from "./game-shared.js";
+import { ITEMS, clamp, isWaterTile, regionAt } from "./game-shared.js";
 import {
   FISH_SPECIES_MAP, LEGENDARY_FISH, FISH_QUALITY_ORDER,
-  BAIT_DEFS, TACKLE_DEFS, FISHING_SHOP_STOCK,
+  BAIT_DEFS, TACKLE_DEFS, FISHING_SHOP_STOCK, selectFishSpecies,
 } from "./fishing-data.js";
 import { createFishingState, ensureFishingShopState } from "./game-fishing.js";
 
@@ -13,6 +13,43 @@ const finiteNumber = (value, fallback = 0) => {
   return Number.isFinite(numeric) ? numeric : fallback;
 };
 const finiteInt = (value, fallback = 0) => Math.floor(finiteNumber(value, fallback));
+
+export function nearestFishableWater(state, radius = 2) {
+  if (!state?.player) return null;
+  const playerX = Number(state.player.x) || 0;
+  const playerY = Number(state.player.y) || 0;
+  const safeRadius = clamp(Math.floor(Number(radius) || 2), 1, 4);
+  let nearest = null;
+  for (let dy = -safeRadius; dy <= safeRadius; dy += 1) {
+    for (let dx = -safeRadius; dx <= safeRadius; dx += 1) {
+      const x = Math.floor(playerX + dx);
+      const y = Math.floor(playerY + dy);
+      if (!isWaterTile(x, y)) continue;
+      const distance = Math.hypot(x + .5 - playerX, y + .5 - playerY);
+      if (!nearest || distance < nearest.distance) nearest = {
+        x,
+        y,
+        distance,
+        regionId: regionAt(x + .5, y + .5).id,
+      };
+    }
+  }
+  return nearest;
+}
+
+function resolvedFishingGear(state) {
+  const bait = BAIT_DEFS[state.fishing.selectedBait] || BAIT_DEFS.none;
+  const tackle = TACKLE_DEFS[state.fishing.selectedTackle] || TACKLE_DEFS.none;
+  return {
+    bait: !bait.item || (state.inventory[bait.item] || 0) > 0 ? bait : BAIT_DEFS.none,
+    tackle: tackle.id === "none" || (state.fishing.tackleUses[tackle.id] || 0) > 0 ? tackle : TACKLE_DEFS.none,
+  };
+}
+
+function consumeResolvedFishingGear(state, gear) {
+  if (gear.bait.item) state.inventory[gear.bait.item] = Math.max(0, (state.inventory[gear.bait.item] || 0) - 1);
+  if (gear.tackle.id !== "none") state.fishing.tackleUses[gear.tackle.id] = Math.max(0, (state.fishing.tackleUses[gear.tackle.id] || 0) - 1);
+}
 
 export function hardenFishingState(state) {
   if (!state || typeof state !== "object") return state;
@@ -38,10 +75,11 @@ export function hardenFishingState(state) {
     record.lastDay = clamp(finiteInt(record.lastDay, record.firstDay), record.firstDay, currentDay);
   }
 
-  fishing.legendaryCaught = [...new Set(fishing.legendaryCaught.filter((id) => {
-    const species = FISH_SPECIES_MAP[id];
-    return species?.legendary && fishing.journal[id]?.count > 0;
-  }))].slice(0, LEGENDARY_FISH.length);
+  const recordedLegends = LEGENDARY_FISH.filter((species) => fishing.journal[species.id]?.count > 0).map((species) => species.id);
+  fishing.legendaryCaught = [...new Set([
+    ...fishing.legendaryCaught.filter((id) => FISH_SPECIES_MAP[id]?.legendary && fishing.journal[id]?.count > 0),
+    ...recordedLegends,
+  ])].slice(0, LEGENDARY_FISH.length);
   fishing.selectedBait = BAIT_DEFS[fishing.selectedBait] ? fishing.selectedBait : "none";
   fishing.selectedTackle = TACKLE_DEFS[fishing.selectedTackle] ? fishing.selectedTackle : "none";
   fishing.tackleUses.spinner = clamp(finiteInt(fishing.tackleUses.spinner), 0, MAX_TACKLE_USES);
@@ -71,6 +109,7 @@ export function installFishingRuntime(GameClass) {
     migrateState: proto.migrateState,
     enterGame: proto.enterGame,
     nextDay: proto.nextDay,
+    beginFishing: proto.beginFishing,
     openFishingGame: proto.openFishingGame,
     finishFishingCatch: proto.finishFishingCatch,
     closeModal: proto.closeModal,
@@ -96,6 +135,21 @@ export function installFishingRuntime(GameClass) {
     this.activeFishingSession = null;
     this.saveGame?.(true);
     return result;
+  };
+
+  proto.beginFishing = function beginFishingNearestWater() {
+    if (this.state.mode !== "world") return this.toast("Fishing requires open continental water.");
+    this.state.fishing = createFishingState(this.state.fishing);
+    const water = nearestFishableWater(this.state, 2);
+    if (!water) return this.toast("Stand beside water to cast the fishing rod.");
+    const gear = resolvedFishingGear(this.state);
+    if (this.state.fishing.selectedBait !== "none" && gear.bait.id === "none") this.toast(`${BAIT_DEFS[this.state.fishing.selectedBait].name} is empty; casting without bait.`);
+    if (this.state.fishing.selectedTackle !== "none" && gear.tackle.id === "none") this.toast(`${TACKLE_DEFS[this.state.fishing.selectedTackle].name} has no uses remaining.`);
+    consumeResolvedFishingGear(this.state, gear);
+    this.spendEnergy(2);
+    this.state.fishing.totalCasts += 1;
+    const species = selectFishSpecies(this.state, water.regionId, gear.bait.id);
+    return this.openFishingGame(species, water.regionId, gear);
   };
 
   proto.openFishingGame = function openFishingGameRuntime(species, regionId, gear) {
