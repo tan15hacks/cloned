@@ -2,11 +2,11 @@ import { ITEMS, CROPS, clamp } from "./game-shared.js";
 
 const registerItem = (id, definition) => { ITEMS[id] ||= definition; };
 
-registerItem("qualitySprinklerKit", { name: "Quality Sprinkler", icon: "💦", value: 760 });
-registerItem("hearthSprinklerKit", { name: "Hearth Sprinkler", icon: "💠", value: 2100 });
-registerItem("beeHouseKit", { name: "Bee House", icon: "🐝", value: 920 });
-registerItem("lightningRodKit", { name: "Spark Rod", icon: "⚡", value: 1280 });
-registerItem("seedMakerKit", { name: "Seed Maker", icon: "🌾", value: 1460 });
+registerItem("qualitySprinklerKit", { name: "Quality Sprinkler", icon: "💦", value: 0 });
+registerItem("hearthSprinklerKit", { name: "Hearth Sprinkler", icon: "💠", value: 0 });
+registerItem("beeHouseKit", { name: "Bee House", icon: "🐝", value: 0 });
+registerItem("lightningRodKit", { name: "Spark Rod", icon: "⚡", value: 0 });
+registerItem("seedMakerKit", { name: "Seed Maker", icon: "🌾", value: 0 });
 registerItem("wildHoney", { name: "Wildflower Honey", icon: "🍯", value: 145 });
 registerItem("sparkHoney", { name: "Spark Honey", icon: "✨", value: 285 });
 registerItem("batteryCell", { name: "Hearth Battery", icon: "🔋", value: 340 });
@@ -117,7 +117,7 @@ export function blueprintCostText(blueprint) {
 export function validateWorkshopAutomationData() {
   if (WORKSHOP_BLUEPRINTS.length !== 5 || new Set(WORKSHOP_BLUEPRINTS.map((entry) => entry.id)).size !== 5) return false;
   if (sprinklerOffsets("qualitySprinkler").length !== 8 || sprinklerOffsets("hearthSprinkler").length !== 24) return false;
-  if (WORKSHOP_BLUEPRINTS.some((entry) => !ITEMS[entry.kit] || entry.maxPlaced < 1 || Object.keys(entry.cost).some((id) => !ITEMS[id]))) return false;
+  if (WORKSHOP_BLUEPRINTS.some((entry) => !ITEMS[entry.kit] || ITEMS[entry.kit].value !== 0 || entry.maxPlaced < 1 || Object.keys(entry.cost).some((id) => !ITEMS[id]))) return false;
   if (Object.entries(SEED_MAKER_RECIPES).some(([crop, recipe]) => !CROPS[crop] || !ITEMS[recipe.input] || !ITEMS[recipe.output] || recipe.amount < 1)) return false;
   return ["wildHoney", "sparkHoney", "batteryCell"].every((id) => ITEMS[id]);
 }
