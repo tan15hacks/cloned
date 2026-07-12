@@ -27,7 +27,7 @@ function playerInsideBuilding(player, building) {
     && Number(player?.y) >= building.y && Number(player?.y) < building.y + building.h;
 }
 
-function normalizeGreenhouseSoil(expansion) {
+function normalizeGreenhouseSoil(expansion, day) {
   if (!expansion.completed.includes("greenhouse")) {
     expansion.greenhouseSoil = {};
     return;
@@ -45,7 +45,7 @@ function normalizeGreenhouseSoil(expansion) {
     if (cropType) soil.crop = {
       type: cropType,
       growth: clamp(Number.isFinite(Number(raw.crop.growth)) ? Number(raw.crop.growth) : 0, 0, CROPS[cropType].days),
-      plantedDay: clamp(finiteInt(raw.crop.plantedDay, 1), 1, 999999999),
+      plantedDay: clamp(finiteInt(raw.crop.plantedDay, 1), 1, Math.max(1, finiteInt(day, 1))),
       greenhouse: true,
     };
     if (soil.tilled) result[key] = soil;
@@ -66,7 +66,7 @@ export function hardenFarmsteadExpansionState(state) {
       expansion.project.startedDay = clamp(finiteInt(expansion.project.startedDay, state.day || 1), 1, Math.max(1, finiteInt(state.day, 1)));
     }
   }
-  normalizeGreenhouseSoil(expansion);
+  normalizeGreenhouseSoil(expansion, state.day);
   expansion.stats.projectsCompleted = expansion.completed.length;
   for (const key of ["greenhouseHarvests", "greenhouseCropsPlanted", "autoWateredTiles"]) expansion.stats[key] = clamp(finiteInt(expansion.stats[key]), 0, MAX_COUNTER);
   state.farmExpansion = expansion;
@@ -81,7 +81,10 @@ function rescueFarmsteadPlayer(game) {
   let target = null;
   if ((expansion.completed.includes("workshop") || expansion.project?.id === "workshop") && playerInsideBuilding(player, FARM_BUILDINGS.workshop)) target = { x: 24.5, y: 62.5 };
   if ((expansion.completed.includes("greenhouse") || expansion.project?.id === "greenhouse") && playerInsideBuilding(player, FARM_BUILDINGS.greenhouse)) target = { x: 41.5, y: 62.5 };
-  if (!target && Math.hypot(Number(player.x) - 34.5, Number(player.y) - 14.5) < .55) target = { x: 34.5, y: 16.5 };
+  if (!target && Math.hypot(Number(player.x) - 34.5, Number(player.y) - 14.5) < .55) {
+    target = [{ x: 34.5, y: 12.5 }, { x: 36.5, y: 14.5 }, { x: 34.5, y: 16.5 }]
+      .find((candidate) => !game.collides?.(candidate.x, candidate.y, .28)) || { x: 11.5, y: 15.5 };
+  }
   if (!target) return false;
   player.x = target.x; player.y = target.y;
   return true;
