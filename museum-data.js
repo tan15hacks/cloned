@@ -4,6 +4,11 @@ import "./cooking-data.js";
 import "./fishing-data.js";
 
 const registerItem = (id, value) => { ITEMS[id] ||= value; };
+const finiteNumber = (value, fallback = 0) => {
+  const numeric = Number(value);
+  return Number.isFinite(numeric) ? numeric : fallback;
+};
+const finiteInt = (value, fallback = 0) => Math.floor(finiteNumber(value, fallback));
 
 registerItem("museumToken", { name: "Silvercrest Museum Token", icon: "🏛️", value: 180 });
 registerItem("curatorSeal", { name: "Continental Curator Seal", icon: "🏅", value: 2400 });
@@ -54,7 +59,7 @@ export const MUSEUM_RANKS = [
 ];
 
 export function museumRankForReputation(reputation = 0) {
-  const safe = Math.max(0, Number(reputation) || 0);
+  const safe = Math.max(0, finiteNumber(reputation));
   return [...MUSEUM_RANKS].reverse().find((entry) => safe >= entry.reputation) || MUSEUM_RANKS[0];
 }
 
@@ -64,7 +69,7 @@ export function createMuseumState(existing = {}) {
   for (const bundleEntry of MUSEUM_BUNDLES) {
     const source = value.donated?.[bundleEntry.id] || {};
     donated[bundleEntry.id] = {};
-    for (const entry of bundleEntry.requirements) donated[bundleEntry.id][entry.item] = clamp(Math.floor(Number(source[entry.item]) || 0), 0, entry.amount);
+    for (const entry of bundleEntry.requirements) donated[bundleEntry.id][entry.item] = clamp(finiteInt(source[entry.item]), 0, entry.amount);
   }
   const completedBundles = MUSEUM_BUNDLES.filter((entry) => entry.requirements.every((requirementEntry) => donated[entry.id][requirementEntry.item] >= requirementEntry.amount)).map((entry) => entry.id);
   const rewardedBundles = Array.isArray(value.rewardedBundles)
@@ -80,17 +85,17 @@ export function createMuseumState(existing = {}) {
     rank: museumRankForReputation(reputation).name,
     introQueued: Boolean(value.introQueued),
     allRewardClaimed: Boolean(value.allRewardClaimed && completedBundles.length === MUSEUM_BUNDLES.length),
-    visits: clamp(Math.floor(Number(value.visits) || 0), 0, 999999),
-    lastDonationDay: clamp(Math.floor(Number(value.lastDonationDay) || 0), 0, 999999),
+    visits: clamp(finiteInt(value.visits), 0, 999999),
+    lastDonationDay: clamp(finiteInt(value.lastDonationDay), 0, 999999),
   };
 }
 
 export function museumBundleProgress(state, bundleEntry) {
   const museum = state?.museum || createMuseumState();
   const donated = museum.donated[bundleEntry.id] || {};
-  const units = bundleEntry.requirements.reduce((sum, entry) => sum + Math.min(entry.amount, Math.max(0, Number(donated[entry.item]) || 0)), 0);
+  const units = bundleEntry.requirements.reduce((sum, entry) => sum + Math.min(entry.amount, Math.max(0, finiteNumber(donated[entry.item]))), 0);
   const total = bundleEntry.requirements.reduce((sum, entry) => sum + entry.amount, 0);
-  const entries = bundleEntry.requirements.filter((entry) => (donated[entry.item] || 0) >= entry.amount).length;
+  const entries = bundleEntry.requirements.filter((entry) => finiteNumber(donated[entry.item]) >= entry.amount).length;
   return { units, total, entries, entryTotal: bundleEntry.requirements.length, complete: units >= total };
 }
 
@@ -110,7 +115,7 @@ export function museumReputation(value) {
   const donated = value?.donated || {};
   const completed = Array.isArray(value?.completedBundles) ? value.completedBundles.length : 0;
   let units = 0;
-  for (const bundleEntry of MUSEUM_BUNDLES) for (const entry of bundleEntry.requirements) units += Math.min(entry.amount, Math.max(0, Number(donated[bundleEntry.id]?.[entry.item]) || 0));
+  for (const bundleEntry of MUSEUM_BUNDLES) for (const entry of bundleEntry.requirements) units += Math.min(entry.amount, Math.max(0, finiteNumber(donated[bundleEntry.id]?.[entry.item])));
   return units + completed * 2;
 }
 
