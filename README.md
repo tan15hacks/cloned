@@ -1,6 +1,50 @@
 # Hearthvale
 
-Hearthvale is an original responsive farming, ranching, cooking, fishing, collection, storage, construction, automation, relationship, exploration, guild-combat, and story-adventure game. It uses original characters, map design, dialogue, systems, and geometric cartoon rendering.
+Hearthvale is an original responsive farming, ranching, cooking, fishing, collection, storage, construction, automation, relationship, exploration, guild-combat, and story-adventure game. It uses original characters, map design, dialogue, systems, and a growing hand-painted top-down visual identity backed by a geometric Canvas renderer.
+
+## Version 3.18 — Hand-Painted Farmstead Terrain
+
+Version 3.18 begins Hearthvale's production art transition by replacing the Farmstead's flat terrain with the approved cozy hand-painted environment style.
+
+### Farmstead terrain art
+
+The Farmstead now renders with:
+
+- Four deterministic seamless grass variants
+- Occasional flowered-grass clearings
+- A complete 47-tile connected dirt-path set
+- A complete 47-tile connected dry-soil set
+- A complete 47-tile connected watered-soil set
+- Existing crops drawn above the new soil artwork
+
+The three connected terrain families provide **141 authored runtime atlas cells**. Roads and farm plots select their correct edge, corner, junction, isolated, and interior tile through an eight-neighbor canonical bitmask.
+
+### Offline embedded atlas
+
+The 512 × 384 runtime atlas is embedded in validated JavaScript chunks rather than fetched as a separate network image. This keeps the first visual upgrade available to the offline PWA without adding another binary request.
+
+The renderer decodes the atlas lazily when the game starts. Grass variation is deterministic, so the same map position keeps the same appearance after loading, sleeping, or revisiting the Farmstead.
+
+### Safe staged rollout
+
+Only the Hearthvale Farmstead uses the new terrain artwork in this release.
+
+- Water, bridges, other regions, buildings, resources, characters, and effects retain their existing renderers.
+- The original geometric terrain renderer remains available as an immediate fallback.
+- If the embedded atlas cannot decode on a browser or Android device, gameplay continues without a blocked or blank world.
+- Save data, collision, pathfinding, farming state, and world generation are unchanged.
+
+This staged approach lets the new visual direction be tested on desktop, Android, and tablet before it expands to buildings, vegetation, water, cliffs, and other biomes.
+
+### Art validation
+
+The Farmstead art regression verifies:
+
+- All 47 unique blob-autotile masks
+- Canonical cardinal and diagonal-neighbor rules
+- Atlas coordinates for path, dry soil, and watered soil
+- Embedded PNG signature, exact decoded size, and valid PNG ending
+- Deterministic grass variation and flower placement
 
 ## Version 3.17 — Farm Workshop and Field Automation
 
@@ -77,6 +121,7 @@ The Silvercrest Museum contains nine permanent galleries with 45 display entries
 ## Major systems
 
 - **57,344-tile streamed continent** across 14 regions
+- **Hand-painted Farmstead terrain** with 4 grass variants and 141 connected path/soil cells
 - **Chapter 1 and Chapter 2** with persistent objectives and story dungeons
 - **Directional combat**, equipment, bosses, status effects, and physical loot
 - **50-floor Grand Depths** with milestone bosses, shortcuts, merchants, and deterministic 1% chests
@@ -109,6 +154,7 @@ node tests/workshop-automation.mjs
 node tests/workshop-automation-gameplay.mjs
 node tests/workshop-automation-runtime.mjs
 node tests/workshop-automation-stream.mjs
+node tests/farmstead-art.mjs
 ```
 
 ## Controls
