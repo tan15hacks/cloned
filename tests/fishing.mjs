@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { ITEMS } from "../game-shared.js";
+import "../fishing-region-data.js";
 import {
   FISH_SPECIES, FISH_SPECIES_MAP, LEGENDARY_FISH, FISH_QUALITY_ORDER,
   BAIT_DEFS, TACKLE_DEFS, FISHING_SHOP_STOCK,
@@ -18,9 +19,11 @@ assert.equal(FISHING_SHOP_STOCK.length, 4);
 
 for (const id of ["wormBait", "glowBait", "spinnerTackle", "luckyTackle", "anglerToken"]) assert.ok(ITEMS[id], `${id} must be registered`);
 
-const expectedRegions = ["farm", "village", "city", "northwatch", "greenfields", "moonlake", "veilmoor", "frostpeak", "darkforest", "swamp", "dread", "volcano", "coast", "ruins"];
+const expectedRegions = ["farm", "village", "city", "northwatch", "greenfields", "moonlake", "veilmoor", "frostpeak", "darkforest", "swamp", "dreadwild", "volcano", "suncoast", "ruins"];
 const coveredRegions = new Set(FISH_SPECIES.flatMap((entry) => entry.regions));
 for (const region of expectedRegions) assert.equal(coveredRegions.has(region), true, `${region} requires at least one fish species`);
+assert.equal(coveredRegions.has("dread"), false, "Fishing data must not retain the old Dreadwild alias");
+assert.equal(coveredRegions.has("coast"), false, "Fishing data must not retain the old Suncoast alias");
 
 for (const species of FISH_SPECIES) {
   assert.ok(species.name && species.description);
@@ -62,9 +65,9 @@ const summerDawn = {
   progression: { skillLevels: { fishing: 10 } },
   fishing: { legendaryCaught: [] },
 };
-assert.equal(fishAvailability(FISH_SPECIES_MAP.goldenMarlin, summerDawn, "coast").available, true);
+assert.equal(fishAvailability(FISH_SPECIES_MAP.goldenMarlin, summerDawn, "suncoast").available, true);
 summerDawn.minutes = 900;
-assert.equal(fishAvailability(FISH_SPECIES_MAP.goldenMarlin, summerDawn, "coast").available, false);
+assert.equal(fishAvailability(FISH_SPECIES_MAP.goldenMarlin, summerDawn, "suncoast").available, false);
 
 const lowLevel = {
   day: 85,
@@ -93,6 +96,7 @@ console.log(JSON.stringify({
   species: FISH_SPECIES.length,
   legendaryFish: LEGENDARY_FISH.length,
   regionsCovered: coveredRegions.size,
+  canonicalRegionIds: true,
   baitTypes: Object.keys(BAIT_DEFS).length,
   tackleTypes: Object.keys(TACKLE_DEFS).length,
   seasonalAvailability: true,
