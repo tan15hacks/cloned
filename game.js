@@ -49,6 +49,7 @@ import { installMuseumCollections } from "./game-museum.js";
 import { installMuseumRuntime } from "./game-museum-runtime.js";
 import { installStorageAndShipping } from "./game-storage.js";
 import { installStorageRuntime } from "./game-storage-runtime.js";
+import { installStorageOverflowRuntime } from "./game-storage-overflow-runtime.js";
 
 class HearthvaleGame {
   constructor() {
@@ -143,4 +144,5 @@ installMuseumCollections(HearthvaleGame);
 installMuseumRuntime(HearthvaleGame);
 installStorageAndShipping(HearthvaleGame);
 installStorageRuntime(HearthvaleGame);
+installStorageOverflowRuntime(HearthvaleGame);
 window.__hearthvale = new HearthvaleGame();
