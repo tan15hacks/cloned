@@ -98,6 +98,7 @@ assert.equal(nearestFishableWater(villageBorderState, 2)?.regionId, "village");
 
 const castGame = new FishingHarness();
 castGame.state = castGame.defaultState();
+castGame.state.weather = "Rain";
 castGame.state.fishing = createFishingState({ selectedBait: "worm", selectedTackle: "spinner", tackleUses: { spinner: 1 } });
 castGame.state.inventory.wormBait = 1;
 castGame.state.player.x = 235.5;
@@ -114,6 +115,20 @@ assert.equal(castGame.state.inventory.wormBait, 0);
 assert.equal(castGame.state.fishing.tackleUses.spinner, 0);
 assert.equal(castGame.state.player.energy, 98);
 assert.equal(castGame.state.fishing.totalCasts, 1);
+
+// Valid water with no species matching the current conditions must not consume anything.
+const noBiteGame = new FishingHarness();
+noBiteGame.state = noBiteGame.defaultState();
+noBiteGame.state.fishing = createFishingState({ selectedBait: "worm", selectedTackle: "spinner", tackleUses: { spinner: 1 } });
+noBiteGame.state.inventory.wormBait = 1;
+noBiteGame.state.player.x = 235.5;
+noBiteGame.state.player.y = 27.5;
+noBiteGame.beginFishing();
+assert.match(noBiteGame.lastToast, /No fish are biting/);
+assert.equal(noBiteGame.state.inventory.wormBait, 1);
+assert.equal(noBiteGame.state.fishing.tackleUses.spinner, 1);
+assert.equal(noBiteGame.state.player.energy, 100);
+assert.equal(noBiteGame.state.fishing.totalCasts, 0);
 
 const dryGame = new FishingHarness();
 dryGame.state = dryGame.defaultState();
@@ -236,6 +251,8 @@ console.log(JSON.stringify({
   ok: true,
   welcomeLetter: true,
   nearestWaterRegionBinding: true,
+  strictCatchConditions: true,
+  noBiteDoesNotConsumeGear: true,
   catchJournal: true,
   legendaryRewards: true,
   legendaryRecordRecovery: true,
