@@ -141,9 +141,7 @@ export function installStorageRuntime(GameClass) {
     if (!original[name]) continue;
     proto[name] = function storageHardenedAction(...args) {
       hardenStorageState(this.state);
-      const result = original[name].apply(this, args);
-      hardenStorageState(this.state);
-      return result;
+      return original[name].apply(this, args);
     };
   }
 }
