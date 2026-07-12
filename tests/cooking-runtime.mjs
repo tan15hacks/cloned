@@ -5,6 +5,7 @@ import {
   installCooking, createCookingState, normalizeCookingRuntime,
   consumeCookingIngredients, syncCookingUnlocks, absoluteGameMinute,
 } from "../game-cooking.js";
+import { installCookingRuntime } from "../game-cooking-runtime.js";
 
 const qualityMap = (values = {}) => ({ normal: 0, silver: 0, gold: 0, iridium: 0, ...values });
 
@@ -46,6 +47,7 @@ class CookingHarness {
   enterGame() {}
   update(dt) { this.state.minutes += dt; }
   nextDay() { this.state.day += 1; this.state.minutes = 360; }
+  leaveToTitle() {}
   spendEnergy(amount) { this.state.player.energy -= amount; }
   getCombatStats() { return { damage: 5, armor: 1, crit: .05, attackSpeed: 1, moveSpeed: 0, lootBonus: 0, statusResist: 0, maxHealth: 0 }; }
   updateHUD() {}
@@ -54,6 +56,9 @@ class CookingHarness {
   toggleGameMenu() {}
   completeSocialHeartEvent(key) { if (!this.state.social.completedEvents.includes(key)) this.state.social.completedEvents.push(key); }
   drawInteriorAmbience() {}
+  addItem(id, amount = 1) { this.state.inventory[id] = (this.state.inventory[id] || 0) + amount; }
+  giveSocialGift(npcId, itemId) { if ((this.state.inventory[itemId] || 0) > 0) this.state.inventory[itemId] -= 1; }
+  sellCategory(ids) { for (const id of ids || []) this.state.inventory[id] = 0; }
   applyEquipmentVitals() { this.vitalRefreshes = (this.vitalRefreshes || 0) + 1; }
   checkAchievement(id, condition) { if (condition && !this.achievementIds.includes(id)) this.achievementIds.push(id); }
   startActionAnimation() {}
@@ -64,6 +69,7 @@ class CookingHarness {
 }
 
 installCooking(CookingHarness);
+installCookingRuntime(CookingHarness);
 
 const game = new CookingHarness();
 game.state = game.defaultState();
@@ -117,6 +123,17 @@ assert.equal(game.state.cooking.activeBuff.buffId, "comfort");
 const beforeSpend = game.state.player.energy;
 game.spendEnergy(10);
 assert.ok(Math.abs((beforeSpend - game.state.player.energy) - 8.2) < .0001, "Comfort buff must reduce energy spending by 18%");
+
+// External additions, gifts, and sales must keep the quality pantry synchronized.
+game.addItem("turnipBroth", 2, false);
+assert.equal(game.state.inventory.turnipBroth, 2);
+assert.equal(game.state.cooking.meals.turnipBroth.normal, 2);
+game.giveSocialGift("mira", "turnipBroth");
+assert.equal(game.state.inventory.turnipBroth, 1);
+assert.equal(game.state.cooking.meals.turnipBroth.normal, 1, "Gifting a meal must remove its pantry record");
+game.sellCategory(["turnipBroth"]);
+assert.equal(game.state.inventory.turnipBroth, 0);
+assert.equal(game.state.cooking.meals.turnipBroth.normal, 0, "Selling a meal must remove its pantry record");
 
 const expiry = game.state.cooking.activeBuff.expiresAt;
 assert.ok(expiry > absoluteGameMinute(game.state));
@@ -183,6 +200,8 @@ console.log(JSON.stringify({
   starterRecipes: 3,
   ingredientQualityStrategies: true,
   cookingAndEating: true,
+  pantryGiftSynchronization: true,
+  pantrySaleSynchronization: true,
   temporaryMealBuffs: true,
   heartRecipeUnlocks: true,
   levelRecipeUnlocks: true,
