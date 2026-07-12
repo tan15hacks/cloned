@@ -41,12 +41,15 @@ export function installExpandedInteriorRender(GameClass) {
       ctx.stroke();
     }
 
+    const socialGuest = this.activeSocialHeartEvent?.();
     const residents = activeInteriorResidents(map, this.state);
     for (const resident of residents) {
+      if (socialGuest?.npc?.id === resident.id) continue;
       const npc = this.state.npcs.find((entry) => entry.id === resident.id);
       if (!npc) continue;
       this.drawAnimatedCharacter(ctx, { ...npc, x: resident.x, y: resident.y, moving: false }, npc.color, npc.name, false);
     }
+    this.drawSocialInteriorGuest?.(ctx, map);
 
     this.drawAnimatedCharacter(ctx, this.state.player, "#2e6f57", "", true);
     ctx.fillStyle = "#f2d59d";
