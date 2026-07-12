@@ -155,7 +155,11 @@ export function nextBackpackUpgrade(capacity) {
 
 export function shipmentValueForItem(id, qualities, multiplier = 1) {
   const base = Math.max(0, Number(ITEMS[id]?.value) || 0);
-  return STORAGE_QUALITY_ORDER.reduce((sum, quality) => sum + Math.floor((qualities?.[quality] || 0) * base * STORAGE_QUALITY_MULTIPLIERS[quality] * multiplier), 0);
+  return STORAGE_QUALITY_ORDER.reduce((sum, quality) => {
+    const count = Math.max(0, finiteInt(qualities?.[quality]));
+    const unitValue = Math.floor(base * STORAGE_QUALITY_MULTIPLIERS[quality] * multiplier);
+    return sum + count * unitValue;
+  }, 0);
 }
 
 export function registerFarmhouseStorage() {
