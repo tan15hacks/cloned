@@ -14,8 +14,9 @@ function finiteInt(value, fallback = 0) {
 
 function normalizedOutput(raw, allowed) {
   if (!raw || typeof raw !== "object" || !allowed.has(raw.id) || !ITEMS[raw.id]) return null;
-  const amount = clamp(finiteInt(raw.amount), 1, 99);
-  return { id: raw.id, amount };
+  const rawAmount = finiteInt(raw.amount);
+  if (rawAmount <= 0) return null;
+  return { id: raw.id, amount: clamp(rawAmount, 1, 99) };
 }
 
 function normalizeDevice(raw, day, serial) {
@@ -51,7 +52,7 @@ function normalizeDevice(raw, day, serial) {
       ...base,
       input,
       output,
-      readyDay: input ? clamp(finiteInt(raw.readyDay, day + 1), day + 1, MAX_COUNTER) : 0,
+      readyDay: input ? clamp(finiteInt(raw.readyDay, day + 1), 1, MAX_COUNTER) : 0,
     };
   }
   return base;
