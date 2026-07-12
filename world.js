@@ -20,15 +20,21 @@ export function isBridgeTile(x, y) {
 
 export function isWaterTile(x, y) {
   if (isBridgeTile(x, y)) return false;
+  const regionId = regionAt(x, y).id;
   const farmPond = ellipse(x, y, 31, 41, 8, 6);
   const moonLake = ellipse(x, y, 83, 83, 18, 13);
   const riverOne = rect(x, y, 54, 54, 4, 67);
   const riverTwo = rect(x, y, 112, 60, 4, 65);
-  const mistPools = (ellipse(x, y, 143, 103, 8, 4) || ellipse(x, y, 160, 129, 7, 4));
-  const swampWater = regionAt(x, y).id === "swamp" && hash(x, y, 91) > 0.73 && !isPathTile(x, y);
-  const coastOcean = regionAt(x, y).id === "suncoast" && y >= 207;
-  const lava = regionAt(x, y).id === "volcano" && (ellipse(x, y, 220, 165, 13, 8) || (hash(x, y, 707) > 0.91 && !isPathTile(x, y)));
-  return farmPond || moonLake || riverOne || riverTwo || mistPools || swampWater || coastOcean || lava;
+  const mistPools = ellipse(x, y, 143, 103, 8, 4) || ellipse(x, y, 160, 129, 7, 4);
+  const northwatchPool = regionId === "northwatch" && ellipse(x, y, 243, 27, 7, 4);
+  const frostpeakPool = regionId === "frostpeak" && ellipse(x, y, 244, 76, 7, 5);
+  const shadowPool = regionId === "darkforest" && ellipse(x, y, 21, 159, 7, 4);
+  const swampWater = regionId === "swamp" && hash(x, y, 91) > 0.73 && !isPathTile(x, y);
+  const dreadPool = regionId === "dreadwild" && ellipse(x, y, 140, 211, 7, 4);
+  const coastOcean = regionId === "suncoast" && y >= 207;
+  const ruinsPool = regionId === "ruins" && ellipse(x, y, 82, 214, 8, 4);
+  const lava = regionId === "volcano" && (ellipse(x, y, 220, 165, 13, 8) || (hash(x, y, 707) > 0.91 && !isPathTile(x, y)));
+  return farmPond || moonLake || riverOne || riverTwo || mistPools || northwatchPool || frostpeakPool || shadowPool || swampWater || dreadPool || coastOcean || ruinsPool || lava;
 }
 
 export function isPathTile(x, y) {
@@ -128,7 +134,7 @@ export function generateMonsters(day = 1) {
       if (isReservedTile(x, y) || isWaterTile(x, y)) continue;
       const type = types[placed % types.length];
       const def = MONSTER_TYPES[type];
-      monsters.push({ id: id++, type, x: x + .5, y: y + .5, hp: def.hp, maxHp: def.hp, cooldown: 0, homeX: x + .5, homeY: y + .5 });
+      monsters.push({ id: id++, type, x: x + 0.5, y: y + 0.5, hp: def.hp, maxHp: def.hp, cooldown: 0, homeX: x + 0.5, homeY: y + 0.5 });
       placed += 1;
     }
   }
