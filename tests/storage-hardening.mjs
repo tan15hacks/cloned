@@ -8,6 +8,7 @@ for (const id of Object.keys(ITEMS).slice(0, 45)) inventory[id] = 1;
 inventory.turnip = 1200;
 inventory.wood = Number.POSITIVE_INFINITY;
 inventory.injectedUnknownItem = 999;
+const validLegacyStacks = Object.entries(inventory).filter(([id, count]) => ITEMS[id] && Number.isFinite(Number(count)) && Number(count) > 0).length;
 
 const state = {
   day: 9,
@@ -37,7 +38,7 @@ assert.equal(state.inventory.injectedUnknownItem, undefined);
 assert.equal(state.inventory.wood, 0);
 assert.equal(state.inventory.turnip, 999);
 assert.equal(state.storage.chests.pantry.items.turnip, 201, "Backpack overstack must be preserved in farmhouse storage");
-assert.equal(state.upgrades.backpack >= 45, true, "Legacy unique stacks must not be deleted when capacity is smaller");
+assert.equal(state.upgrades.backpack >= validLegacyStacks, true, "Valid legacy stacks must not be deleted when capacity is smaller");
 assert.equal(state.storage.sortMode, "category");
 assert.equal(state.storage.filter, "all");
 assert.equal(state.storage.chests.pantry.items.missing, undefined);
@@ -77,7 +78,7 @@ console.log(JSON.stringify({
   ok: true,
   unknownItemsRemoved: true,
   backpackOverstackPreserved: true,
-  legacyCapacityProtected: true,
+  validLegacyCapacityProtected: true,
   nonShippableRecovery: true,
   invalidCountersRejected: true,
   shippingBinSpaceCleared: true,
