@@ -42,6 +42,8 @@ import { installRelationshipsRuntime } from "./game-relationships-runtime.js";
 import { installRelationshipSecurity } from "./game-relationships-security.js";
 import { installCooking } from "./game-cooking.js";
 import { installCookingRuntime } from "./game-cooking-runtime.js";
+import { installFishingOverhaul } from "./game-fishing.js";
+import { installFishingRuntime } from "./game-fishing-runtime.js";
 
 class HearthvaleGame {
   constructor() {
@@ -57,6 +59,7 @@ class HearthvaleGame {
     this.modalOpen = false;
     this.dialogueOpen = false;
     this.fishingTimer = null;
+    this.activeFishingSession = null;
     this.festivalTimer = null;
     this.festivalSequenceToken = 0;
     this.toastTimer = null;
@@ -129,4 +132,6 @@ installRelationshipsRuntime(HearthvaleGame);
 installRelationshipSecurity(HearthvaleGame);
 installCooking(HearthvaleGame);
 installCookingRuntime(HearthvaleGame);
+installFishingOverhaul(HearthvaleGame);
+installFishingRuntime(HearthvaleGame);
 window.__hearthvale = new HearthvaleGame();
