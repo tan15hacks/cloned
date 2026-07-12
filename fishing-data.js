@@ -51,12 +51,12 @@ export const FISH_SPECIES = [
   fish("shadowTrout", "Lightless Shadow Trout", ["darkforest"], { icon: "🐟", seasons: ["autumn", "winter"], start: 1020, end: 1440, rarity: "rare", weight: 9, difficulty: 2.5, minSize: 32, maxSize: 74, category: "rareFish", description: "A silent trout whose outline seems detached from its body." }),
   fish("mireCatfish", "Murkfen Catfish", ["swamp"], { icon: "🐟", seasons: ["summer", "autumn"], weather: ["Rain", "Cloudy"], weight: 20, difficulty: 1.8, minSize: 44, maxSize: 110, description: "A broad catfish that burrows beneath warm mud." }),
   fish("bloomscale", "Bloomscale", ["swamp"], { icon: "🪷", seasons: ["spring", "summer"], start: 420, end: 960, rarity: "uncommon", weight: 12, difficulty: 2.1, minSize: 22, maxSize: 54, category: "rareFish", description: "Petal-like scales camouflage it among Swamp Blooms." }),
-  fish("voidLamprey", "Dreadwild Void Lamprey", ["dread"], { icon: "🕳️", seasons: ["autumn", "winter"], start: 1080, end: 1440, weather: ["Cloudy", "Sparkfall"], minLevel: 6, rarity: "rare", weight: 6, difficulty: 3, minSize: 58, maxSize: 126, category: "rareFish", description: "A dangerous lamprey that follows unstable Waystone currents." }),
+  fish("voidLamprey", "Dreadwild Void Lamprey", ["dreadwild"], { icon: "🕳️", seasons: ["autumn", "winter"], start: 1080, end: 1440, weather: ["Cloudy", "Sparkfall"], minLevel: 6, rarity: "rare", weight: 6, difficulty: 3, minSize: 58, maxSize: 126, category: "rareFish", description: "A dangerous lamprey that follows unstable Waystone currents." }),
   fish("emberEel", "Cinderwake Ember Eel", ["volcano"], { icon: "🔥", seasons: ["summer", "autumn"], start: 960, end: 1440, minLevel: 5, rarity: "rare", weight: 7, difficulty: 2.8, minSize: 52, maxSize: 112, category: "rareFish", description: "Its body remains warm even after leaving volcanic water." }),
   fish("cinderKoi", "Cinderheart Koi", ["volcano"], { icon: "🌋", seasons: ["summer"], weather: ["Sparkfall"], start: 1140, end: 1440, minLevel: 9, rarity: "legendary", weight: 1, difficulty: 3.9, minSize: 92, maxSize: 136, category: "rareFish", legendary: true, description: "A living ember said to remember the first eruption." }),
-  fish("sunscale", "Suncoast Sunscale", ["coast"], { icon: "🐠", seasons: ["spring", "summer"], start: 420, end: 1080, weight: 24, difficulty: 1.3, minSize: 18, maxSize: 46, description: "A bright reef fish common along warm Suncoast shallows." }),
-  fish("tideRunner", "Tide Runner", ["coast", "ruins"], { icon: "🐟", seasons: ["summer", "autumn"], start: 720, end: 1320, rarity: "uncommon", weight: 15, difficulty: 2, minSize: 40, maxSize: 96, category: "rareFish", description: "A fast ocean fish that follows the strongest incoming tide." }),
-  fish("goldenMarlin", "Golden Dawn Marlin", ["coast"], { icon: "☀️", seasons: ["summer"], weather: ["Clear"], start: 360, end: 540, minLevel: 9, rarity: "legendary", weight: 1, difficulty: 4, minSize: 180, maxSize: 260, category: "rareFish", legendary: true, description: "The Suncoast's legendary marlin appears only at clear summer dawn." }),
+  fish("sunscale", "Suncoast Sunscale", ["suncoast"], { icon: "🐠", seasons: ["spring", "summer"], start: 420, end: 1080, weight: 24, difficulty: 1.3, minSize: 18, maxSize: 46, description: "A bright reef fish common along warm Suncoast shallows." }),
+  fish("tideRunner", "Tide Runner", ["suncoast", "ruins"], { icon: "🐟", seasons: ["summer", "autumn"], start: 720, end: 1320, rarity: "uncommon", weight: 15, difficulty: 2, minSize: 40, maxSize: 96, category: "rareFish", description: "A fast ocean fish that follows the strongest incoming tide." }),
+  fish("goldenMarlin", "Golden Dawn Marlin", ["suncoast"], { icon: "☀️", seasons: ["summer"], weather: ["Clear"], start: 360, end: 540, minLevel: 9, rarity: "legendary", weight: 1, difficulty: 4, minSize: 180, maxSize: 260, category: "rareFish", legendary: true, description: "The Suncoast's legendary marlin appears only at clear summer dawn." }),
   fish("relicGar", "Suncleft Relic Gar", ["ruins"], { icon: "🏺", seasons: ["spring", "autumn"], weather: ["Cloudy", "Sparkfall"], minLevel: 5, rarity: "rare", weight: 8, difficulty: 2.7, minSize: 64, maxSize: 132, category: "rareFish", description: "A plated gar nesting among submerged Suncleft masonry." }),
 ];
 
@@ -102,9 +102,8 @@ export function availableFish(state, regionId) {
 }
 
 export function selectFishSpecies(state, regionId, baitId = "none", roll = Math.random()) {
-  let candidates = availableFish(state, regionId);
-  if (!candidates.length) candidates = FISH_SPECIES.filter((entry) => entry.regions.includes(regionId) && !entry.legendary);
-  if (!candidates.length) candidates = FISH_SPECIES.filter((entry) => entry.id === "brookMinnow");
+  const candidates = availableFish(state, regionId);
+  if (!candidates.length) return null;
   const bait = BAIT_DEFS[baitId] || BAIT_DEFS.none;
   const weighted = candidates.map((entry) => {
     let weight = entry.weight;
@@ -120,7 +119,7 @@ export function selectFishSpecies(state, regionId, baitId = "none", roll = Math.
     cursor -= item.weight;
     if (cursor <= 0) return item.entry;
   }
-  return weighted.at(-1).entry;
+  return weighted.at(-1)?.entry || null;
 }
 
 export function fishSize(entry, fishingLevel = 1, accuracy = 0, roll = Math.random()) {
