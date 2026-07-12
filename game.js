@@ -47,6 +47,8 @@ import { installFishingOverhaul } from "./game-fishing.js";
 import { installFishingRuntime } from "./game-fishing-runtime.js";
 import { installMuseumCollections } from "./game-museum.js";
 import { installMuseumRuntime } from "./game-museum-runtime.js";
+import { installStorageAndShipping } from "./game-storage.js";
+import { installStorageRuntime } from "./game-storage-runtime.js";
 
 class HearthvaleGame {
   constructor() {
@@ -139,4 +141,6 @@ installFishingOverhaul(HearthvaleGame);
 installFishingRuntime(HearthvaleGame);
 installMuseumCollections(HearthvaleGame);
 installMuseumRuntime(HearthvaleGame);
+installStorageAndShipping(HearthvaleGame);
+installStorageRuntime(HearthvaleGame);
 window.__hearthvale = new HearthvaleGame();
