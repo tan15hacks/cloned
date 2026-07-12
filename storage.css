@@ -1,0 +1,214 @@
+#modal .storage-capacity,
+#modal .shipping-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(110px, 1fr));
+  gap: 9px;
+  margin-bottom: 12px;
+}
+
+#modal .storage-capacity > div,
+#modal .shipping-summary > div,
+#modal .storage-overview-card,
+#modal .backpack-upgrade,
+#modal .shipping-last {
+  padding: 11px;
+  border: 2px solid rgba(24, 54, 45, .32);
+  border-radius: 12px;
+  background: rgba(246, 232, 190, .82);
+}
+
+#modal .storage-capacity > div,
+#modal .shipping-summary > div {
+  display: grid;
+  gap: 3px;
+  text-align: center;
+}
+
+#modal .storage-capacity strong,
+#modal .shipping-summary strong {
+  font-size: 20px;
+}
+
+#modal .storage-capacity small,
+#modal .shipping-summary small,
+#modal .storage-item-card small,
+#modal .storage-transfer-row small,
+#modal .storage-overview-card small {
+  color: #4a5d4f;
+}
+
+.storage-controls {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.storage-controls > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.storage-controls button {
+  min-height: 34px;
+  padding: 6px 9px;
+  font-size: 12px;
+}
+
+.storage-controls button.active {
+  outline: 3px solid rgba(239, 185, 74, .62);
+}
+
+.storage-controls label {
+  display: flex;
+  gap: 7px;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.storage-controls select {
+  min-height: 36px;
+  border: 2px solid #18362d;
+  border-radius: 8px;
+  background: #fff8dc;
+}
+
+.storage-item-list,
+.storage-transfer-list {
+  display: grid;
+  gap: 8px;
+  max-height: 52vh;
+  overflow: auto;
+  padding-right: 3px;
+}
+
+.storage-item-card,
+.storage-transfer-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 9px;
+  align-items: center;
+  padding: 9px;
+  border: 2px solid rgba(24, 54, 45, .28);
+  border-radius: 11px;
+  background: rgba(255, 251, 226, .76);
+}
+
+.storage-item-card > span,
+.storage-transfer-row > span {
+  font-size: 26px;
+}
+
+.storage-item-card > div,
+.storage-transfer-row > div,
+.storage-overview-card > div {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.storage-item-card button,
+.storage-transfer-row button {
+  min-height: 34px;
+  padding: 6px 9px;
+  font-size: 12px;
+}
+
+.storage-transfer-row {
+  grid-template-columns: auto minmax(120px, 1fr) auto auto;
+}
+
+.storage-two-column,
+.shipping-columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(280px, 1fr));
+  gap: 14px;
+}
+
+.storage-two-column > section,
+.shipping-columns > section {
+  min-width: 0;
+}
+
+.storage-two-column h3,
+.shipping-columns h3 {
+  margin-top: 0;
+}
+
+.storage-overview-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(260px, 1fr));
+  gap: 11px;
+  margin-bottom: 13px;
+}
+
+.storage-overview-card {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px;
+}
+
+.storage-overview-card > span {
+  font-size: 34px;
+}
+
+.storage-overview-card p,
+.backpack-upgrade p {
+  margin: 5px 0 0;
+}
+
+.backpack-upgrade {
+  display: grid;
+  gap: 8px;
+}
+
+.backpack-upgrade h3 {
+  margin: 0;
+}
+
+.shipping-last {
+  margin-bottom: 12px;
+  background: rgba(143, 207, 121, .28);
+}
+
+@media (max-width: 760px) {
+  #modal .storage-capacity,
+  #modal .shipping-summary {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  #modal .storage-capacity > div:first-child,
+  #modal .shipping-summary > div:first-child {
+    grid-column: 1 / -1;
+  }
+
+  .storage-controls {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .storage-controls label {
+    justify-content: space-between;
+  }
+
+  .storage-two-column,
+  .shipping-columns,
+  .storage-overview-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .storage-item-list,
+  .storage-transfer-list {
+    max-height: none;
+  }
+
+  .storage-transfer-row {
+    grid-template-columns: auto 1fr auto;
+  }
+
+  .storage-transfer-row button:last-child {
+    grid-column: 2 / -1;
+  }
+}
