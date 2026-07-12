@@ -14,6 +14,23 @@ const finiteNumber = (value, fallback = 0) => {
 };
 const finiteInt = (value, fallback = 0) => Math.floor(finiteNumber(value, fallback));
 
+function clearFishingInput(game) {
+  if (game?.fishingKeyHandler && typeof window !== "undefined") window.removeEventListener("keydown", game.fishingKeyHandler);
+  if (game) game.fishingKeyHandler = null;
+}
+
+function bindFishingInput(game) {
+  clearFishingInput(game);
+  if (typeof window === "undefined" || typeof document === "undefined") return;
+  game.fishingKeyHandler = (event) => {
+    if (!game.activeFishingSession || event.repeat || !["Space", "KeyF"].includes(event.code)) return;
+    event.preventDefault();
+    event.stopPropagation();
+    document.getElementById("reelButton")?.click();
+  };
+  window.addEventListener("keydown", game.fishingKeyHandler);
+}
+
 export function nearestFishableWater(state, radius = 2) {
   if (!state?.player) return null;
   const playerX = Number(state.player.x) || 0;
@@ -124,11 +141,13 @@ export function installFishingRuntime(GameClass) {
     hardenFishingState(this.state);
     const result = original.enterGame.call(this);
     hardenFishingState(this.state);
+    clearFishingInput(this);
     this.activeFishingSession = null;
     return result;
   };
 
   proto.nextDay = function nextDayFishingRuntime(passedOut) {
+    clearFishingInput(this);
     const result = original.nextDay.call(this, passedOut);
     hardenFishingState(this.state);
     this.state.fishing.streak = 0;
@@ -155,10 +174,13 @@ export function installFishingRuntime(GameClass) {
 
   proto.openFishingGame = function openFishingGameRuntime(species, regionId, gear) {
     this.activeFishingSession = { speciesId: species?.id || null, regionId: regionId || null };
-    return original.openFishingGame.call(this, species, regionId, gear);
+    const result = original.openFishingGame.call(this, species, regionId, gear);
+    bindFishingInput(this);
+    return result;
   };
 
   proto.finishFishingCatch = function finishFishingCatchRuntime(species, regionId, gear, accuracy, perfect) {
+    clearFishingInput(this);
     this.activeFishingSession = null;
     const result = original.finishFishingCatch.call(this, species, regionId, gear, accuracy, perfect);
     hardenFishingState(this.state);
@@ -167,6 +189,7 @@ export function installFishingRuntime(GameClass) {
 
   proto.closeModal = function closeModalFishingRuntime() {
     const interrupted = Boolean(this.activeFishingSession);
+    clearFishingInput(this);
     this.activeFishingSession = null;
     const result = original.closeModal.call(this);
     if (interrupted && this.state?.fishing) {
@@ -178,6 +201,7 @@ export function installFishingRuntime(GameClass) {
   };
 
   proto.leaveToTitle = function leaveToTitleFishingRuntime() {
+    clearFishingInput(this);
     if (this.fishingTimer) clearInterval(this.fishingTimer);
     this.fishingTimer = null;
     this.activeFishingSession = null;
