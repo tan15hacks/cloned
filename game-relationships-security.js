@@ -43,7 +43,7 @@ export function installRelationshipSecurity(GameClass) {
     if (reward) actions.push({ label: "Claim Enclosure", action: () => this.claimSocialLetter(id) });
     actions.push({ label: "Back to Mailbox", action: () => { this.closeModal(); this.openSocialMailbox(); } });
     actions.push({ label: "Close", action: () => this.closeModal() });
-    this.openModal(escapeSocialHtml(letter.subject), `<p><em>From ${escapeSocialHtml(letter.from)}</em></p><p>${body}</p>${rewardText}`, actions);
+    this.openModal(String(letter.subject || "Letter"), `<p><em>From ${escapeSocialHtml(letter.from)}</em></p><p>${body}</p>${rewardText}`, actions);
     this.saveGame?.(true);
   };
 }
