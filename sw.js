@@ -1,4 +1,4 @@
-const CACHE = "hearthvale-continent-v3-11";
+const CACHE = "hearthvale-continent-v3-11-1";
 const ASSETS = [
   "./",
   "./index.html",
@@ -48,6 +48,7 @@ const ASSETS = [
   "./relationship-data.js",
   "./game-relationships.js",
   "./game-relationships-runtime.js",
+  "./game-relationships-security.js",
   "./game-combat.js",
   "./game-combat-runtime.js",
   "./game-world-polish.js",
