@@ -41,7 +41,8 @@ export function hardenCookingState(state) {
   }
 
   state.cooking.knownRecipes = [...new Set(state.cooking.knownRecipes.filter((id) => COOKING_RECIPE_MAP[id]))].slice(0, COOKING_RECIPES.length);
-  state.cooking.notifiedRecipes = [...new Set(state.cooking.notifiedRecipes.filter((id) => COOKING_RECIPE_MAP[id]))].slice(0, COOKING_RECIPES.length);
+  const knownRecipes = new Set(state.cooking.knownRecipes);
+  state.cooking.notifiedRecipes = [...new Set(state.cooking.notifiedRecipes.filter((id) => knownRecipes.has(id)))].slice(0, COOKING_RECIPES.length);
   state.cooking.stats.uniqueRecipesCooked = [...new Set(state.cooking.stats.uniqueRecipesCooked.filter((id) => COOKING_RECIPE_MAP[id]))].slice(0, COOKING_RECIPES.length);
   state.cooking.stats.dishesCooked = clamp(Math.floor(Number(state.cooking.stats.dishesCooked) || 0), 0, 999999);
   state.cooking.stats.mealsEaten = clamp(Math.floor(Number(state.cooking.stats.mealsEaten) || 0), 0, 999999);
