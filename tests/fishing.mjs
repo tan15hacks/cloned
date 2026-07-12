@@ -91,6 +91,15 @@ const glowingSelection = selectFishSpecies(winterSparkfall, "moonlake", "glow", 
 assert.ok(glowingSelection.regions.includes("moonlake"));
 assert.equal(fishAvailability(glowingSelection, winterSparkfall, "moonlake").available, true);
 
+const noBiteSelection = selectFishSpecies({
+  day: 1,
+  minutes: 600,
+  weather: "Clear",
+  progression: { skillLevels: { fishing: 10 } },
+  fishing: { legendaryCaught: [] },
+}, "northwatch", "glow", .5);
+assert.equal(noBiteSelection, null, "Fishing must not bypass season, weather, time, or level restrictions through a fallback species");
+
 console.log(JSON.stringify({
   ok: true,
   species: FISH_SPECIES.length,
@@ -99,6 +108,7 @@ console.log(JSON.stringify({
   canonicalRegionIds: true,
   baitTypes: Object.keys(BAIT_DEFS).length,
   tackleTypes: Object.keys(TACKLE_DEFS).length,
+  strictNoBiteConditions: true,
   seasonalAvailability: true,
   weatherAvailability: true,
   timeWindows: true,
