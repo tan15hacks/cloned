@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
   <meta name="theme-color" content="#1e5b43" />
-  <meta name="description" content="Hearthvale is an original seasonal farming, ranching, relationships, heart-events, mailbox, expanded-interior, artisan crafting, exploration, guild, combat, progression, and story adventure across a streamed 57,344-tile continent." />
+  <meta name="description" content="Hearthvale is an original seasonal farming, ranching, cooking, meal-buff, relationships, heart-event, mailbox, expanded-interior, artisan crafting, exploration, guild, combat, progression, and story adventure across a streamed 57,344-tile continent." />
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" href="assets/icon.svg" />
   <link rel="apple-touch-icon" href="assets/icon.svg" />
@@ -17,6 +17,7 @@
   <link rel="stylesheet" href="ranching.css" />
   <link rel="stylesheet" href="interiors.css" />
   <link rel="stylesheet" href="relationships.css" />
+  <link rel="stylesheet" href="cooking.css" />
   <title>Hearthvale</title>
 </head>
 <body>
@@ -46,6 +47,11 @@
       </div>
     </section>
 
+    <section id="mealBuffHud" class="hidden" aria-live="polite">
+      <span id="mealBuffIcon">🍲</span>
+      <div><strong id="mealBuffName">Meal Effect</strong><small id="mealBuffTime">0h 0m</small></div>
+    </section>
+
     <div id="toolbar" class="hidden" role="toolbar" aria-label="Tools"></div>
     <div id="contextHint" class="hidden"></div>
     <div id="toast" class="hidden" role="status"></div>
@@ -60,16 +66,16 @@
 
     <section id="titleScreen" class="screen active">
       <div class="title-panel">
-        <p class="eyebrow">TALK · REMEMBER · BECOME PART OF HEARTHVALE</p>
+        <p class="eyebrow">GROW · COOK · SHARE THE CONTINENT</p>
         <h1>HEARTHVALE</h1>
-        <p class="subtitle">Build friendships with all 18 named residents, discover loved and disliked gifts, remember unique seasonal birthdays, receive letters and rewards through the Farmstead mailbox, and attend 54 scheduled heart events inside Hearthvale's playable buildings.</p>
+        <p class="subtitle">Turn crops, fish, forage, eggs, milk, cheese, truffles, and artisan goods into 16 quality-aware meals. Learn recipes through Cooking Levels and friendships, prepare food at the farmhouse stove, and carry powerful temporary meal effects into farming, exploration, and combat.</p>
         <div class="title-actions">
           <button id="continueButton" class="primary">Continue</button>
           <button id="newGameButton">New Adventure</button>
           <button id="howToButton">How to Play</button>
           <button id="settingsButton">Settings</button>
         </div>
-        <p class="version">v3.11.0 · Relationships and heart events · Gifts, birthdays, mailbox letters, friendship tiers, and resident stories</p>
+        <p class="version">v3.12.0 · Farmhouse cooking and meal buffs · 16 recipes, ingredient quality, Cooking Levels, recipe gifts, and pantry meals</p>
       </div>
     </section>
 
