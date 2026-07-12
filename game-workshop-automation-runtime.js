@@ -65,6 +65,7 @@ export function hardenWorkshopAutomationState(state) {
   const nonAutomation = source.filter((entry) => !AUTOMATION_TYPES.has(entry?.type));
   const blocked = new Set(nonAutomation.map((entry) => keyOf(Math.floor(Number(entry.x)), Math.floor(Number(entry.y)))));
   const counts = Object.fromEntries(WORKSHOP_BLUEPRINTS.map((entry) => [entry.id, 0]));
+  const ids = new Set();
   const normalized = [];
   let removed = 0;
   for (const raw of source) {
@@ -78,6 +79,8 @@ export function hardenWorkshopAutomationState(state) {
       removed += 1;
       continue;
     }
+    if (ids.has(device.id)) device.id = `automation:migrated:${Math.max(1, finiteInt(state.day, 1))}:${normalized.length}:${device.type}`;
+    ids.add(device.id);
     blocked.add(tile);
     counts[device.type] += 1;
     normalized.push(device);
