@@ -1,7 +1,7 @@
 {
   "name": "Hearthvale: Continental Adventure",
   "short_name": "Hearthvale",
-  "description": "An original offline farming, ranching, cooking, fishing, museum-collection, relationships, exploration, guild-combat, story, and 50-floor cave adventure.",
+  "description": "An original offline farming, ranching, cooking, fishing, museum, inventory storage, overnight shipping, relationships, exploration, guild-combat, story, and 50-floor cave adventure.",
   "start_url": "./",
   "display": "standalone",
   "orientation": "any",
