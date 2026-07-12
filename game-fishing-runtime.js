@@ -1,6 +1,6 @@
 import { ITEMS, clamp } from "./game-shared.js";
 import {
-  FISH_SPECIES, FISH_SPECIES_MAP, LEGENDARY_FISH, FISH_QUALITY_ORDER,
+  FISH_SPECIES_MAP, LEGENDARY_FISH, FISH_QUALITY_ORDER,
   BAIT_DEFS, TACKLE_DEFS, FISHING_SHOP_STOCK,
 } from "./fishing-data.js";
 import { createFishingState, ensureFishingShopState } from "./game-fishing.js";
@@ -8,13 +8,18 @@ import { createFishingState, ensureFishingShopState } from "./game-fishing.js";
 const MAX_RECORD_COUNT = 999999;
 const MAX_TACKLE_USES = 999;
 const MAX_COUNTER = 9999999;
+const finiteNumber = (value, fallback = 0) => {
+  const numeric = Number(value);
+  return Number.isFinite(numeric) ? numeric : fallback;
+};
+const finiteInt = (value, fallback = 0) => Math.floor(finiteNumber(value, fallback));
 
 export function hardenFishingState(state) {
   if (!state || typeof state !== "object") return state;
   state.inventory = state.inventory && typeof state.inventory === "object" ? state.inventory : {};
   state.fishing = createFishingState(state.fishing);
   const fishing = state.fishing;
-  const currentDay = Math.max(1, Math.floor(Number(state.day) || 1));
+  const currentDay = Math.max(1, finiteInt(state.day, 1));
 
   for (const [id, record] of Object.entries(fishing.journal)) {
     const species = FISH_SPECIES_MAP[id];
@@ -22,15 +27,15 @@ export function hardenFishingState(state) {
       delete fishing.journal[id];
       continue;
     }
-    record.count = clamp(Math.floor(Number(record.count) || 0), 0, MAX_RECORD_COUNT);
+    record.count = clamp(finiteInt(record.count), 0, MAX_RECORD_COUNT);
     if (record.count <= 0) {
       delete fishing.journal[id];
       continue;
     }
     record.bestQuality = FISH_QUALITY_ORDER.includes(record.bestQuality) ? record.bestQuality : "normal";
-    record.largestSize = clamp(Number(record.largestSize) || species.minSize, species.minSize, species.maxSize * 1.15);
-    record.firstDay = clamp(Math.floor(Number(record.firstDay) || 1), 1, currentDay);
-    record.lastDay = clamp(Math.floor(Number(record.lastDay) || record.firstDay), record.firstDay, currentDay);
+    record.largestSize = clamp(finiteNumber(record.largestSize, species.minSize), species.minSize, species.maxSize * 1.15);
+    record.firstDay = clamp(finiteInt(record.firstDay, 1), 1, currentDay);
+    record.lastDay = clamp(finiteInt(record.lastDay, record.firstDay), record.firstDay, currentDay);
   }
 
   fishing.legendaryCaught = [...new Set(fishing.legendaryCaught.filter((id) => {
@@ -39,23 +44,23 @@ export function hardenFishingState(state) {
   }))].slice(0, LEGENDARY_FISH.length);
   fishing.selectedBait = BAIT_DEFS[fishing.selectedBait] ? fishing.selectedBait : "none";
   fishing.selectedTackle = TACKLE_DEFS[fishing.selectedTackle] ? fishing.selectedTackle : "none";
-  fishing.tackleUses.spinner = clamp(Math.floor(Number(fishing.tackleUses.spinner) || 0), 0, MAX_TACKLE_USES);
-  fishing.tackleUses.lucky = clamp(Math.floor(Number(fishing.tackleUses.lucky) || 0), 0, MAX_TACKLE_USES);
-  fishing.streak = clamp(Math.floor(Number(fishing.streak) || 0), 0, 10000);
-  fishing.bestStreak = clamp(Math.max(fishing.streak, Math.floor(Number(fishing.bestStreak) || 0)), 0, 10000);
-  fishing.lastCatchDay = clamp(Math.floor(Number(fishing.lastCatchDay) || 0), 0, currentDay);
-  fishing.totalEscapes = clamp(Math.floor(Number(fishing.totalEscapes) || 0), 0, MAX_COUNTER);
-  fishing.treasuresFound = clamp(Math.floor(Number(fishing.treasuresFound) || 0), 0, MAX_COUNTER);
-  fishing.perfectCatches = clamp(Math.floor(Number(fishing.perfectCatches) || 0), 0, MAX_COUNTER);
+  fishing.tackleUses.spinner = clamp(finiteInt(fishing.tackleUses.spinner), 0, MAX_TACKLE_USES);
+  fishing.tackleUses.lucky = clamp(finiteInt(fishing.tackleUses.lucky), 0, MAX_TACKLE_USES);
+  fishing.streak = clamp(finiteInt(fishing.streak), 0, 10000);
+  fishing.bestStreak = clamp(Math.max(fishing.streak, finiteInt(fishing.bestStreak)), 0, 10000);
+  fishing.lastCatchDay = clamp(finiteInt(fishing.lastCatchDay), 0, currentDay);
+  fishing.totalEscapes = clamp(finiteInt(fishing.totalEscapes), 0, MAX_COUNTER);
+  fishing.treasuresFound = clamp(finiteInt(fishing.treasuresFound), 0, MAX_COUNTER);
+  fishing.perfectCatches = clamp(finiteInt(fishing.perfectCatches), 0, MAX_COUNTER);
   const recordedCatches = Object.values(fishing.journal).reduce((sum, record) => sum + record.count, 0);
-  fishing.totalCasts = clamp(Math.max(Math.floor(Number(fishing.totalCasts) || 0), recordedCatches + fishing.totalEscapes), 0, MAX_COUNTER);
+  fishing.totalCasts = clamp(Math.max(finiteInt(fishing.totalCasts), recordedCatches + fishing.totalEscapes), 0, MAX_COUNTER);
 
   ensureFishingShopState(state);
-  for (const entry of FISHING_SHOP_STOCK) fishing.shopStock[entry.id] = clamp(Math.floor(Number(fishing.shopStock[entry.id]) || 0), 0, entry.daily);
+  for (const entry of FISHING_SHOP_STOCK) fishing.shopStock[entry.id] = clamp(finiteInt(fishing.shopStock[entry.id]), 0, entry.daily);
   for (const id of Object.keys(fishing.shopStock)) if (!FISHING_SHOP_STOCK.some((entry) => entry.id === id)) delete fishing.shopStock[id];
 
   for (const id of ["wormBait", "glowBait", "spinnerTackle", "luckyTackle", "anglerToken"]) {
-    if (ITEMS[id]) state.inventory[id] = clamp(Math.floor(Number(state.inventory[id]) || 0), 0, 999999);
+    if (ITEMS[id]) state.inventory[id] = clamp(finiteInt(state.inventory[id]), 0, 999999);
   }
   return state;
 }
