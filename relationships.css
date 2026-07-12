@@ -1,0 +1,88 @@
+.relationship-social-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+.relationship-social-card {
+  display: grid;
+  grid-template-columns: 46px 1fr;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 11px;
+  text-align: left;
+  border: 2px solid rgba(255,255,255,.13);
+  border-radius: 14px;
+  background: rgba(16,36,29,.16);
+}
+.relationship-social-card:hover,
+.relationship-social-card:focus-visible {
+  border-color: rgba(239,185,74,.65);
+  transform: translateY(-1px);
+}
+.relationship-social-card strong,
+.relationship-social-card small { display: block; }
+.relationship-avatar {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  font-size: 26px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.1);
+}
+.social-heart-track {
+  height: 8px;
+  margin: 7px 0;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 999px;
+  background: rgba(16,36,29,.28);
+}
+.social-heart-track i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #78b978, #efb94a, #ee8a96);
+}
+.relationship-profile {
+  padding: 12px;
+  border: 2px solid rgba(239,185,74,.35);
+  border-radius: 14px;
+  background: rgba(16,36,29,.12);
+}
+.social-gift-list,
+.social-mail-list {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+}
+.social-gift-item,
+.social-letter {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border: 2px solid rgba(255,255,255,.12);
+  border-radius: 12px;
+  background: rgba(16,36,29,.15);
+}
+.social-gift-item > span { font-size: 25px; }
+.social-gift-item strong,
+.social-gift-item small,
+.social-letter strong,
+.social-letter small { display: block; }
+.social-letter.unread {
+  border-color: rgba(239,185,74,.7);
+  background: rgba(239,185,74,.1);
+}
+.social-letter.read { opacity: .82; }
+@media (max-width: 640px) {
+  .relationship-social-grid { grid-template-columns: 1fr; }
+  .social-gift-item,
+  .social-letter { grid-template-columns: auto 1fr; }
+  .social-gift-item button,
+  .social-letter button { grid-column: 1 / -1; width: 100%; }
+}
