@@ -1,0 +1,129 @@
+.farmstead-summary,
+.farmstead-report-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 12px 0 16px;
+}
+
+.farmstead-summary > div,
+.farmstead-report-grid > div {
+  display: grid;
+  gap: 3px;
+  padding: 12px;
+  border: 2px solid rgba(16, 36, 29, .2);
+  border-radius: 12px;
+  background: rgba(239, 225, 181, .42);
+  text-align: center;
+}
+
+.farmstead-summary strong,
+.farmstead-report-grid strong {
+  font-size: 1.25rem;
+  color: #1e5b43;
+}
+
+.farmstead-summary small,
+.farmstead-report-grid small {
+  opacity: .75;
+}
+
+.farm-project-list {
+  display: grid;
+  gap: 12px;
+}
+
+.farm-project-card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  padding: 13px;
+  border: 2px solid rgba(16, 36, 29, .2);
+  border-radius: 14px;
+  background: rgba(255, 247, 218, .7);
+}
+
+.farm-project-card.complete {
+  border-color: rgba(46, 111, 87, .55);
+  background: rgba(191, 224, 179, .62);
+}
+
+.farm-project-card.building {
+  border-color: rgba(217, 157, 57, .7);
+  background: rgba(244, 213, 146, .58);
+}
+
+.farm-project-card.locked {
+  filter: saturate(.55);
+  opacity: .68;
+}
+
+.farm-project-icon {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: rgba(16, 36, 29, .1);
+  font-size: 28px;
+}
+
+.farm-project-card h3 {
+  margin: 0 0 4px;
+}
+
+.farm-project-card p {
+  margin: 0 0 8px;
+}
+
+.farm-materials {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.farm-material {
+  padding: 4px 7px;
+  border-radius: 999px;
+  background: rgba(16, 36, 29, .08);
+  font-size: .78rem;
+}
+
+.farm-material.ready {
+  color: #205e43;
+  background: rgba(74, 151, 93, .14);
+}
+
+.farm-material.missing {
+  color: #8b3f36;
+  background: rgba(188, 75, 65, .12);
+}
+
+.farm-project-status {
+  white-space: nowrap;
+  padding: 7px 9px;
+  border-radius: 10px;
+  background: rgba(16, 36, 29, .1);
+}
+
+.farm-project-status.complete { color: #1f6948; }
+.farm-project-status.building { color: #80530e; }
+
+@media (max-width: 700px) {
+  .farmstead-summary,
+  .farmstead-report-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .farm-project-card {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .farm-project-card > button,
+  .farm-project-status {
+    grid-column: 1 / -1;
+    width: 100%;
+    text-align: center;
+  }
+}
