@@ -1,5 +1,6 @@
 import { ITEMS } from "./game-shared.js";
-import { RANCH_QUALITY } from "./ranch-data.js";
+import { RANCH_PRODUCT_IDS, RANCH_QUALITY } from "./ranch-data.js";
+import { COOKING_RECIPE_MAP } from "./cooking-data.js";
 import {
   BACKPACK_STACK_LIMIT, preferredStorageChest,
   backpackOccupiedSlots, createStorageState,
@@ -24,6 +25,33 @@ function shiftStoredQuality(container, id, quality, amount) {
     const take = Math.min(remaining, Math.max(0, finiteInt(record[source])));
     record[source] -= take;
     record[quality] = Math.max(0, finiteInt(record[quality])) + take;
+    remaining -= take;
+  }
+}
+
+function externalQualitySnapshot(state, id) {
+  if (COOKING_RECIPE_MAP[id]) return null;
+  const record = RANCH_PRODUCT_IDS.includes(id)
+    ? state.ranch?.qualityInventory?.[id]
+    : PROGRESSION_QUALITY_ITEMS.has(id)
+      ? state.progression?.qualityInventory?.[id]
+      : null;
+  if (!record) return null;
+  const inventory = Math.max(0, finiteInt(state.inventory?.[id]));
+  const recorded = QUALITY_ORDER.reduce((sum, quality) => sum + Math.max(0, finiteInt(record[quality])), 0);
+  return { record, untrackedNormal: Math.max(0, inventory - recorded) };
+}
+
+function consumeExternalQuality(snapshot, amount) {
+  if (!snapshot || amount <= 0) return;
+  let remaining = Math.max(0, finiteInt(amount));
+  const generic = Math.min(remaining, snapshot.untrackedNormal);
+  remaining -= generic;
+  for (const quality of QUALITY_ORDER) {
+    if (remaining <= 0) break;
+    const available = Math.max(0, finiteInt(snapshot.record[quality]));
+    const take = Math.min(remaining, available);
+    snapshot.record[quality] = available - take;
     remaining -= take;
   }
 }
@@ -74,6 +102,7 @@ export function installStorageOverflowRuntime(GameClass) {
     addItem: proto.addItem,
     addRanchItem: proto.addRanchItem,
     cookMeal: proto.cookMeal,
+    giveSocialGift: proto.giveSocialGift,
     enterGame: proto.enterGame,
     nextDay: proto.nextDay,
   };
@@ -127,6 +156,15 @@ export function installStorageOverflowRuntime(GameClass) {
         this.saveGame?.(true);
       }
     }
+    return result;
+  };
+
+  if (original.giveSocialGift) proto.giveSocialGift = function giveSocialGiftStorageQuality(npcId, itemId) {
+    const before = Math.max(0, finiteInt(this.state.inventory?.[itemId]));
+    const quality = externalQualitySnapshot(this.state, itemId);
+    const result = original.giveSocialGift.call(this, npcId, itemId);
+    const after = Math.max(0, finiteInt(this.state.inventory?.[itemId]));
+    consumeExternalQuality(quality, Math.max(0, before - after));
     return result;
   };
 
