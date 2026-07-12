@@ -9,11 +9,28 @@ import {
 } from "./game-storage.js";
 
 const MAX_COUNTER = 999999999;
+const QUALITY_ORDER = ["normal", "silver", "gold", "iridium"];
 const finiteInt = (value, fallback = 0) => {
   const numeric = Number(value);
   return Math.floor(Number.isFinite(numeric) ? numeric : fallback);
 };
 const normalQuality = (amount) => ({ normal: Math.max(0, finiteInt(amount)), silver: 0, gold: 0, iridium: 0 });
+
+function qualityTotal(qualities) {
+  return QUALITY_ORDER.reduce((sum, quality) => sum + Math.max(0, finiteInt(qualities?.[quality])), 0);
+}
+
+function qualitiesAfterConsumed(qualities, consumed) {
+  const remaining = Object.fromEntries(QUALITY_ORDER.map((quality) => [quality, Math.max(0, finiteInt(qualities?.[quality]))]));
+  let amount = Math.max(0, finiteInt(consumed));
+  for (const quality of QUALITY_ORDER) {
+    const take = Math.min(amount, remaining[quality]);
+    remaining[quality] -= take;
+    amount -= take;
+    if (amount <= 0) break;
+  }
+  return remaining;
+}
 
 export function hardenStorageState(state) {
   if (!state || typeof state !== "object") return state;
@@ -33,11 +50,11 @@ export function hardenStorageState(state) {
     const overflow = Math.max(0, raw - safe);
     if (overflow > 0) {
       const preferred = preferredStorageChest(id);
+      const alternate = preferred === "pantry" ? "trunk" : "pantry";
       let remaining = overflow;
       remaining -= addQualitiesToContainer(state.storage.chests[preferred], id, normalQuality(remaining));
-      const alternate = preferred === "pantry" ? "trunk" : "pantry";
       if (remaining > 0) remaining -= addQualitiesToContainer(state.storage.chests[alternate], id, normalQuality(remaining));
-      if (remaining > 0) state.inventory[id] = clamp(state.inventory[id] + remaining, 0, STORAGE_STACK_LIMIT);
+      // Imported quantities beyond the backpack and both 9,999-unit chest stacks are malformed and are intentionally rejected.
     }
   }
 
@@ -47,19 +64,15 @@ export function hardenStorageState(state) {
   for (const [id, count] of Object.entries({ ...state.storage.shipping.items })) {
     if (isShippableItem(id)) continue;
     const qualities = removeContainerUnits(state.storage.shipping, id, count);
+    const total = qualityTotal(qualities);
     const preferred = preferredStorageChest(id);
-    let moved = addQualitiesToContainer(state.storage.chests[preferred], id, qualities);
-    const total = Object.values(qualities).reduce((sum, value) => sum + value, 0);
-    if (moved < total) {
-      const remainingQualities = { ...qualities };
-      let remaining = moved;
-      for (const quality of ["normal", "silver", "gold", "iridium"]) {
-        const consumed = Math.min(remaining, remainingQualities[quality]);
-        remainingQualities[quality] -= consumed;
-        remaining -= consumed;
-      }
-      moved += addQualitiesToBackpack(state, id, remainingQualities);
-    }
+    const alternate = preferred === "pantry" ? "trunk" : "pantry";
+    const firstMoved = addQualitiesToContainer(state.storage.chests[preferred], id, qualities);
+    let remainingQualities = qualitiesAfterConsumed(qualities, firstMoved);
+    const secondMoved = addQualitiesToContainer(state.storage.chests[alternate], id, remainingQualities);
+    remainingQualities = qualitiesAfterConsumed(remainingQualities, secondMoved);
+    const recovered = firstMoved + secondMoved;
+    if (recovered < total) addQualitiesToBackpack(state, id, remainingQualities);
   }
 
   for (const chestId of Object.keys(STORAGE_CHESTS)) {
