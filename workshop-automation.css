@@ -1,0 +1,127 @@
+.automation-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 12px 0 16px;
+}
+
+.automation-summary > div {
+  display: grid;
+  gap: 3px;
+  padding: 12px;
+  border: 2px solid rgba(16, 36, 29, .2);
+  border-radius: 12px;
+  background: rgba(194, 220, 189, .46);
+  text-align: center;
+}
+
+.automation-summary strong {
+  font-size: 1.25rem;
+  color: #1e5b43;
+}
+
+.automation-summary small {
+  opacity: .76;
+}
+
+.automation-list {
+  display: grid;
+  gap: 12px;
+}
+
+.automation-card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  padding: 13px;
+  border: 2px solid rgba(16, 36, 29, .2);
+  border-radius: 14px;
+  background: rgba(255, 247, 218, .72);
+}
+
+.automation-card.locked {
+  filter: saturate(.45);
+  opacity: .66;
+}
+
+.automation-icon {
+  display: grid;
+  place-items: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 13px;
+  background: rgba(16, 36, 29, .1);
+  font-size: 29px;
+}
+
+.automation-card h3 {
+  margin: 0 0 4px;
+}
+
+.automation-card p {
+  margin: 0 0 8px;
+}
+
+.automation-card small {
+  display: block;
+  margin-top: 7px;
+  opacity: .75;
+}
+
+.automation-costs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.automation-cost {
+  padding: 4px 7px;
+  border-radius: 999px;
+  background: rgba(16, 36, 29, .08);
+  font-size: .78rem;
+}
+
+.automation-cost.ready {
+  color: #205e43;
+  background: rgba(74, 151, 93, .15);
+}
+
+.automation-cost.missing {
+  color: #8b3f36;
+  background: rgba(188, 75, 65, .13);
+}
+
+.automation-actions {
+  display: grid;
+  gap: 7px;
+  min-width: 96px;
+}
+
+.automation-actions strong {
+  max-width: 120px;
+  font-size: .78rem;
+  text-align: center;
+  opacity: .75;
+}
+
+@media (max-width: 700px) {
+  .automation-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .automation-card {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .automation-actions {
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+  }
+
+  .automation-actions strong {
+    grid-column: 1 / -1;
+    max-width: none;
+  }
+}
