@@ -9,6 +9,7 @@ import {
 import {
   createSocialState, giftWeek, giftStatus, canGiveGift, queueEligibleHeartEventsState,
 } from "../game-relationships.js";
+import { escapeSocialHtml } from "../game-relationships-security.js";
 
 registerExpandedInteriors();
 assert.equal(validateRelationshipProfiles(), true);
@@ -70,6 +71,14 @@ assert.equal(queueEligibleHeartEventsState(social, npcs, 9), 1);
 assert.deepEqual(social.pendingEvents, ["mira:6"]);
 assert.equal(heartEventForKey("mira:9").title, "A Place at the Table");
 
+const dangerous = `<img src=x onerror="globalThis.pwned=true"> & 'letter'`;
+const escaped = escapeSocialHtml(dangerous);
+assert.equal(escaped.includes("<img"), false);
+assert.equal(escaped.includes("onerror=\""), false);
+assert.match(escaped, /&lt;img/);
+assert.match(escaped, /&amp;/);
+assert.match(escaped, /&#39;letter&#39;/);
+
 console.log(JSON.stringify({
   ok: true,
   residents: RELATIONSHIP_NPC_IDS.length,
@@ -77,4 +86,5 @@ console.log(JSON.stringify({
   heartEvents: RELATIONSHIP_NPC_IDS.length * 3,
   eventSpotsWalkable: true,
   giftLimits: true,
+  mailboxHtmlEscaping: true,
 }));
