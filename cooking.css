@@ -40,8 +40,7 @@
 .cooking-active small,
 .cooking-recipe small,
 .cooking-pantry-item small { opacity: .76; }
-.cooking-progress,
-.social-heart-track {
+.cooking-progress {
   height: 7px;
   overflow: hidden;
   border-radius: 999px;
