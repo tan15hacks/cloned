@@ -88,7 +88,7 @@ export function registerFarmsteadExpansion() {
     ...FARM_PATH_RECTS,
     [FARM_BUILDINGS.workshop.x - 1, FARM_BUILDINGS.workshop.y - 1, FARM_BUILDINGS.workshop.w + 2, FARM_BUILDINGS.workshop.h + 3],
     [FARM_BUILDINGS.greenhouse.x - 1, FARM_BUILDINGS.greenhouse.y - 1, FARM_BUILDINGS.greenhouse.w + 2, FARM_BUILDINGS.greenhouse.h + 3],
-    [33, 13, 3, 4],
+    [33, 13, 3, 2],
   ];
   for (const reserve of reserveRects) {
     const exists = POLISHED_PATH_RECTS.some((entry) => entry.length === reserve.length && entry.every((value, index) => value === reserve[index]));
