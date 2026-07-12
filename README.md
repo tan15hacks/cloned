@@ -1,98 +1,110 @@
 # Hearthvale
 
-Hearthvale is an original, responsive seasonal farming, ranching, relationships, expanded-interior, exploration, living-world, guild, combat, progression, and story-adventure game. It uses its own characters, story, map, dialogue, systems, and geometric cartoon rendering rather than copying Stardew Valley assets or content.
+Hearthvale is an original responsive farming, ranching, cooking, relationship, exploration, guild-combat, and story-adventure game. It uses its own characters, map, dialogue, systems, and geometric cartoon rendering rather than copying another game's assets or content.
 
-## Version 3.11 — Relationships, Heart Events, Gifts, and Mailbox
+## Version 3.12 — Farmhouse Cooking and Meal Buffs
 
-Version 3.11 turns all **18 named residents** into a deeper long-term social system while preserving Chapter 1 and Chapter 2 story conversations.
+Version 3.12 connects crops, fish, forage, ranch products, artisan goods, relationships, and combat through a complete cooking loop.
 
-### Resident relationship profiles
+### Farmhouse kitchen
 
-Every named resident now has:
+The Farmhouse now contains two playable stations:
 
-- A role and personal profile
-- A unique seasonal birthday
-- Two loved gifts
-- At least three liked gifts
-- At least two disliked gifts
-- Four friendship tiers from Acquaintance to Kindred Friend
-- A daily conversation streak
-- Three personal heart events at 3, 6, and 9 friendship
+- **Farmhouse Stove** — prepare known recipes using ingredients from the player's inventory.
+- **Farmhouse Cookbook** — review recipes, unlock requirements, ingredient stock, Cooking XP, meal effects, and prepared food.
 
-Gift preferences become visible after they are discovered through gifting or after reaching 3 friendship.
+The stove, cookbook shelf, interaction markers, warm light, and rising steam are rendered inside the existing lightweight Farmhouse interior.
 
-### Gift rules and birthdays
+### 16 original recipes
 
-Players can give each resident:
+1. Hearth Turnip Broth
+2. Sunberry Compote
+3. Silverleaf Omelet
+4. Glowcap Skillet
+5. Hearth & Kettle River Stew
+6. Orchard Apple Custard
+7. Moonbean Curry
+8. Golden Turnip Bake
+9. Moonlake Fisher Pie
+10. Frostmint Cream Tea
+11. Murkfen Bloom Chowder
+12. Starwatch Parfait
+13. Grand Market Truffle Risotto
+14. Cinderwake Ember Hotpot
+15. Grand Depths Victory Platter
+16. Hearthvale Continental Feast
 
-- One gift per day
-- Two gifts per seven-day week
+Recipes use existing crops, fish, forage, eggs, milk, cheese, goat products, truffles, and artisan goods. Three recipes are available immediately, three unlock through Cooking Levels, and ten are learned from completed resident heart events after reaching the recipe's required Cooking Level.
 
-Loved, liked, neutral, and disliked items produce different friendship changes. Birthday gifts receive stronger positive bonuses, and talking to a resident on their birthday provides an additional friendship increase.
+### Ingredient and meal quality
 
-The expanded Residents menu displays friendship, birthday, profession, known preferences, weekly gift usage, talk streak, completed heart events, and pending invitations.
+Cooking understands the existing crop, fish, and ranch quality inventories. Players may choose:
 
-### Farmstead mailbox
+- **Cook Standard** — uses lower-quality ingredients first.
+- **Use Best Ingredients** — spends premium ingredients first for a better final dish.
 
-A physical mailbox now stands beside the farmhouse. It receives:
+Prepared meals can become Homestyle, Refined, Gourmet, or Masterwork quality. Higher-quality food restores more health and energy and keeps its meal effect active longer.
 
-- A welcome letter from Mira
-- Birthday reminders from Silvercrest Civic Post
-- Heart-event invitations
-- One-time item and coin enclosures
+### Cooking Levels
 
-Unread mail is shown above the mailbox. Letter rewards are claim-once and persist safely in the browser save.
+Cooking has a dedicated progression path from Level 1 to Level 10. Cooking food awards XP, unlocks advanced cookbook entries, and records:
 
-### 54 scheduled heart events
+- Total dishes cooked
+- Total meals eaten
+- Masterwork meals prepared
+- Unique recipes completed
+- Recipe collection progress
 
-Each resident has three authored personal scenes, producing **54 heart events** in total.
+### Temporary meal effects
 
-Heart-event letters specify a building and time window. The invited resident appears inside the correct playable interior with a heart marker. Events can occur in:
+Only one meal effect may be active at a time. Eating another prepared meal replaces the current effect. Effects use game time and remain consistent across overworld travel, interiors, caves, sleeping, saving, and loading.
 
-- Mira's Seeds
-- Hearth & Kettle
-- Ironhart Smithy
-- Blue Vial Apothecary
-- The Golden Griffin
-- Silvercrest Grand Market
-- Starwatch Observatory
-- Silvercrest Hall
+Meal effects can improve:
 
-Completing scenes awards friendship, coins, useful items, journal entries, achievements, and the collectible Hearthvale Friendship Pin at 9 hearts.
+- Tool and attack energy efficiency
+- Movement speed
+- Damage and armor
+- Critical chance and attack speed
+- Equipment-drop luck
+- Maximum health
+- Status resistance
 
-### Story compatibility
+The HUD displays the active meal, quality, and remaining game time.
 
-Relationship dialogue steps aside whenever Chapter 1 or Chapter 2 owns a required conversation. Mira's opening tutorial, Aria's Guild scenes, Sora's investigation, Oren's blueprint, Bram's stabilizer, and Mei's escort sequence remain unchanged.
+### Relationship recipe letters
+
+Completing selected 3-, 6-, and 9-heart events can unlock personal recipes from Rowan, Lumi, Mira, Tavi, Pella, Niva, Sora, Cass, Bram, and Guildmaster Aria. New recipes are recorded in the journal and delivered through the secure Farmstead mailbox.
+
+Rowan also sends a first-day cooking letter with starter ingredients and explains the restored farmhouse stove.
+
+### Cooking achievements
+
+- **Home-Cooked** — Prepare the first meal at the farmhouse stove
+- **Kitchen Hand** — Cook 25 meals
+- **Masterwork Supper** — Cook a Masterwork-quality meal
+- **Continental Cookbook** — Learn all 16 recipes
+- **Continental Chef** — Cook every recipe at least once
 
 ### Save hardening
 
-Existing saves automatically receive social records without resetting friendship. Migration normalizes:
+Existing saves automatically receive Cooking Level 1, the starter cookbook, an empty quality-aware pantry, and the kitchen welcome letter. Migration validates recipe IDs, quality counts, XP, statistics, meal inventory, active effects, expiration times, and imported inventory records.
 
-- Friendship values
-- Talk dates and streaks
-- Gift histories
-- Known preferences
-- Pending and completed heart events
-- Birthday records
-- Duplicate or malformed letters
-- Invalid rewards and event references
+Forged or malformed effects cannot grant unrelated bonuses, imported meal durations are capped to one game day, expired effects are removed, and non-finite XP values are rejected.
 
-Only one pending event per resident is kept at a time, so older high-friendship saves receive their new scenes in order rather than being flooded with all three immediately.
+## Version 3.11 — Relationships, Heart Events, Gifts, and Mailbox
 
-### Relationship achievements
+All 18 named residents have unique birthdays, loved and disliked gifts, conversation streaks, friendship tiers, and three authored heart events at 3, 6, and 9 friendship—54 scenes in total.
 
-- **Hearthvale Social Circle** — Meet all 18 named residents
-- **Trusted Across Town** — Reach 8 friendship with eight residents
-- **Kindred Friend** — Reach maximum friendship with one resident
-- **A Story Shared** — Complete a heart event
-- **Town Confidant** — Complete five 9-heart events
+Players may give one gift per resident each day and two per seven-day week. Birthday gifts receive stronger bonuses. The Residents menu shows friendship, profession, known preferences, gift usage, talk streaks, completed scenes, and pending invitations.
 
-## Version 3.10 — Expanded Building Interiors and Town Life
+A physical Farmstead mailbox receives birthday reminders, heart-event invitations, recipe letters, and claim-once item or coin enclosures. Imported letter text is escaped before rendering.
 
-Version 3.10 expands the lightweight interior system from two maps to **ten playable buildings** without increasing the 57,344-tile overworld.
+## Version 3.10 — Expanded Building Interiors
 
-### Eight new furnished interiors
+Hearthvale contains ten playable lightweight interiors:
 
+- Farmhouse
+- Silvercrest Adventurers' Guild
 - Mira's Seeds
 - Hearth & Kettle
 - Ironhart Smithy
@@ -102,66 +114,67 @@ Version 3.10 expands the lightweight interior system from two maps to **ten play
 - Starwatch Observatory
 - Silvercrest Hall
 
-These join the existing Farmhouse and Silvercrest Adventurers' Guild interiors.
+Interiors include collision-safe furniture, service counters, local lighting, weather-aware windows, indoor NPC schedules, independent camera bounds, and save-safe exterior return points.
 
-Every map contains collision-safe furniture, clear entrances and exits, service or lore interactions, indoor lighting, weather-aware windows, and a building-specific visual identity.
+## Version 3.9 — Farm Animals and Artisan Machines
 
-Named residents move indoors during working hours, disappear from the street while inside, and remain available for quest-safe dialogue. Business counters enforce opening hours even if the player remains inside after closing.
+Six animal species support long-term ranch progression:
 
-The Adventure Menu includes a **Buildings & Interiors** directory with discovery, visit counts, current opening status, and the Open Every Door achievement.
+- Chickens producing Eggs
+- Cows producing Milk
+- Ducks producing Duck Eggs and Feathers
+- Goats producing Goat Milk
+- Sheep producing Wool
+- Pigs finding Truffles
 
-## Version 3.9 — Farm Animals and Barn Progression
+The Coop and Barn progress through Basic, Large, and Deluxe tiers. The Silo expands hay storage. Daily feeding, petting, health, weather, housing, friendship, happiness, and Farming Level affect Normal, Silver, Gold, and Iridium products.
 
-The Farmstead supports Chickens, Cows, Ducks, Goats, Sheep, and Pigs. Animals track friendship, happiness, health, feeding, petting, grazing, product readiness, quality, sickness, and rare colors without permanent death.
-
-Coops, Barns, and Hay storage upgrade through multiple tiers. Players can hatch animals, install heaters and collectors, cut pasture into Hay, and process quality goods through Mayonnaise, Cheese, Cloth, and Truffle Oil machines.
+Four machines create Mayonnaise, Cheese, Cloth, and Truffle Oil.
 
 ## Version 3.8 — Seasons and Festivals
 
-The continuous Day counter maps into four 28-day seasons and a repeating 112-day year: Springbloom, Suncrest, Emberfall, and Frostwane.
+The continuous calendar uses four 28-day seasons and a repeating 112-day year:
 
-Four annual festivals provide unique minigames, Festival Tokens, experience, keepsakes, friendship bonuses, and equipment:
+- Springbloom
+- Suncrest
+- Emberfall
+- Frostwane
 
-- Springbloom Day 7 — Hearthvale Bloomfair
-- Suncrest Day 14 — Moonlake Regatta
-- Emberfall Day 21 — Silvercrest Harvest Crown
-- Frostwane Day 28 — Starfall Vigil
+Each season has deterministic weather, crop affinity, ambient effects, and an annual festival with a unique minigame, tokens, XP, keepsakes, friendship rewards, and collectible equipment.
 
 ## Version 3.7 — Chapter 2: The Fractured Waystones
 
-Chapter 2 contains seventeen objectives connecting Guildmaster Aria, Sora, Veilmoor, Oren, Bram, Mei, Suncleft Ruins, and the hidden Waystone Archive.
+Chapter 2 contains seventeen objectives connecting Aria, Sora, Veilmoor, Oren, Bram, Mei, Suncleft Ruins, and the hidden Waystone Archive.
 
-The 52 × 34 Archive contains room groups, rune switches, gates, spike traps, inscriptions, a hidden cache, a checkpoint, the Riftbound Sentinel, and the Hollow Cartographer.
+The 52 × 34 Archive includes rune switches, gates, traps, inscriptions, a hidden cache, a checkpoint, the Riftbound Sentinel, and the Hollow Cartographer. Completion unlocks the Rift Compass, a second equipment preset, free stabilized Waystone travel, backpack expansion, XP, and the Pathfinder achievement.
 
-## Version 3.6 — Economy, Skills, and Cave Progression
+## Version 3.6 — Progression and Cave Milestones
 
-The player has an Adventure Level from 1–20 and Farming, Mining, Combat, Fishing, and Foraging skills from 1–10. Crops and fish use four quality tiers, shops use daily stock, equipment can be enhanced to +3, and milestone bosses guard Floors 10, 20, 30, 40, and 50.
+The player has Adventure Level 1–20 and Farming, Mining, Combat, Fishing, and Foraging skills from 1–10. Activities, quests, bounties, and bosses award experience and permanent perks.
+
+Crops and fish use four quality tiers. Shops have daily stock, blacksmith upgrades require depth-appropriate materials, equipment can be enhanced to +3, and progression bosses guard Floors 10, 20, 30, 40, and 50.
 
 ## Version 3.5 — Living World
 
-All 18 named NPCs have time- and weather-aware routines. Hearthvale and Silvercrest include moving citizens, shop hours, evening lights, umbrellas, contextual dialogue, and animated geometric characters.
+All 18 named NPCs have time- and weather-aware routines. Hearthvale and Silvercrest include moving citizens, shop hours, evening lights, umbrellas, contextual dialogue, friendship milestones, and indoor work schedules.
+
+Characters use animated geometric body parts for walking, blinking, tools, fishing, combat, and weather reactions.
 
 ## Version 3.4 — World and Map Polish
 
-The 256 × 224 overworld remains **57,344 tiles**, with authored settlement roads, protected door clearances, city walls and gates, regional decorations, animated environmental effects, safer cave entrances, and improved underground presentation.
+The 256 × 224 overworld contains **57,344 tiles** across 14 connected regions. Authored roads, settlement gates, protected entrances, regional decorations, water, snow, fog, embers, swamp bubbles, and cave atmosphere improve readability without increasing world size.
 
-The world uses deterministic 16 × 16 tile chunks. Only nearby terrain, resources, monsters, decorations, citizens, animals, and effects are active at runtime.
+The world uses deterministic 16 × 16 chunks. Only nearby terrain, resources, monsters, decorations, citizens, ranch animals, and effects are active.
 
-## Guided Chapter 1
+## Story and combat
 
-Chapter 1 introduces farming, Hearthvale Village, Silvercrest City, the Adventurers' Guild, Greenfield combat, and Cave Floor 3 through a persistent objective tracker, markers, dialogue, rewards, and completion screen.
-
-## Combat and equipment
+Chapter 1 introduces farming, Hearthvale Village, Silvercrest City, the Adventurers' Guild, Greenfield combat, and Cave Floor 3 through a persistent objective tracker and world markers.
 
 Combat includes directional sword arcs, cooldowns, critical hits, knockback, damage numbers, invulnerability, telegraphed attacks, projectiles, status effects, physical loot, boss bars, and six equipment slots.
 
-## Regions
-
-The continent contains 14 connected regions: Hearthvale Farmstead, Hearthvale Village, Silvercrest City, Northwatch Foothills, Greenfield Wilds, Moonlake Basin, Veilmoor, Frostpeak Mountains, The Lightless Wood, Murkfen Swamp, Dreadwild Expanse, Cinderwake Caldera, Suncoast Reach, and Suncleft Ruins.
-
 ## Grand Depths — 50 Floors
 
-Five surface entrances connect to the Grand Depths. Floor 1 is an expedition hub with a merchant, trader, healer, and milestone floor gate.
+Five surface entrances connect to the Grand Depths. Floor 1 is an expedition hub with a merchant, trader, healer, and milestone gate.
 
 - Floors 1–9 — Copper Galleries
 - Floors 10–19 — Fungal Grotto
@@ -187,7 +200,7 @@ npm run start
 
 Open `http://localhost:4173`.
 
-Validate JavaScript modules and regression tests:
+Run syntax and regression validation:
 
 ```bash
 npm run check
@@ -205,12 +218,15 @@ node tests/interiors-runtime.mjs
 node tests/interiors-hardening.mjs
 node tests/relationships.mjs
 node tests/relationships-runtime.mjs
+node tests/cooking.mjs
+node tests/cooking-runtime.mjs
+node tests/cooking-hardening.mjs
 ```
 
 ## Controls
 
-- Desktop: WASD/arrows to move, E/Enter to interact, Space/F to use the selected tool, 1–8 to select tools, Q to cycle seeds, and M/Escape for the menu.
-- Android/tablet: virtual movement stick, A tool button, B interaction button, and tappable toolbar/menu controls.
+- Desktop: WASD/arrows move, E/Enter interact, Space/F uses the selected tool, 1–8 selects tools, Q cycles seeds, and M/Escape opens the Adventure Menu.
+- Android/tablet: virtual movement stick, A tool/attack, B interaction, and tappable toolbar/menu controls.
 
 ## License
 
