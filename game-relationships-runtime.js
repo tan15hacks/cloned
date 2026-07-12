@@ -1,22 +1,55 @@
 import { ITEMS, clamp } from "./game-shared.js";
 import { createSocialState, giftWeek } from "./game-relationships.js";
-import { RELATIONSHIP_PROFILES, heartEventForKey } from "./relationship-data.js";
+import { RELATIONSHIP_PROFILES, SOCIAL_MAILBOX, heartEventForKey } from "./relationship-data.js";
+
+function mailboxBlocks(x, y, radius = .3) {
+  const safeRadius = Math.max(0, Number(radius) || 0);
+  return Math.abs(Number(x) - SOCIAL_MAILBOX.x) < .42 + safeRadius
+    && Math.abs(Number(y) - SOCIAL_MAILBOX.y) < .34 + safeRadius;
+}
+
+export function clearMailboxSpace(state) {
+  if (!state || typeof state !== "object") return 0;
+  let removed = 0;
+  if (Array.isArray(state.resources)) {
+    const before = state.resources.length;
+    state.resources = state.resources.filter((resource) => Math.hypot(Number(resource.x) - SOCIAL_MAILBOX.x, Number(resource.y) - SOCIAL_MAILBOX.y) >= 1.05);
+    removed += before - state.resources.length;
+  }
+  if (Array.isArray(state.placed)) {
+    const before = state.placed.length;
+    state.placed = state.placed.filter((placed) => Math.hypot(Number(placed.x) - SOCIAL_MAILBOX.x, Number(placed.y) - SOCIAL_MAILBOX.y) >= 1.05);
+    removed += before - state.placed.length;
+  }
+  if (state.soil && typeof state.soil === "object") {
+    for (const key of Object.keys(state.soil)) {
+      const [x, y] = key.split(",").map(Number);
+      if (Math.floor(SOCIAL_MAILBOX.x) === x && Math.floor(SOCIAL_MAILBOX.y) === y) {
+        delete state.soil[key];
+        removed += 1;
+      }
+    }
+  }
+  return removed;
+}
 
 export function normalizeRelationshipRuntime(state) {
   if (!state || typeof state !== "object") return state;
   const day = Math.max(1, Math.floor(Number(state.day) || 1));
   const social = createSocialState(state.social);
+  const talkedDays = {};
+  const talkStreaks = {};
 
   for (const npc of state.npcs || []) {
     npc.friendship = clamp(Number(npc.friendship) || 0, 0, 10);
     if (!RELATIONSHIP_PROFILES[npc.id]) continue;
     const talkedDay = Math.max(0, Math.min(day, Math.floor(Number(social.talkedDays[npc.id]) || 0)));
-    if (talkedDay > 0) social.talkedDays[npc.id] = talkedDay;
-    else delete social.talkedDays[npc.id];
+    if (talkedDay > 0) talkedDays[npc.id] = talkedDay;
     const streak = clamp(Math.floor(Number(social.talkStreaks[npc.id]) || 0), 0, 9999);
-    if (streak > 0) social.talkStreaks[npc.id] = streak;
-    else delete social.talkStreaks[npc.id];
+    if (streak > 0) talkStreaks[npc.id] = streak;
   }
+  social.talkedDays = talkedDays;
+  social.talkStreaks = talkStreaks;
 
   for (const npcId of Object.keys(social.giftLog)) {
     social.giftLog[npcId] = [...new Set(social.giftLog[npcId]
@@ -48,8 +81,9 @@ export function normalizeRelationshipRuntime(state) {
       amount: clamp(Math.floor(Number(raw.reward.amount) || 1), 1, 999),
       coins: clamp(Math.floor(Number(raw.reward.coins) || 0), 0, 999999),
     } : null;
+    const eventKey = heartEventForKey(raw.eventKey) ? raw.eventKey : null;
     letters.push({
-      id,
+      id: id.slice(0, 180),
       from: String(raw.from || "Hearthvale Post").slice(0, 100),
       subject: String(raw.subject || "Letter").slice(0, 140),
       body: String(raw.body || "").slice(0, 3000),
@@ -57,13 +91,13 @@ export function normalizeRelationshipRuntime(state) {
       read: Boolean(raw.read),
       claimed: reward ? Boolean(raw.claimed) : true,
       reward: reward && (reward.item || reward.coins > 0) ? reward : null,
-      eventKey: heartEventForKey(raw.eventKey) ? raw.eventKey : null,
+      eventKey,
     });
   }
   social.letters = letters.slice(-100);
   social.met = [...new Set([
     ...social.met.filter((id) => RELATIONSHIP_PROFILES[id]),
-    ...Object.keys(social.talkedDays).filter((id) => RELATIONSHIP_PROFILES[id]),
+    ...Object.keys(social.talkedDays),
   ])].slice(0, Object.keys(RELATIONSHIP_PROFILES).length);
   social.lastProcessedDay = clamp(social.lastProcessedDay, 0, day);
   social.processedBirthdayKeys = [...new Set(social.processedBirthdayKeys.map(String).filter(Boolean))].slice(-100);
@@ -77,16 +111,25 @@ export function installRelationshipsRuntime(GameClass) {
     migrateState: proto.migrateState,
     enterGame: proto.enterGame,
     nextDay: proto.nextDay,
+    collides: proto.collides,
   };
 
   proto.migrateState = function migrateStateRelationshipsRuntime(data) {
-    return normalizeRelationshipRuntime(original.migrateState.call(this, data));
+    const state = normalizeRelationshipRuntime(original.migrateState.call(this, data));
+    clearMailboxSpace(state);
+    return state;
   };
 
   proto.enterGame = function enterGameRelationshipsRuntime() {
     normalizeRelationshipRuntime(this.state);
     const result = original.enterGame.call(this);
     normalizeRelationshipRuntime(this.state);
+    const removed = clearMailboxSpace(this.state);
+    if (removed > 0) {
+      this.rebuildResourceMap?.();
+      this.refreshActiveWorldChunks?.(true);
+      this.saveGame?.(true);
+    }
     this.processSocialDay?.(true);
     return result;
   };
@@ -94,6 +137,16 @@ export function installRelationshipsRuntime(GameClass) {
   proto.nextDay = function nextDayRelationshipsRuntime(passedOut) {
     const result = original.nextDay.call(this, passedOut);
     normalizeRelationshipRuntime(this.state);
+    const removed = clearMailboxSpace(this.state);
+    if (removed > 0) {
+      this.rebuildResourceMap?.();
+      this.refreshActiveWorldChunks?.(true);
+    }
     return result;
+  };
+
+  if (original.collides) proto.collides = function collidesWithMailbox(x, y, radius = .3) {
+    if (this.state?.mode === "world" && mailboxBlocks(x, y, radius)) return true;
+    return original.collides.call(this, x, y, radius);
   };
 }
