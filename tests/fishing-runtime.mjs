@@ -1,8 +1,9 @@
 import assert from "node:assert/strict";
 import { ITEMS } from "../game-shared.js";
+import "../fishing-region-data.js";
 import { FISH_SPECIES_MAP, BAIT_DEFS, TACKLE_DEFS } from "../fishing-data.js";
 import { installFishingOverhaul, createFishingState, ensureFishingShopState } from "../game-fishing.js";
-import { installFishingRuntime, hardenFishingState } from "../game-fishing-runtime.js";
+import { installFishingRuntime, hardenFishingState, nearestFishableWater } from "../game-fishing-runtime.js";
 
 class FishingHarness {
   constructor() {
@@ -88,6 +89,40 @@ assert.ok(game.state.fishing);
 assert.equal(game.state.fishing.introQueued, true);
 assert.equal(game.state.social.letters.some((letter) => letter.id === "fishing-overhaul-welcome"), true);
 assert.equal(game.state.social.letters.filter((letter) => letter.id === "fishing-overhaul-welcome").length, 1);
+
+// A cast must use the nearest water tile's region instead of trusting the player's region blindly.
+const villageBorderState = game.defaultState();
+villageBorderState.player.x = 58.5;
+villageBorderState.player.y = 54.5;
+assert.equal(nearestFishableWater(villageBorderState, 2)?.regionId, "village");
+
+const castGame = new FishingHarness();
+castGame.state = castGame.defaultState();
+castGame.state.fishing = createFishingState({ selectedBait: "worm", selectedTackle: "spinner", tackleUses: { spinner: 1 } });
+castGame.state.inventory.wormBait = 1;
+castGame.state.player.x = 235.5;
+castGame.state.player.y = 27.5;
+let cast = null;
+castGame.openFishingGame = (species, regionId, gear) => { cast = { species, regionId, gear }; };
+castGame.beginFishing();
+assert.ok(cast);
+assert.equal(cast.regionId, "northwatch");
+assert.equal(cast.species.regions.includes("northwatch"), true);
+assert.equal(cast.gear.bait.id, "worm");
+assert.equal(cast.gear.tackle.id, "spinner");
+assert.equal(castGame.state.inventory.wormBait, 0);
+assert.equal(castGame.state.fishing.tackleUses.spinner, 0);
+assert.equal(castGame.state.player.energy, 98);
+assert.equal(castGame.state.fishing.totalCasts, 1);
+
+const dryGame = new FishingHarness();
+dryGame.state = dryGame.defaultState();
+dryGame.state.fishing = createFishingState();
+dryGame.state.player.x = 130.5;
+dryGame.state.player.y = 20.5;
+dryGame.beginFishing();
+assert.equal(dryGame.lastToast, "Stand beside water to cast the fishing rod.");
+assert.equal(dryGame.state.player.energy, 100);
 
 const previousRandom = Math.random;
 Math.random = () => .99;
@@ -185,11 +220,25 @@ assert.equal(malformed.fishing.shopStock.injected, undefined);
 assert.equal(malformed.inventory.wormBait, 0);
 assert.equal(malformed.inventory.glowBait, 0);
 
+// A valid legendary journal entry must restore the one-time caught flag and block reward replay.
+const recordedLegend = {
+  day: 20,
+  inventory: Object.fromEntries(Object.keys(ITEMS).map((id) => [id, 0])),
+  fishing: {
+    journal: { starKoi: { count: 1, bestQuality: "gold", largestSize: 100, firstDay: 12, lastDay: 12 } },
+    legendaryCaught: [],
+  },
+};
+hardenFishingState(recordedLegend);
+assert.deepEqual(recordedLegend.fishing.legendaryCaught, ["starKoi"]);
+
 console.log(JSON.stringify({
   ok: true,
   welcomeLetter: true,
+  nearestWaterRegionBinding: true,
   catchJournal: true,
   legendaryRewards: true,
+  legendaryRecordRecovery: true,
   tackleShop: true,
   interruptedSessionSafety: true,
   dailyStockRefresh: true,
