@@ -1,6 +1,91 @@
 # Hearthvale
 
-Hearthvale is an original, responsive seasonal farming, farm-animal ranching, expanded-interior, exploration, living-world, guild, combat, progression, and story-adventure game. It uses its own characters, story, map, dialogue, systems, and geometric cartoon rendering rather than copying Stardew Valley assets or content.
+Hearthvale is an original, responsive seasonal farming, ranching, relationships, expanded-interior, exploration, living-world, guild, combat, progression, and story-adventure game. It uses its own characters, story, map, dialogue, systems, and geometric cartoon rendering rather than copying Stardew Valley assets or content.
+
+## Version 3.11 — Relationships, Heart Events, Gifts, and Mailbox
+
+Version 3.11 turns all **18 named residents** into a deeper long-term social system while preserving Chapter 1 and Chapter 2 story conversations.
+
+### Resident relationship profiles
+
+Every named resident now has:
+
+- A role and personal profile
+- A unique seasonal birthday
+- Two loved gifts
+- At least three liked gifts
+- At least two disliked gifts
+- Four friendship tiers from Acquaintance to Kindred Friend
+- A daily conversation streak
+- Three personal heart events at 3, 6, and 9 friendship
+
+Gift preferences become visible after they are discovered through gifting or after reaching 3 friendship.
+
+### Gift rules and birthdays
+
+Players can give each resident:
+
+- One gift per day
+- Two gifts per seven-day week
+
+Loved, liked, neutral, and disliked items produce different friendship changes. Birthday gifts receive stronger positive bonuses, and talking to a resident on their birthday provides an additional friendship increase.
+
+The expanded Residents menu displays friendship, birthday, profession, known preferences, weekly gift usage, talk streak, completed heart events, and pending invitations.
+
+### Farmstead mailbox
+
+A physical mailbox now stands beside the farmhouse. It receives:
+
+- A welcome letter from Mira
+- Birthday reminders from Silvercrest Civic Post
+- Heart-event invitations
+- One-time item and coin enclosures
+
+Unread mail is shown above the mailbox. Letter rewards are claim-once and persist safely in the browser save.
+
+### 54 scheduled heart events
+
+Each resident has three authored personal scenes, producing **54 heart events** in total.
+
+Heart-event letters specify a building and time window. The invited resident appears inside the correct playable interior with a heart marker. Events can occur in:
+
+- Mira's Seeds
+- Hearth & Kettle
+- Ironhart Smithy
+- Blue Vial Apothecary
+- The Golden Griffin
+- Silvercrest Grand Market
+- Starwatch Observatory
+- Silvercrest Hall
+
+Completing scenes awards friendship, coins, useful items, journal entries, achievements, and the collectible Hearthvale Friendship Pin at 9 hearts.
+
+### Story compatibility
+
+Relationship dialogue steps aside whenever Chapter 1 or Chapter 2 owns a required conversation. Mira's opening tutorial, Aria's Guild scenes, Sora's investigation, Oren's blueprint, Bram's stabilizer, and Mei's escort sequence remain unchanged.
+
+### Save hardening
+
+Existing saves automatically receive social records without resetting friendship. Migration normalizes:
+
+- Friendship values
+- Talk dates and streaks
+- Gift histories
+- Known preferences
+- Pending and completed heart events
+- Birthday records
+- Duplicate or malformed letters
+- Invalid rewards and event references
+
+Only one pending event per resident is kept at a time, so older high-friendship saves receive their new scenes in order rather than being flooded with all three immediately.
+
+### Relationship achievements
+
+- **Hearthvale Social Circle** — Meet all 18 named residents
+- **Trusted Across Town** — Reach 8 friendship with eight residents
+- **Kindred Friend** — Reach maximum friendship with one resident
+- **A Story Shared** — Complete a heart event
+- **Town Confidant** — Complete five 9-heart events
 
 ## Version 3.10 — Expanded Building Interiors and Town Life
 
@@ -19,88 +104,23 @@ Version 3.10 expands the lightweight interior system from two maps to **ten play
 
 These join the existing Farmhouse and Silvercrest Adventurers' Guild interiors.
 
-Every new map contains collision-safe furniture, a clear entrance and exit, at least three reachable service or lore interactions, indoor lighting, windows that reflect time and rain, and a building-specific visual identity. Examples include seed displays, market stalls, smithing equipment, brewing tables, guest beds, a piano, civic records, a continental map, and the Great Telescope.
+Every map contains collision-safe furniture, clear entrances and exits, service or lore interactions, indoor lighting, weather-aware windows, and a building-specific visual identity.
 
-### Indoor NPC schedules
+Named residents move indoors during working hours, disappear from the street while inside, and remain available for quest-safe dialogue. Business counters enforce opening hours even if the player remains inside after closing.
 
-Named residents now move indoors during their working hours:
-
-- Mira works behind the Seed Shop counter.
-- Bram works inside Ironhart Smithy.
-- Pella operates the Apothecary.
-- Cass and Eno work inside the Grand Market.
-- Rowan manages the Golden Griffin.
-- Sora observes from Starwatch.
-- Mei and Ves work inside Silvercrest Hall.
-- Oren visits Hearth & Kettle during the evening.
-
-NPCs assigned to an interior are hidden from the street and remain available for normal quest-safe dialogue indoors. Rain and Snow extend several sheltered work schedules.
-
-### Playable counters and furnishings
-
-Indoor interactions connect directly to existing game systems:
-
-- Seed purchases and seasonal crop information
-- Village and city inn meals, room rental, and sleep
-- Blacksmith upgrades and tempering information
-- Apothecary remedies and brewing notes
-- Grand Market buying, selling, and price records
-- Starwatch forecasts and seasonal star charts
-- City Hall services, world map, and civic statistics
-
-The Adventure Menu now includes a **Buildings & Interiors** directory showing which mapped buildings have been visited, how many times each has been entered, and whether each business is currently open.
-
-### Rendering and performance
-
-Interiors use small independent maps with their own camera bounds. The overworld, monsters, resources, citizens, and ranch animals are not rendered while indoors. Interior lighting, forge sparks, alchemy bubbles, and star effects remain local to the current room.
-
-### Save compatibility
-
-Existing saves receive an interior discovery log, visit counters, civic record flags, and safe last-interior metadata. Invalid map references are removed during migration. Saves made inside unsupported or outdated interior data safely return to the overworld through the existing living-world migration layer.
+The Adventure Menu includes a **Buildings & Interiors** directory with discovery, visit counts, current opening status, and the Open Every Door achievement.
 
 ## Version 3.9 — Farm Animals and Barn Progression
 
-Version 3.9 turns the Farmstead into a long-term ranch and artisan-production loop while preserving the streamed continent.
+The Farmstead supports Chickens, Cows, Ducks, Goats, Sheep, and Pigs. Animals track friendship, happiness, health, feeding, petting, grazing, product readiness, quality, sickness, and rare colors without permanent death.
 
-### Six animal species
-
-- Chickens producing Eggs
-- Cows producing Milk
-- Ducks producing Duck Eggs and occasional Feathers
-- Goats producing Goat Milk
-- Sheep producing Wool
-- Pigs finding Truffles outdoors
-
-Every animal stores a name, age, friendship, happiness, health, sickness state, daily feeding and petting records, outdoor state, product readiness, product quality, and a rare-color variant. Animals can become temporarily sick after serious neglect, but they never permanently die.
-
-### Coop, barn, and silo progression
-
-The Coop progresses from Basic to Large and Deluxe tiers. Capacity increases from 4 to 8 and then 12 animals. Large Coops unlock Ducks and incubation; Deluxe Coops add automatic feeding and a quality bonus.
-
-The Barn progresses from Basic to Large and Deluxe tiers. Capacity increases from 4 to 8 and then 12 animals. Large Barns unlock Goats and Sheep; Deluxe Barns unlock Pigs, automatic feeding, improved product quality, and winter protection.
-
-Hay storage progresses from a 40-hay stack to a 240-hay Farm Silo and a 480-hay Expanded Silo. Every building project requires coins and materials and completes after multiple in-game days.
-
-### Daily care, products, and artisan machines
-
-Players can pet, rename, feed, water, clean, heat, treat, and collect from animals. Animals graze during clear weather, and off-screen grazing is simulated while the player is away. The Ranch Scythe converts mature pasture grass into Hay.
-
-Animal and artisan goods use Normal, Silver, Gold, and Iridium quality. Friendship, happiness, Farming Level, housing tier, heating, and daily care affect quality and possible double products.
-
-Four machines process quality goods over game time:
-
-- Egg or Duck Egg → Mayonnaise
-- Milk or Goat Milk → Cheese
-- Wool or Feather → Cloth
-- Truffle → Truffle Oil
+Coops, Barns, and Hay storage upgrade through multiple tiers. Players can hatch animals, install heaters and collectors, cut pasture into Hay, and process quality goods through Mayonnaise, Cheese, Cloth, and Truffle Oil machines.
 
 ## Version 3.8 — Seasons and Festivals
 
-The continuous Day counter maps into four 28-day seasons and a repeating 112-day year: Springbloom, Suncrest, Emberfall, and Frostwane. Existing saves automatically enter the correct year and season based on their saved Day number.
+The continuous Day counter maps into four 28-day seasons and a repeating 112-day year: Springbloom, Suncrest, Emberfall, and Frostwane.
 
-Each season has deterministic weather, lightweight screen-local effects, and crop affinity. Favored crops grow 25% faster; other crops grow 25% slower but never wither.
-
-Four annual festivals provide unique minigames, Festival Tokens, Adventure and skill XP, keepsakes, friendship bonuses, and collectible equipment:
+Four annual festivals provide unique minigames, Festival Tokens, experience, keepsakes, friendship bonuses, and equipment:
 
 - Springbloom Day 7 — Hearthvale Bloomfair
 - Suncrest Day 14 — Moonlake Regatta
@@ -111,21 +131,15 @@ Four annual festivals provide unique minigames, Festival Tokens, Adventure and s
 
 Chapter 2 contains seventeen objectives connecting Guildmaster Aria, Sora, Veilmoor, Oren, Bram, Mei, Suncleft Ruins, and the hidden Waystone Archive.
 
-The separate 52 × 34 Archive contains five room groups, three rune switches, progression gates, spike traps, environmental inscriptions, a hidden cache, a checkpoint, the Riftbound Sentinel, and the Hollow Cartographer. Dungeon progress and bosses persist safely across saves.
-
-Completing Chapter 2 unlocks the Rift Compass, a second equipment preset, free stabilized Waystone travel, backpack expansion, experience rewards, and the Pathfinder of Hearthvale achievement.
+The 52 × 34 Archive contains room groups, rune switches, gates, spike traps, inscriptions, a hidden cache, a checkpoint, the Riftbound Sentinel, and the Hollow Cartographer.
 
 ## Version 3.6 — Economy, Skills, and Cave Progression
 
-The player has an Adventure Level from 1–20 and Farming, Mining, Combat, Fishing, and Foraging skills from 1–10. Activities, quests, bounties, and milestone bosses award experience and unlock permanent perks.
-
-Crops and fish use Normal, Silver, Gold, and Iridium quality. Shops use daily stock, blacksmith upgrades require depth-appropriate materials, equipment can be enhanced to +3, and progression bosses guard Floors 10, 20, 30, 40, and 50.
+The player has an Adventure Level from 1–20 and Farming, Mining, Combat, Fishing, and Foraging skills from 1–10. Crops and fish use four quality tiers, shops use daily stock, equipment can be enhanced to +3, and milestone bosses guard Floors 10, 20, 30, 40, and 50.
 
 ## Version 3.5 — Living World
 
-All 18 named NPCs have time- and weather-aware routines. Hearthvale and Silvercrest contain moving citizens, shop hours, evening lights, umbrellas, contextual dialogue, friendship milestones, and the original Farmhouse and Adventurers' Guild interiors.
-
-Characters use animated geometric body parts for walking, blinking, tool actions, fishing, combat, and weather reactions.
+All 18 named NPCs have time- and weather-aware routines. Hearthvale and Silvercrest include moving citizens, shop hours, evening lights, umbrellas, contextual dialogue, and animated geometric characters.
 
 ## Version 3.4 — World and Map Polish
 
@@ -135,17 +149,15 @@ The world uses deterministic 16 × 16 tile chunks. Only nearby terrain, resource
 
 ## Guided Chapter 1
 
-Chapter 1 introduces farming, Hearthvale Village, Silvercrest City, the Adventurers' Guild, Greenfield combat, and Cave Floor 3 through a persistent objective tracker, progress bars, world markers, cave markers, directional arrows, dialogue, rewards, and a completion screen.
+Chapter 1 introduces farming, Hearthvale Village, Silvercrest City, the Adventurers' Guild, Greenfield combat, and Cave Floor 3 through a persistent objective tracker, markers, dialogue, rewards, and completion screen.
 
 ## Combat and equipment
 
-Combat includes directional sword arcs, attack cooldowns, critical hits, knockback, damage numbers, invulnerability frames, telegraphed attacks, projectiles, status effects, physical loot drops, boss bars, and six equipment slots: weapon, armor, helmet, boots, ring, and charm.
+Combat includes directional sword arcs, cooldowns, critical hits, knockback, damage numbers, invulnerability, telegraphed attacks, projectiles, status effects, physical loot, boss bars, and six equipment slots.
 
 ## Regions
 
 The continent contains 14 connected regions: Hearthvale Farmstead, Hearthvale Village, Silvercrest City, Northwatch Foothills, Greenfield Wilds, Moonlake Basin, Veilmoor, Frostpeak Mountains, The Lightless Wood, Murkfen Swamp, Dreadwild Expanse, Cinderwake Caldera, Suncoast Reach, and Suncleft Ruins.
-
-Every hostile surface region has three region-exclusive monster species.
 
 ## Grand Depths — 50 Floors
 
@@ -190,6 +202,9 @@ node tests/ranching-runtime.mjs
 node tests/ranching-hardening.mjs
 node tests/interiors.mjs
 node tests/interiors-runtime.mjs
+node tests/interiors-hardening.mjs
+node tests/relationships.mjs
+node tests/relationships-runtime.mjs
 ```
 
 ## Controls
