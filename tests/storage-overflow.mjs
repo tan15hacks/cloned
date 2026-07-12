@@ -58,8 +58,8 @@ const game = new OverflowHarness();
 game.state = game.defaultState();
 game.state.storage = createStorageState({}, game.state);
 
-// Fill the backpack with forty unique stacks while keeping Apple and Milk absent.
-const filler = Object.keys(ITEMS).filter((id) => !["apple", "milk", "wood"].includes(id)).slice(0, 40);
+// Fill the backpack with forty unique stacks while keeping test items absent.
+const filler = Object.keys(ITEMS).filter((id) => !["apple", "milk", "egg", "wood"].includes(id)).slice(0, 40);
 for (const id of filler) game.state.inventory[id] = 1;
 assert.equal(Object.values(game.state.inventory).filter((count) => count > 0).length, 40);
 
@@ -86,6 +86,16 @@ assert.equal(game.state.storage.chests.trunk.items.milk, 2);
 assert.equal(game.state.storage.chests.trunk.qualities.milk.iridium, 2);
 assert.equal(milkResult.stored, 2);
 
+// Storing a Normal product must not relabel premium stock already in the alternate chest.
+game.state.storage.chests.pantry.items.egg = 9999;
+game.state.storage.chests.pantry.qualities.egg = qualityMap({ normal: 9999 });
+game.state.storage.chests.trunk.items.egg = 1;
+game.state.storage.chests.trunk.qualities.egg = qualityMap({ gold: 1 });
+game.addRanchItem("egg", "normal", 1, false);
+assert.equal(game.state.storage.chests.trunk.items.egg, 2);
+assert.equal(game.state.storage.chests.trunk.qualities.egg.gold, 1);
+assert.equal(game.state.storage.chests.trunk.qualities.egg.normal, 1);
+
 // Material overflow normally prefers the trunk; a full trunk stack must fall back to the pantry.
 game.state.storage.chests.trunk.items.wood = 9999;
 game.state.storage.chests.trunk.qualities.wood = qualityMap({ normal: 9999 });
@@ -102,5 +112,6 @@ console.log(JSON.stringify({
   alternateChestFallback: true,
   progressionQualityPreserved: true,
   ranchQualityPreserved: true,
+  normalQualityIsolation: true,
   stackLimitsRespected: true,
 }));
