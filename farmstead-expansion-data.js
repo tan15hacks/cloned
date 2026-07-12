@@ -18,8 +18,8 @@ export const FARM_BUILDINGS = {
 };
 
 export const FARM_PATH_RECTS = [
-  [23, 49, 4, 14],
-  [40, 49, 4, 14],
+  [23, 53, 4, 10],
+  [40, 53, 4, 10],
   [23, 60, 21, 3],
 ];
 
