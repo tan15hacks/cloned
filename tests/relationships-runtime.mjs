@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { ITEMS, NPC_DEFS } from "../game-shared.js";
 import { registerExpandedInteriors } from "../expanded-interiors-data.js";
 import { installRelationships } from "../game-relationships.js";
-import { installRelationshipsRuntime, normalizeRelationshipRuntime } from "../game-relationships-runtime.js";
+import { clearMailboxSpace, installRelationshipsRuntime, normalizeRelationshipRuntime } from "../game-relationships-runtime.js";
 
 registerExpandedInteriors();
 
@@ -21,6 +21,9 @@ class RelationshipHarness {
       npcs: NPC_DEFS.map((npc) => ({ ...npc, friendship: 0, talkedDay: 0, x: npc.home.x, y: npc.home.y })),
       questStats: { talk: 0 }, journal: [], coins: 0, achievements: [],
       chapterOne: { completed: true, step: 14 }, chapterTwo: { completed: true, started: true, step: 16 },
+      resources: [{ id: 1, type: "tree", x: 18.5, y: 14.5 }, { id: 2, type: "rock", x: 22.5, y: 18.5 }],
+      placed: [{ id: "old", type: "lantern", x: 18.5, y: 14.5 }],
+      soil: { "18,14": { tilled: true, crop: null }, "20,20": { tilled: true, crop: null } },
       social: null,
     };
   }
@@ -33,6 +36,7 @@ class RelationshipHarness {
   updateContextHint() {}
   drawBuildings() {}
   showRelationships() {}
+  collides() { return false; }
   checkQuests() {}
   checkAchievement(id, condition) { if (condition && !this.achievementIds.includes(id)) this.achievementIds.push(id); }
   addItem(id, amount) { this.state.inventory[id] = (this.state.inventory[id] || 0) + amount; }
@@ -42,6 +46,8 @@ class RelationshipHarness {
   openModal() {}
   toast(message) { this.lastToast = message; }
   saveGame() {}
+  rebuildResourceMap() { this.rebuilt = true; }
+  refreshActiveWorldChunks() { this.refreshed = true; }
   sound() {}
 }
 
@@ -54,6 +60,13 @@ game.state.inventory.berry = 3;
 game.enterGame();
 assert.ok(game.state.social);
 assert.ok(game.state.social.letters.some((letter) => letter.id === "social-welcome"));
+assert.deepEqual(game.state.resources.map((resource) => resource.id), [2]);
+assert.deepEqual(game.state.placed, []);
+assert.equal(game.state.soil["18,14"], undefined);
+assert.ok(game.state.soil["20,20"]);
+assert.equal(game.rebuilt, true);
+assert.equal(game.collides(18.5, 14.5, .3), true, "The physical mailbox must block player movement");
+assert.equal(game.collides(22.5, 18.5, .3), false);
 
 const mira = game.state.npcs.find((npc) => npc.id === "mira");
 game.giveSocialGift("mira", "berry");
@@ -101,7 +114,7 @@ const corrupt = normalizeRelationshipRuntime({
   social: {
     giftLog: { mira: [1, 1, 999, -2], unknown: [2] },
     talkedDays: { mira: 999, unknown: 4 },
-    talkStreaks: { mira: -5 },
+    talkStreaks: { mira: -5, unknown: 7 },
     pendingEvents: ["mira:3", "mira:6", "bad:9"],
     completedEvents: ["mira:3", "mira:3"],
     letters: [
@@ -113,11 +126,20 @@ const corrupt = normalizeRelationshipRuntime({
 assert.equal(corrupt.npcs[0].friendship, 10);
 assert.equal(corrupt.npcs[1].friendship, 0);
 assert.deepEqual(corrupt.social.giftLog.mira, [1]);
+assert.deepEqual(corrupt.social.talkedDays, { mira: 20 });
+assert.deepEqual(corrupt.social.talkStreaks, {});
 assert.deepEqual(corrupt.social.pendingEvents, ["mira:6"]);
 assert.deepEqual(corrupt.social.completedEvents, ["mira:3"]);
 assert.equal(corrupt.social.letters.length, 1);
 assert.equal(corrupt.social.letters[0].day, 20);
 assert.equal(corrupt.social.letters[0].reward, null);
+
+const standalone = {
+  resources: [{ id: "mail", x: 18.5, y: 14.5 }, { id: "safe", x: 30.5, y: 30.5 }],
+  placed: [], soil: {},
+};
+assert.equal(clearMailboxSpace(standalone), 1);
+assert.deepEqual(standalone.resources.map((resource) => resource.id), ["safe"]);
 
 console.log(JSON.stringify({
   ok: true,
@@ -127,4 +149,5 @@ console.log(JSON.stringify({
   heartEventCompletion: true,
   oneTimeMailRewards: true,
   corruptSaveNormalization: true,
+  mailboxSpaceProtection: true,
 }));
