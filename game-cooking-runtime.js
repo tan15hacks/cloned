@@ -8,6 +8,31 @@ import { absoluteGameMinute, createCookingState } from "./game-cooking.js";
 const MAX_COOKING_XP = 2_000_000;
 const MAX_ACTIVE_DURATION = 1440;
 
+export function removePreparedMealRecords(state, recipeId, amount = 1) {
+  const recipe = COOKING_RECIPE_MAP[recipeId];
+  const meal = state?.cooking?.meals?.[recipeId];
+  if (!recipe || !meal) return 0;
+  let remaining = Math.max(0, Math.floor(Number(amount) || 0));
+  let removed = 0;
+  for (const quality of COOKING_QUALITY_ORDER) {
+    if (remaining <= 0) break;
+    const available = Math.max(0, Math.floor(Number(meal[quality]) || 0));
+    const take = Math.min(available, remaining);
+    meal[quality] = available - take;
+    remaining -= take;
+    removed += take;
+  }
+  return removed;
+}
+
+function addPreparedMealRecords(state, recipeId, amount = 1) {
+  const meal = state?.cooking?.meals?.[recipeId];
+  if (!COOKING_RECIPE_MAP[recipeId] || !meal) return 0;
+  const added = Math.max(0, Math.floor(Number(amount) || 0));
+  meal.normal = clamp((Number(meal.normal) || 0) + added, 0, 9999);
+  return added;
+}
+
 export function hardenCookingState(state) {
   if (!state || typeof state !== "object") return state;
   state.inventory = state.inventory && typeof state.inventory === "object" ? state.inventory : {};
@@ -64,6 +89,9 @@ export function installCookingRuntime(GameClass) {
     enterGame: proto.enterGame,
     nextDay: proto.nextDay,
     leaveToTitle: proto.leaveToTitle,
+    addItem: proto.addItem,
+    giveSocialGift: proto.giveSocialGift,
+    sellCategory: proto.sellCategory,
   };
 
   proto.migrateState = function migrateStateCookingRuntime(data) {
@@ -90,5 +118,41 @@ export function installCookingRuntime(GameClass) {
   proto.leaveToTitle = function leaveToTitleCookingRuntime() {
     if (typeof document !== "undefined") document.getElementById("mealBuffHud")?.classList.add("hidden");
     return original.leaveToTitle.call(this);
+  };
+
+  if (original.addItem) proto.addItem = function addItemCookingRuntime(id, amount = 1, announce = false) {
+    const before = Math.max(0, Number(this.state?.inventory?.[id]) || 0);
+    const result = original.addItem.call(this, id, amount, announce);
+    const after = Math.max(0, Number(this.state?.inventory?.[id]) || 0);
+    if (after > before && COOKING_RECIPE_MAP[id]) addPreparedMealRecords(this.state, id, after - before);
+    return result;
+  };
+
+  if (original.giveSocialGift) proto.giveSocialGift = function giveSocialGiftCookingRuntime(npcId, itemId) {
+    const before = Math.max(0, Number(this.state?.inventory?.[itemId]) || 0);
+    const result = original.giveSocialGift.call(this, npcId, itemId);
+    const after = Math.max(0, Number(this.state?.inventory?.[itemId]) || 0);
+    const consumed = Math.max(0, before - after);
+    if (consumed > 0 && COOKING_RECIPE_MAP[itemId]) {
+      removePreparedMealRecords(this.state, itemId, consumed);
+      this.saveGame?.(true);
+    }
+    return result;
+  };
+
+  if (original.sellCategory) proto.sellCategory = function sellCategoryCookingRuntime(ids, multiplier = 1) {
+    const mealCounts = Object.fromEntries((ids || []).filter((id) => COOKING_RECIPE_MAP[id]).map((id) => [id, Math.max(0, Number(this.state?.inventory?.[id]) || 0)]));
+    const result = original.sellCategory.call(this, ids, multiplier);
+    let synchronized = false;
+    for (const [id, before] of Object.entries(mealCounts)) {
+      const after = Math.max(0, Number(this.state?.inventory?.[id]) || 0);
+      const consumed = Math.max(0, before - after);
+      if (consumed > 0) {
+        removePreparedMealRecords(this.state, id, consumed);
+        synchronized = true;
+      }
+    }
+    if (synchronized) this.saveGame?.(true);
+    return result;
   };
 }
