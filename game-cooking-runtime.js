@@ -12,7 +12,8 @@ export function hardenCookingState(state) {
   if (!state || typeof state !== "object") return state;
   state.inventory = state.inventory && typeof state.inventory === "object" ? state.inventory : {};
   state.cooking = createCookingState(state.cooking);
-  state.cooking.xp = clamp(Math.floor(Number(state.cooking.xp) || 0), 0, MAX_COOKING_XP);
+  const rawXp = Number(state.cooking.xp);
+  state.cooking.xp = clamp(Math.floor(Number.isFinite(rawXp) ? rawXp : 0), 0, MAX_COOKING_XP);
   state.cooking.level = cookingLevelFromXp(state.cooking.xp);
 
   for (const recipe of COOKING_RECIPES) {
