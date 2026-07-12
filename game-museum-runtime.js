@@ -1,4 +1,4 @@
-import { ITEMS, clamp } from "./game-shared.js";
+import { ITEMS, REGIONS, clamp } from "./game-shared.js";
 import {
   MUSEUM_BUNDLES, MUSEUM_BUNDLE_MAP, MUSEUM_TOTAL_UNITS,
   createMuseumState, museumOverallProgress, museumRankForReputation,
@@ -15,6 +15,20 @@ const finiteInt = (value, fallback = 0) => Math.floor(finiteNumber(value, fallba
 export function hardenMuseumState(state) {
   if (!state || typeof state !== "object") return state;
   state.inventory = state.inventory && typeof state.inventory === "object" ? state.inventory : {};
+  state.journal = Array.isArray(state.journal) ? state.journal.map(String).slice(0, 30) : [];
+  const validRegions = new Set(REGIONS.map((entry) => entry.id));
+  state.visitedRegions = Array.isArray(state.visitedRegions)
+    ? [...new Set(state.visitedRegions.filter((id) => validRegions.has(id)))].slice(0, REGIONS.length)
+    : [];
+  if (!state.visitedRegions.includes("farm")) state.visitedRegions.unshift("farm");
+  state.fishing = state.fishing && typeof state.fishing === "object" ? state.fishing : {};
+  state.fishing.journal = state.fishing.journal && typeof state.fishing.journal === "object" && !Array.isArray(state.fishing.journal) ? state.fishing.journal : {};
+  state.cooking = state.cooking && typeof state.cooking === "object" ? state.cooking : {};
+  state.cooking.stats = state.cooking.stats && typeof state.cooking.stats === "object" ? state.cooking.stats : {};
+  state.cooking.stats.uniqueRecipesCooked = Array.isArray(state.cooking.stats.uniqueRecipesCooked)
+    ? [...new Set(state.cooking.stats.uniqueRecipesCooked.map(String))].slice(0, 16)
+    : [];
+
   state.museum = createMuseumState(state.museum);
   const museum = state.museum;
   const day = Math.max(1, finiteInt(state.day, 1));
