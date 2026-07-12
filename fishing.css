@@ -1,0 +1,153 @@
+.fishing-hook-card,
+.fishing-result {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border: 2px solid rgba(142, 198, 216, .45);
+  border-radius: 14px;
+  background: rgba(78, 156, 188, .1);
+}
+.fishing-hook-card > span,
+.fishing-result > span { font-size: 34px; }
+.fishing-hook-card > div,
+.fishing-result > div { display: grid; gap: 3px; }
+.fishing-hook-card small,
+.fishing-result small,
+.fishing-summary small,
+.fishing-loadout small,
+.fish-journal-card small,
+.fishing-shop-item small { opacity: .76; }
+
+.fishing-track {
+  position: relative;
+  height: 64px;
+  overflow: hidden;
+  margin: 18px 0 10px;
+  border: 3px solid #10241d;
+  border-radius: 14px;
+  background:
+    repeating-linear-gradient(0deg, rgba(255,255,255,.08) 0 2px, transparent 2px 13px),
+    linear-gradient(#6db2cc, #397f9c);
+  box-shadow: inset 0 0 18px rgba(0,0,0,.2);
+}
+.fishing-zone {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-left: 3px solid #10241d;
+  border-right: 3px solid #10241d;
+  background: rgba(239, 185, 74, .72);
+  transition: left .12s ease;
+}
+.fishing-marker {
+  position: absolute;
+  top: 10px;
+  left: 0;
+  font-size: 35px;
+  filter: drop-shadow(0 3px 2px rgba(0,0,0,.28));
+}
+.fishing-progress {
+  height: 10px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(16, 36, 29, .24);
+}
+.fishing-progress i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #5eaf79, #f0c35b);
+  transition: width .16s ease;
+}
+
+.fishing-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(100px, 1fr));
+  gap: 9px;
+  margin-bottom: 10px;
+}
+.fishing-summary > div,
+.fishing-loadout > div {
+  display: grid;
+  gap: 4px;
+  padding: 10px;
+  border: 2px solid rgba(255,255,255,.13);
+  border-radius: 12px;
+  background: rgba(16,36,29,.14);
+}
+.fishing-loadout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px;
+  margin-bottom: 12px;
+}
+
+.fish-journal-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(255px, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+.fish-journal-card {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  min-height: 150px;
+  padding: 12px;
+  border: 2px solid rgba(255,255,255,.13);
+  border-radius: 14px;
+  background: rgba(16,36,29,.14);
+}
+.fish-journal-card.caught { border-color: rgba(98, 179, 207, .42); }
+.fish-journal-card.unknown { opacity: .72; filter: saturate(.68); }
+.fish-journal-card.legendary { border-color: rgba(239,185,74,.62); box-shadow: inset 0 0 18px rgba(239,185,74,.08); }
+.fish-journal-card header { display: flex; align-items: center; gap: 10px; }
+.fish-journal-card header > span { font-size: 30px; }
+.fish-journal-card header > div { display: grid; gap: 3px; }
+.fish-journal-card p { margin: 0; line-height: 1.45; }
+.fish-availability {
+  justify-self: start;
+  padding: 5px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+}
+.fish-availability.available { background: rgba(94,175,121,.18); color: #b8f3c5; }
+.fish-availability.unavailable { background: rgba(255,255,255,.08); opacity: .78; }
+
+.fishing-gear-grid { grid-template-columns: repeat(auto-fit, minmax(175px, 1fr)); }
+.fishing-shop-list { display: grid; gap: 9px; }
+.fishing-shop-item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 11px;
+  border: 2px solid rgba(142,198,216,.28);
+  border-radius: 12px;
+  background: rgba(78,156,188,.07);
+}
+.fishing-shop-item > div { display: grid; gap: 3px; }
+.fishing-shop-item button:disabled { opacity: .42; }
+.fishing-treasure {
+  padding: 10px;
+  border: 2px solid rgba(239,185,74,.45);
+  border-radius: 11px;
+  background: rgba(239,185,74,.09);
+}
+.legendary-catch {
+  padding: 10px;
+  border: 2px solid rgba(255,220,110,.7);
+  border-radius: 11px;
+  background: linear-gradient(90deg, rgba(239,185,74,.13), rgba(142,198,216,.1));
+  font-weight: 700;
+}
+
+@media (max-width: 700px) {
+  .fishing-summary { grid-template-columns: 1fr 1fr; }
+  .fishing-loadout { grid-template-columns: 1fr; }
+  .fish-journal-grid { grid-template-columns: 1fr; }
+  .fishing-shop-item { grid-template-columns: 1fr; }
+}
