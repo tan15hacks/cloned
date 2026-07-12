@@ -33,13 +33,32 @@ const farmhouse = INTERIOR_MAPS.farmhouse;
 const stove = farmhouse.objects.find((object) => object.id === "farmhouse-stove");
 const shelf = farmhouse.objects.find((object) => object.id === "farmhouse-cookbook-shelf");
 assert.ok(stove && shelf);
+
+const contains = (object, x, y) => x >= object.x && x < object.x + object.w && y >= object.y && y < object.y + object.h;
+const walkable = (x, y) => x >= 1 && y >= 1 && x < farmhouse.width - 1 && y < farmhouse.height - 1
+  && !farmhouse.objects.some((object) => object.solid && contains(object, x + .5, y + .5));
+const start = [Math.floor(farmhouse.exit.x), Math.floor(farmhouse.exit.y - 1.2)];
+const queue = [start];
+const reachable = new Set([start.join(",")]);
+while (queue.length) {
+  const [x, y] = queue.shift();
+  for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+    const nx = x + dx;
+    const ny = y + dy;
+    const key = `${nx},${ny}`;
+    if (reachable.has(key) || !walkable(nx, ny)) continue;
+    reachable.add(key);
+    queue.push([nx, ny]);
+  }
+}
+
 for (const id of ["kitchenStove", "cookbook"]) {
   const interaction = farmhouse.interactions.find((entry) => entry.id === id);
   assert.ok(interaction, `${id} interaction must exist`);
-  const blocked = farmhouse.objects.some((object) => object.solid
-    && interaction.x >= object.x && interaction.x < object.x + object.w
-    && interaction.y >= object.y && interaction.y < object.y + object.h);
-  assert.equal(blocked, false, `${id} must stand on a walkable tile`);
+  const x = Math.floor(interaction.x);
+  const y = Math.floor(interaction.y);
+  assert.equal(walkable(x, y), true, `${id} must stand on a walkable tile`);
+  assert.equal(reachable.has(`${x},${y}`), true, `${id} must be reachable from the farmhouse exit`);
 }
 
 assert.equal(cookingXpForLevel(1), 0);
@@ -61,6 +80,7 @@ console.log(JSON.stringify({
   starterRecipes: COOKING_STARTER_RECIPES.length,
   friendshipRecipes: heartRecipes,
   kitchenInteractionsWalkable: true,
+  kitchenInteractionsReachable: true,
   qualityTiers: COOKING_QUALITY_ORDER.length,
   cookingLevels: 10,
 }));
