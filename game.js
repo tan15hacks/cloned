@@ -53,6 +53,8 @@ import { installStorageOverflowRuntime } from "./game-storage-overflow-runtime.j
 import { installFarmsteadExpansion } from "./game-farmstead-expansion.js";
 import { installFarmsteadExpansionRuntime } from "./game-farmstead-expansion-runtime.js";
 import { installFarmsteadStreamRuntime } from "./game-farmstead-stream-runtime.js";
+import { installWorkshopAutomation } from "./game-workshop-automation.js";
+import { installWorkshopAutomationRuntime } from "./game-workshop-automation-runtime.js";
 
 class HearthvaleGame {
   constructor() {
@@ -151,4 +153,6 @@ installStorageOverflowRuntime(HearthvaleGame);
 installFarmsteadExpansion(HearthvaleGame);
 installFarmsteadExpansionRuntime(HearthvaleGame);
 installFarmsteadStreamRuntime(HearthvaleGame);
+installWorkshopAutomation(HearthvaleGame);
+installWorkshopAutomationRuntime(HearthvaleGame);
 window.__hearthvale = new HearthvaleGame();
