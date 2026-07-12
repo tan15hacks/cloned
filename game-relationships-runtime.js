@@ -140,6 +140,7 @@ export function installRelationshipsRuntime(GameClass) {
     if (removed > 0) {
       this.rebuildResourceMap?.();
       this.refreshActiveWorldChunks?.(true);
+      this.saveGame?.(true);
     }
     return result;
   };
