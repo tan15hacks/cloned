@@ -1,14 +1,55 @@
 # Hearthvale
 
-Hearthvale is an original responsive farming, ranching, cooking, fishing, collection, storage, construction, automation, relationship, exploration, guild-combat, and story-adventure game. It uses original characters, map design, dialogue, systems, and a growing hand-painted top-down visual identity backed by a safe geometric Canvas fallback.
+Hearthvale is an original responsive farming, ranching, cooking, fishing, collection, storage, construction, automation, relationship, exploration, guild-combat, and story-adventure game. It uses original characters, map design, dialogue, systems, and a growing hand-painted top-down visual identity backed by safe geometric Canvas fallbacks.
+
+## Version 3.20 — Farmstead Farming and Automation Art
+
+Version 3.20 completes the first working-farm art pass by upgrading crops, placed devices, construction services, and the objects that communicate daily Farmstead activity.
+
+### Five-stage crop artwork
+
+Turnips, Sunberries, and Moonbeans now display five readable stages:
+
+1. Seed mound
+2. Sprout
+3. Developing plant
+4. Flowering or fruit-forming plant
+5. Harvest-ready crop
+
+The crop renderer uses the existing growth value and crop duration; it does not alter growth speed, watering, quality, harvest output, seasonal affinity, XP, or save data. The same crop artwork is used on the outdoor Farmstead and inside the Hearthglass Greenhouse.
+
+### Painted automation and service objects
+
+The Farmstead now has distinct art and state indicators for:
+
+- Basic and Quality Sprinklers
+- Hearth Sprinklers
+- Bee Houses with moving bees and output badges
+- Spark Rods with charged effects
+- Seed Makers with idle, processing, and ready states
+- Lanterns
+- The overnight shipping bin and current shipment count
+- The Farmstead project board
+- Construction scaffolding
+- The completed Farm Workshop
+- Basic and Deluxe Hearthglass Greenhouses
+
+Production readiness, loaded inputs, charged outputs, construction state, and greenhouse upgrades are shown visually without changing the underlying simulation.
+
+### Regression coverage
+
+The v3.20 farming-art regression verifies:
+
+- Every crop type maps through all five growth stages
+- Invalid crop data falls back safely
+- All seven placed-art targets are registered
+- Shipping-bin and project-board coordinates are valid
+- Workshop and Greenhouse art targets are present
+- Crop, placed-device, and building renderer hooks install correctly
 
 ## Version 3.19 — Farmstead Buildings and Nature Art
 
-Version 3.19 extends the approved visual direction beyond terrain and into the objects that define the opening Farmstead.
-
-### Embedded object artwork
-
-The Farmstead now uses a compact hand-painted raster atlas for:
+Version 3.19 extended the visual direction beyond terrain with an embedded **448 × 232 PNG atlas** covering:
 
 - The blue-roof Farmhouse
 - Summer deciduous trees and fruit trees
@@ -16,32 +57,9 @@ The Farmstead now uses a compact hand-painted raster atlas for:
 - Wooden crates
 - Horizontal and vertical wooden fences
 
-The optimized **448 × 232 PNG atlas** is embedded across three JavaScript chunks. It is decoded lazily at runtime and cached with the offline PWA, so the visual upgrade does not require a separate image request.
-
-### Safe renderer replacement
-
-Only matching Farmstead objects are replaced. Existing renderers remain active for other regions and unsupported object types.
-
-- Building footprints, doors, collisions, services, and interior entry points are unchanged.
-- Resource IDs, health, harvesting, respawning, chunk streaming, and save data are unchanged.
-- Fence collision rectangles continue to come from the authored world structures.
-- The original geometric renderer is used immediately when the embedded atlas is unavailable or fails to decode.
-- The object layer is installed through the existing `game-farmstead-prop-art.js` compatibility entry point, preventing duplicate wrappers.
-
-### Art validation
-
-The Farmstead object-art regression verifies:
-
-- PNG signature, dimensions, and ending
-- All six sprite rectangles fit inside the atlas
-- Farm-only resource and fence selection
-- Tree, rock, and crate destination geometry
-- Farmhouse, tree, rock, crate, and fence coverage
-- Geometric fallback behavior without a browser `Image` implementation
+The object atlas is embedded across three JavaScript chunks and decoded lazily. Only matching Farmstead objects are replaced. Building footprints, doors, collision, resource IDs, harvesting, respawning, chunk streaming, interactions, and save data remain unchanged. The original geometric renderer is used whenever the embedded atlas is unavailable.
 
 ## Version 3.18 — Hand-Painted Farmstead Terrain
-
-Version 3.18 began Hearthvale's production art transition by replacing the Farmstead's flat terrain with the approved cozy hand-painted environment style.
 
 The Farmstead terrain renderer includes:
 
@@ -52,9 +70,7 @@ The Farmstead terrain renderer includes:
 - A complete 47-tile connected watered-soil set
 - Existing crops drawn above the new soil artwork
 
-The three connected terrain families provide **141 runtime atlas cells**. Roads and farm plots select their correct edge, corner, junction, isolated, and interior tile through an eight-neighbor canonical bitmask.
-
-The **512 × 384 terrain atlas** is embedded in five validated JavaScript chunks and decoded lazily. Water, bridges, other regions, characters, and unsupported effects retain their existing renderers. Save data, collision, pathfinding, farming state, and world generation remain unchanged.
+The three connected terrain families provide **141 runtime atlas cells** selected through an eight-neighbor canonical bitmask. The **512 × 384 terrain atlas** is embedded in five validated JavaScript chunks and keeps the original geometric terrain renderer as a fallback.
 
 ## Version 3.17 — Farm Workshop and Field Automation
 
@@ -83,7 +99,7 @@ The completed greenhouse contains up to 48 protected crop beds, automatic irriga
 ## Major systems
 
 - **57,344-tile streamed continent** across 14 regions
-- **Hand-painted Farmstead terrain, Farmhouse, trees, rocks, crates, and fences**
+- **Hand-painted Farmstead terrain, buildings, nature, crops, automation, and service objects**
 - **Chapter 1 and Chapter 2** with persistent objectives and story dungeons
 - **Directional combat**, equipment, bosses, status effects, and physical loot
 - **50-floor Grand Depths** with milestone bosses, shortcuts, merchants, and deterministic 1% chests
@@ -114,6 +130,7 @@ node tests/smoke.mjs
 node tests/farmstead-art.mjs
 node tests/farmstead-prop-art.mjs
 node tests/farmstead-object-art.mjs
+node tests/farmstead-farming-art.mjs
 ```
 
 ## Controls
