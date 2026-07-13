@@ -17,7 +17,7 @@ const png = Buffer.from(encoded, "base64");
 assert.deepEqual([...png.subarray(0, 8)], [137, 80, 78, 71, 13, 10, 26, 10]);
 assert.equal(png.readUInt32BE(16), FARMSTEAD_OBJECT_ATLAS_WIDTH);
 assert.equal(png.readUInt32BE(20), FARMSTEAD_OBJECT_ATLAS_HEIGHT);
-assert.equal(png.subarray(-12, -8).toString("ascii"), "IEND");
+assert.equal(png.subarray(-8, -4).toString("ascii"), "IEND");
 assert.equal(FARMSTEAD_OBJECT_ATLAS_WIDTH, 448);
 assert.equal(FARMSTEAD_OBJECT_ATLAS_HEIGHT, 232);
 
