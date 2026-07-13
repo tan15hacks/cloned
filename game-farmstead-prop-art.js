@@ -1,4 +1,5 @@
 import { TILE, BUILDINGS, regionAt } from "./game-shared.js";
+import { AUTHORED_STRUCTURES } from "./world-polish-data.js";
 
 const FARM = "farm";
 const TREE_TYPES = new Set(["tree", "fruitTree"]);
@@ -10,7 +11,8 @@ function onFarm(point) {
 
 function roundedRect(ctx, x, y, w, h, r) {
   ctx.beginPath();
-  ctx.roundRect(x, y, w, h, r);
+  if (typeof ctx.roundRect === "function") ctx.roundRect(x, y, w, h, r);
+  else ctx.rect(x, y, w, h);
 }
 
 function drawFarmTree(ctx, resource) {
@@ -118,6 +120,13 @@ function drawFarmhouse(ctx, building) {
   ctx.restore();
 }
 
+export function farmsteadPropArtTargets() {
+  return {
+    farmhouse: BUILDINGS.find((entry) => entry.id === "farmhouse") || null,
+    fences: AUTHORED_STRUCTURES.filter((entry) => entry.type?.startsWith("fence") && regionAt(entry.x, entry.y).id === FARM),
+  };
+}
+
 export function installFarmsteadPropArt(GameClass) {
   const proto = GameClass.prototype;
   const original = {
@@ -135,27 +144,26 @@ export function installFarmsteadPropArt(GameClass) {
 
   proto.drawBuildings = function drawFarmsteadBuildingArt(ctx, bounds) {
     const farmhouse = BUILDINGS.find((entry) => entry.id === "farmhouse");
-    const hideFarmhouse = farmhouse && farmhouse.x + farmhouse.w >= bounds.startX && farmhouse.x <= bounds.endX && farmhouse.y + farmhouse.h >= bounds.startY && farmhouse.y <= bounds.endY;
-    if (!hideFarmhouse) return original.drawBuildings.call(this, ctx, bounds);
-    const originalBuildings = BUILDINGS.filter((entry) => entry.id !== "farmhouse");
-    const saved = BUILDINGS.slice();
-    BUILDINGS.splice(0, BUILDINGS.length, ...originalBuildings);
-    try { original.drawBuildings.call(this, ctx, bounds); } finally { BUILDINGS.splice(0, BUILDINGS.length, ...saved); }
+    const visible = farmhouse && farmhouse.x + farmhouse.w >= bounds.startX && farmhouse.x <= bounds.endX && farmhouse.y + farmhouse.h >= bounds.startY && farmhouse.y <= bounds.endY;
+    if (!visible) return original.drawBuildings.call(this, ctx, bounds);
+    const index = BUILDINGS.indexOf(farmhouse);
+    BUILDINGS.splice(index, 1);
+    try { original.drawBuildings.call(this, ctx, bounds); } finally { BUILDINGS.splice(index, 0, farmhouse); }
     drawFarmhouse(ctx, farmhouse);
   };
 
   proto.drawWorldDecorations = function drawFarmsteadDecorationsArt(ctx, decorations, solidLayer) {
     const replacements = decorations.filter((decor) => decor.type === "crate" && regionAt(decor.x, decor.y).id === FARM);
-    const remaining = replacements.length ? decorations.filter((decor) => !replacements.includes(decor)) : decorations;
-    original.drawWorldDecorations.call(this, ctx, remaining, solidLayer);
+    const replacementSet = new Set(replacements);
+    original.drawWorldDecorations.call(this, ctx, decorations.filter((decor) => !replacementSet.has(decor)), solidLayer);
     for (const decor of replacements) drawFarmCrate(ctx, decor);
   };
 
   proto.drawAuthoredStructures = function drawFarmsteadStructuresArt(ctx, bounds) {
-    const originalStructures = globalThis.__hearthvaleAuthoredStructures;
     original.drawAuthoredStructures.call(this, ctx, bounds);
-    // Overlay richer Farmstead fence art without changing collision geometry.
-    const structures = this.getFarmsteadFenceStructures?.() || [];
-    for (const structure of structures) drawFarmFence(ctx, structure);
+    for (const structure of farmsteadPropArtTargets().fences) {
+      if (structure.x + structure.w < bounds.startX - 2 || structure.x > bounds.endX + 2 || structure.y + structure.h < bounds.startY - 2 || structure.y > bounds.endY + 2) continue;
+      drawFarmFence(ctx, structure);
+    }
   };
 }
